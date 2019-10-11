@@ -9,6 +9,9 @@ class SnapshotRatingScale(models.Model):
     names = ArrayField(models.CharField(max_length=1024))
     values = ArrayField(models.CharField(max_length=1024))
 
+    def __str__(self):
+        names = (f"{name} ({value})" for name, value in zip(self.names, self.values))
+        return f"<SnapshotRatingScale {self.pk}: {', '.join(names)}>"
 
 class Snapshot(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -17,10 +20,3 @@ class Snapshot(models.Model):
     # coord = geomodels.PointField()
     date = models.DateTimeField('date snapshot taken', default=datetime.datetime.now)
     
-
-
-class UserSession(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    session_id = models.CharField(max_length=1024)
-    last_seen = models.DateTimeField('date session last seen', default=datetime.datetime.now)
-    date = models.DateTimeField('date session created', default=datetime.datetime.now)

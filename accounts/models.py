@@ -21,7 +21,6 @@ class UserEmailBackend:
 
     def get_user(self, user_id):
         try:
-            print("get_user")
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
