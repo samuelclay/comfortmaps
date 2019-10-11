@@ -2,22 +2,24 @@
 
 from django.db import migrations
 
-
 def add_initial_scale(apps, schema_editor):
-    SnapshotRatingScale = apps.get_model('record', 'SnapshotRatingScale')
+    SnapshotRatingScale = apps.get_model('records', 'SnapshotRatingScale')
     SnapshotRatingScale.objects.create(names=["Inexcusable", 
                                               "Sucks", 
                                               "Not Great", 
                                               "Fine", 
                                               "Perfect"], values=[1,2,3,4,5])
-    
+
+def remove_initial_scale(apps, schema_editor):
+    SnapshotRatingScale = apps.get_model('records', 'SnapshotRatingScale')
+    SnapshotRatingScale.objects.all().delete()
     
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('record', '0001_initial'),
+        ('records', '0001_initial'),
     ]
 
     operations = [
-        migrations.RunPython(add_initial_scale)
+        migrations.RunPython(add_initial_scale, remove_initial_scale)
     ]

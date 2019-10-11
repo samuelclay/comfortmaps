@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'record',
+    'records',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'comfortmaps.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -69,7 +70,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'comfortmaps.wsgi.application'
-
+AUTHENTICATION_BACKENDS = ['accounts.models.UserEmailBackend']
+AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -100,6 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SESSION_COOKIE_AGE = 60*60*24*365*10
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

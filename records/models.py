@@ -1,7 +1,7 @@
 import datetime
 from django.db import models
 from django.contrib.gis.db import models as geomodels
-from django.contrib.auth.models import User
+from accounts.models import User
 from django.contrib.postgres.fields import ArrayField
 
 
