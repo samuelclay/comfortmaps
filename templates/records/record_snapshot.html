@@ -157,7 +157,7 @@ body {
                       {% elif value == "2" %}
                         order-2
                       {% endif %}">
-            <button class="btn btn-lg btn-primary CM-rating-button CM-rating-{{ value }}"  type="submit">
+            <button class="btn btn-lg btn-primary CM-rating-button CM-rating-{{ value }}"  type="submit" v-on:click="sendSnapshot({{ value }})">
               <div class="CM-rating-value-text h1">{{ value }}</div>
               <div class="CM-rating-name-text h5">{{ name }}</div>
             </button>
@@ -169,4 +169,12 @@ body {
 
   </div>
 </div>
+{% endblock %}
+
+{% block script %}
+{% csrf_token %}
+<script type="text/javascript">
+// using jQuery
+window.csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+</script>
 {% endblock %}

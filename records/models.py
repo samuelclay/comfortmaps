@@ -1,4 +1,5 @@
 import datetime
+from django.utils import timezone
 from django.db import models
 from django.contrib.gis.db import models as geomodels
 from accounts.models import User
@@ -18,5 +19,5 @@ class Snapshot(models.Model):
     rating = models.IntegerField()
     rating_scale = models.ForeignKey(SnapshotRatingScale, on_delete=models.CASCADE)
     # coord = geomodels.PointField()
-    date = models.DateTimeField('date snapshot taken', default=datetime.datetime.now)
+    date = models.DateTimeField('date snapshot taken', default=timezone.now)
     
