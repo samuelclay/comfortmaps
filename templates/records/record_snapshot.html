@@ -50,22 +50,123 @@ body {
     padding-top: 10px;
   }
 }
+.CM-ratings .col-4 {
+  padding: 0 4px;
+}
+.CM-ratings .col-4 .CM-rating-button {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.CM-ratings .col-4 .h5 {
+  font-size: 1rem;
+}
+.CM-rating-button {
+  border-radius: 32px;
+  line-height: 0;
+  margin: 0 1vw 3vh 0;
+  width: 100%;
+}
+.CM-rating-4, .CM-rating-5 {
+  border-radius: 48px;
+}
+.CM-rating-5 {
+  background-color: #28a745;
+  border-color: #228e3b;
+}
+.CM-rating-5:hover {
+  background-color: #1e7d34;
+  border-color: #18672b;
+}
+.btn-primary:not(:disabled).CM-rating-5:active {
+  background-color: #e4fde9;
+  border-color: #e4fde9;
+  color: #303030;
+}
+.CM-rating-4 {
+  background-color: #28a745;
+  border-color: #228e3b;
+}
+.CM-rating-4:hover {
+  background-color: #1e7d34;
+  border-color: #18672b;
+}
+.btn-primary:not(:disabled).CM-rating-4:active {
+  background-color: #e4fde9;
+  border-color: #e4fde9;
+  color: #303030;
+}
+.CM-rating-3 {
+  background-color: #dca435;
+  border-color: #cb9730;
+}
+.CM-rating-3:hover {
+  background-color: #c2912e;
+  border-color: #af8229;
+}
+.btn-primary:not(:disabled).CM-rating-3:active {
+  background-color: #fcf5e8;
+  border-color: #f6ebd6;
+  color: #303030;
+}
+.CM-rating-2 {
+  background-color: #dca435;
+  border-color: #cb9730;
+}
+.CM-rating-2:hover {
+  background-color: #c2912e;
+  border-color: #af8229;
+}
+.btn-primary:not(:disabled).CM-rating-2:active {
+  background-color: #fcf5e8;
+  border-color: #f6ebd6;
+  color: #303030;
+}
+.CM-rating-1 {
+  background-color: #dca435;
+  border-color: #cb9730;
+}
+.CM-rating-1:hover {
+  background-color: #c2912e;
+  border-color: #af8229;
+}
+.btn-primary:not(:disabled).CM-rating-1:active {
+  background-color: #fcf5e8;
+  border-color: #f6ebd6;
+  color: #303030;
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class = "container">
-  <div class = "col-md-6 col-md-offset-3">
-    <div class="wrapper">
-        <h2 class="form-signin-heading">Comfort Maps</h2>
-        <br>
-        {% for name, value in snapshot_rating_scales %}
-          <button class="btn btn-lg btn-primary btn-block" type="submit">{{ name }} {{ value }}</button>
+<div class = "container CM-ratings">
+  <div class="wrapper">
+      {# <h2 class="form-signin-heading">Comfort Maps</h2> #}
+      <div class="row">
+      
+        {% for name, value in snapshot_rating_scales reversed %}
+          {% if value == "3" %}</div><div class="row no-gutters">{% endif %}
+          <div class="{% if value == "3" or value == "2" or value == "1" %}
+                        col-4
+                      {% else %}
+                        col
+                      {% endif %}
+                      {% if value == "5" %}
+                        order-last
+                      {% elif value == "3" %}
+                        order-last
+                      {% elif value == "2" %}
+                        order-2
+                      {% endif %}">
+            <button class="btn btn-lg btn-primary CM-rating-button CM-rating-{{ value }}"  type="submit">
+              <div class="CM-rating-value-text h1">{{ value }}</div>
+              <div class="CM-rating-name-text h5">{{ name }}</div>
+            </button>
+          </div>
         {% endfor %}
-        <br>
-      </form>
 
-    </div>
+      </div>
+    </form>
+
   </div>
 </div>
 {% endblock %}
