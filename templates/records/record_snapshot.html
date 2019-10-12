@@ -5,51 +5,10 @@
 body {
   background: #eee !important;
 }
-.wrapper {
-  margin-top: 80px;
-  margin-bottom: 80px;
+.CM-map {
+  background-color: rgba(0, 0, 0, .1);
 }
-.form-signin {
-  padding: 15px 35px 45px;
-  margin: 0 auto;
-  background-color: #fff;
-  border: 1px solid rgba(0,0,0,0.1);
 
-  .form-signin-heading,
-  .checkbox {
-    margin-bottom: 30px;
-  }
-  .checkbox {
-    font-weight: normal;
-  }
-  .form-control {
-    position: relative;
-    font-size: 16px;
-    height: auto;
-    padding: 10px;
-    @include box-sizing(border-box);
-    &:focus {
-      z-index: 2;
-    }
-  }
-  input[type="text"] {
-    margin-bottom: -1px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  input[type="password"] {
-    margin-bottom: 20px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-  }
-}
-@media(max-width: 500px){
-  footer{
-    height: 130px !important;
-    padding-bottom: 10px;
-    padding-top: 10px;
-  }
-}
 .CM-ratings .col-4 {
   padding: 0 4px;
 }
@@ -134,41 +93,44 @@ body {
   border-color: #f6ebd6;
   color: #303030;
 }
+
 </style>
 {% endblock %}
 
 {% block content %}
-<div class = "container CM-ratings">
-  <div class="wrapper">
-      {# <h2 class="form-signin-heading">Comfort Maps</h2> #}
-      <div class="row">
+<div class="CM-snapshot">
+  <div class="row flex-row vh-100">
+    <div class="CM-ratings col-sm-8 align-items-sm-stretch flex-fill my-auto">
+        {# <h2 class="form-signin-heading">Comfort Maps</h2> #}
+        <div class="row">
       
-        {% for name, value in snapshot_rating_scales reversed %}
-          {% if value == "3" %}</div><div class="row no-gutters">{% endif %}
-          <div class="{% if value == "3" or value == "2" or value == "1" %}
-                        col-4
-                      {% else %}
-                        col
-                      {% endif %}
-                      {% if value == "5" %}
-                        order-last
-                      {% elif value == "3" %}
-                        order-last
-                      {% elif value == "2" %}
-                        order-2
-                      {% endif %}">
-            <button class="btn btn-lg btn-primary CM-rating-button CM-rating-{{ value }}"  type="submit" v-on:click="sendSnapshot({{ value }})">
-              <div class="CM-rating-value-text h1">{{ value }}</div>
-              <div class="CM-rating-name-text h5">{{ name }}</div>
-            </button>
-          </div>
-        {% endfor %}
+          {% for name, value in snapshot_rating_scales reversed %}
+            {% if value == "3" %}</div><div class="row no-gutters">{% endif %}
+            <div class="{% if value == "3" or value == "2" or value == "1" %}
+                          col-4
+                        {% else %}
+                          col
+                        {% endif %}
+                        {% if value == "5" %}
+                          order-last
+                        {% elif value == "3" %}
+                          order-last
+                        {% elif value == "2" %}
+                          order-2
+                        {% endif %}">
+              <button class="btn btn-lg btn-primary CM-rating-button CM-rating-{{ value }}"  type="submit" v-on:click="sendSnapshot({{ value }})">
+                <div class="CM-rating-value-text h1">{{ value }}</div>
+                <div class="CM-rating-name-text h5">{{ name }}</div>
+              </button>
+            </div>
+          {% endfor %}
 
-      </div>
-    </form>
-
+        </div>
+    </div>
+    <div class="CM-map col-sm-4 align-items-sm-stretch flex-fill"></div>
   </div>
 </div>
+
 {% endblock %}
 
 {% block script %}
