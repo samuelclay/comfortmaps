@@ -73,3 +73,18 @@ window.collectGpsInterval = setInterval(window.collectGps, 5 * 1000);
 navigator.geolocation.watchPosition(window.processGpsPosition, function() {
   console.log(['No permission for GPS', true]);
 });
+
+
+function resizeVh() {
+  let vh = window.innerHeight * 0.01;
+  // Then we set the value in the --vh custom property to the root of the document
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+window.addEventListener('resize', () => {
+  resizeVh();
+});
+window.addEventListener('orientationchange', () => {
+  resizeVh();
+});
+
+resizeVh();
