@@ -62,12 +62,13 @@ window.processGpsPosition = function(position) {
     CM.googleMap.setCenter(pos);
     CM.googleMap.setZoom(16);
     
+    const rotation = position.coords.heading - 90;
     var chevron = {
       path: 'M 13 3 L 7 12 L 13 21 L 17 21 L 11 12 L 17 3 L 13 3 z',
       strokeColor: '#F00',
       fillColor: '#F00',
       fillOpacity: 1,
-      rotation: position.coords.heading
+      rotation: rotation
     };
     new google.maps.Marker({
       position: CM.googleMap.getCenter(),
