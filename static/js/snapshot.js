@@ -66,8 +66,8 @@ window.processGpsPosition = function(position) {
   CM.googleMap.setZoom(16);
   const distanceFromLastPoint = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, 
                                                                pos.lng, CM.lastPos.lng);
-  console.log(['New position', pos, distanceFromLastPoint]);
-  if (Math.abs(distanceBetweenLatLongs) < 0.025) {
+  console.log(['New position', pos, distanceFromLastPoint, distanceBetweenLatLongs < 0.05]);
+  if (distanceBetweenLatLongs < 0.05) {
     return;
   }
   CM.lastPos = pos;
