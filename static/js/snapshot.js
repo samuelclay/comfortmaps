@@ -67,7 +67,7 @@ window.processGpsPosition = function(position) {
   const distanceFromLastPoint = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, 
                                                                pos.lng, CM.lastPos.lng);
   CM.lastPos = pos;
-  console.log(['New position', pos, distanceBetweenLatLongs]);
+  console.log(['New position', pos, distanceFromLastPoint]);
   if (Math.abs(distanceBetweenLatLongs) < 1) {
     return;
   }
