@@ -24,73 +24,63 @@ body {
   line-height: 0;
   margin: 0 1vw 3vh 0;
   width: 100%;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+.CM-rating-button:hover {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+.btn-primary:not(:disabled).CM-rating-button:active {
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #303030;
 }
 .CM-rating-4, .CM-rating-5 {
   border-radius: 48px;
 }
 .CM-rating-5 {
   background-color: #28a745;
-  border-color: #228e3b;
 }
 .CM-rating-5:hover {
   background-color: #1e7d34;
-  border-color: #18672b;
 }
 .btn-primary:not(:disabled).CM-rating-5:active {
   background-color: #e4fde9;
-  border-color: #e4fde9;
-  color: #303030;
 }
 .CM-rating-4 {
   background-color: #28a745;
-  border-color: #228e3b;
 }
 .CM-rating-4:hover {
   background-color: #1e7d34;
-  border-color: #18672b;
 }
 .btn-primary:not(:disabled).CM-rating-4:active {
   background-color: #e4fde9;
-  border-color: #e4fde9;
-  color: #303030;
 }
 .CM-rating-3 {
   background-color: #dca435;
-  border-color: #cb9730;
 }
 .CM-rating-3:hover {
   background-color: #c2912e;
-  border-color: #af8229;
 }
 .btn-primary:not(:disabled).CM-rating-3:active {
   background-color: #fcf5e8;
-  border-color: #f6ebd6;
-  color: #303030;
 }
 .CM-rating-2 {
   background-color: #dca435;
-  border-color: #cb9730;
 }
 .CM-rating-2:hover {
   background-color: #c2912e;
-  border-color: #af8229;
 }
 .btn-primary:not(:disabled).CM-rating-2:active {
   background-color: #fcf5e8;
-  border-color: #f6ebd6;
-  color: #303030;
 }
 .CM-rating-1 {
   background-color: #dca435;
-  border-color: #cb9730;
 }
 .CM-rating-1:hover {
   background-color: #c2912e;
-  border-color: #af8229;
 }
 .btn-primary:not(:disabled).CM-rating-1:active {
   background-color: #fcf5e8;
-  border-color: #f6ebd6;
+  border-color: rgba(0, 0, 0, 0.1);
   color: #303030;
 }
 
@@ -127,7 +117,7 @@ body {
 
         </div>
     </div>
-    <div class="CM-map col-sm-4 align-items-sm-stretch flex-fill"></div>
+    <div class="CM-map col-sm-4 align-items-sm-stretch flex-fill" id="map"></div>
   </div>
 </div>
 
@@ -138,5 +128,9 @@ body {
 <script type="text/javascript">
 // using jQuery
 window.csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap">
 </script>
 {% endblock %}
