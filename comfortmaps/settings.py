@@ -81,6 +81,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'comfortmaps',
+        'USER': 'comfortmaps',
     }
 }
 
