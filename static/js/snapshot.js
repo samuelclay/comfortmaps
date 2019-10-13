@@ -9,6 +9,13 @@ CM.snapshotVue = new Vue({
             jQuery.post("/record/snapshot/", {
                 rating: rating,
                 gps: CM.geolocation
+            });
+            
+            new google.maps.Marker({
+              position: CM.googleMap.getCenter(),
+              label: ""+rating,
+              animation: google.maps.Animation.DROP,
+              map: CM.googleMap
             })
         }
     }
@@ -66,7 +73,7 @@ window.processGpsPosition = function(position) {
       position: CM.googleMap.getCenter(),
       icon: chevron,
       map: CM.googleMap
-    })
+    });
   }
 };
 window.collectGpsInterval = setInterval(window.collectGps, 5 * 1000);
