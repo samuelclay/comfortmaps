@@ -7,7 +7,6 @@ body {
 }
 .CM-snapshot {
   overflow: hidden;
-  position: fixed;
 }
 .CM-snapshot > .row {
   height: 100vh;
@@ -136,6 +135,10 @@ body {
 <script type="text/javascript">
 // using jQuery
 window.csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+document.addEventListener("touchmove", function(event){
+    event.preventDefault();
+});
 </script>
 
 <script async defer
