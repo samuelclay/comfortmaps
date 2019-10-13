@@ -1,0 +1,11 @@
+---
+- hosts: web
+  vars:
+    home_dir: "{{ ansible_env.HOME }}"
+  roles:
+    - {role: common, tags: ['common']}
+    - {role: letsencrypt, tags: ['letsencrypt']}
+    - {role: nginx, tags: ['nginx']}
+    # - {role: nodejs, tags: ['nodejs']}
+    - {role: pip, tags: ['pip']}
+    - {role: app, tags: ['app']}

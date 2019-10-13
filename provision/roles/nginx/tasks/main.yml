@@ -1,0 +1,20 @@
+---
+- name: Install nginx
+  apt: name=nginx state=present
+  become: yes
+  
+- name: Copy nginx comfortmaps config
+  template: src=nginx.comfortmaps.conf dest=/etc/nginx/sites-enabled/comfortmaps.conf
+  become: yes
+  
+  
+- name: Remove default nginx site
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  become: yes
+  notify: restart nginx
+  
+- name: Restart nginx
+  command: service nginx restart
+  become: yes
+  args:
+      warn: false # Ansible 2.0 should fix the service module, since it doesn't restart nginx properly

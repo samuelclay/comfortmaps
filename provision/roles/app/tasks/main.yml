@@ -1,0 +1,37 @@
+---
+- name: Adding ssh config for comfortmaps
+  blockinfile:
+    dest: ~/.ssh/config
+    create: yes
+    marker: "## {mark} added for comfortmaps"
+    block: |
+      Host comfortmaps.github.com
+      HostName github.com
+      User git
+      IdentityFile ~/.ssh/comfortmaps-web.pem
+
+- name: Add comfortmaps-web.pem.pub
+  template:
+    src: /mnt/comfortmaps-secrets/keys/comfortmaps-web.pem.pub
+    dest: ~/.ssh/comfortmaps-web.pem.pub
+    mode: 0600
+
+- name: Add comfortmaps-web.pem
+  template:
+    src: /mnt/comfortmaps-secrets/keys/comfortmaps-web.pem
+    dest: ~/.ssh/comfortmaps-web.pem
+    mode: 0600
+    
+- name: Clone App Repo
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ repo_dir }}"
+    accept_hostkey: yes
+    key_file: /mnt/comfortmaps-secrets/keys/comfortmaps-web.pem
+    update: yes
+
+- name: Reloading app server (supervisord)
+  supervisorctl: name=app state=restarted config=/etc/supervisor/supervisord.conf
+  become: yes
+    
+

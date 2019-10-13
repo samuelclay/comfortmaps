@@ -1,0 +1,19 @@
+---
+- name: Install packages
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: installed 
+    update_cache: yes
+  with_items:
+    - curl
+    - git
+    - zsh
+
+- name: "Set MOTD banner"
+  become: yes
+  template:
+    src: "motd.txt"
+    dest: "/etc/update-motd.d/80-weel-motd"
+    mode: 0755
+
