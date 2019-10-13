@@ -67,11 +67,11 @@ window.processGpsPosition = function(position) {
     const distanceFromLastPoint = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, pos.lng, CM.lastPos.lng);
     CM.lastPos = pos;
     
-    if (distanceBetweenLatLongs < 20) {
+    if (distanceBetweenLatLongs < 50) {
       return;
     }
     
-    const rotation = position.coords.heading - 90;
+    const rotation = position.coords.heading + 90;
     const chevron = {
       path: 'M 13 3 L 7 12 L 13 21 L 17 21 L 11 12 L 17 3 L 13 3 z',
       strokeColor: '#F00',
