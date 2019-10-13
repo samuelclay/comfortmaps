@@ -54,7 +54,7 @@ window.collectGps = function() {
 window.processGpsPosition = function(position) {
   CM.geolocation = position;
   CM.seenLocations = CM.seenLocations || [];
-  CM.lastPos = CM.lastPos || {lat: 0, long: 0};
+  CM.lastPos = CM.lastPos || {lat: 10, long: 10};
   
   var pos = {
     lat: position.coords.latitude,
@@ -68,7 +68,7 @@ window.processGpsPosition = function(position) {
                                                                pos.lng, CM.lastPos.lng);
   CM.lastPos = pos;
   
-  if (distanceBetweenLatLongs < 0.1) {
+  if (Math.abs(distanceBetweenLatLongs) < 0.1) {
     return;
   }
   
