@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'comfortmaps',
         'USER': 'comfortmaps',
-        'PASSWORD': '',
+        'PASSWORD': 'comfortmaps',
     }
 }
 
