@@ -8,6 +8,10 @@ body {
 .CM-snapshot {
   overflow: hidden;
 }
+.CM-snapshot > .row {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
 .CM-map {
   background-color: rgba(0, 0, 0, .1);
 }
@@ -92,7 +96,7 @@ body {
 
 {% block content %}
 <div class="CM-snapshot">
-  <div class="row flex-row vh-100">
+  <div class="row flex-row">
     <div class="CM-ratings col-sm-8 align-items-sm-stretch flex-fill my-auto">
         {# <h2 class="form-signin-heading">Comfort Maps</h2> #}
         <div class="row">
