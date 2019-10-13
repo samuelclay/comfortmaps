@@ -61,33 +61,33 @@ window.processGpsPosition = function(position) {
     lng: position.coords.longitude
   };
 
-  if (CM.googleMap) {
-    CM.googleMap.setCenter(pos);
-    CM.googleMap.setZoom(16);
-    const distanceFromLastPoint = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, pos.lng, CM.lastPos.lng);
-    CM.lastPos = pos;
-    
-    if (distanceBetweenLatLongs < 0.1) {
-      return;
-    }
-    
-    const rotation = position.coords.heading + 90;
-    const chevron = {
-      path: 'M 13 3 L 7 12 L 13 21 L 17 21 L 11 12 L 17 3 L 13 3 z',
-      strokeColor: '#F00',
-      fillColor: '#F00',
-      fillOpacity: 1,
-      rotation: rotation
-    };
-    const chevronOld = $.extend({}, chevron, {fillColor: '#FF0', strokeColor: '#FF0'});
-    new google.maps.Marker({
-      position: CM.googleMap.getCenter(),
-      icon: chevron,
-      map: CM.googleMap
-    });
+  if (!CM.googleMap) return;
+  CM.googleMap.setCenter(pos);
+  CM.googleMap.setZoom(16);
+  const distanceFromLastPoint = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, 
+                                                               pos.lng, CM.lastPos.lng);
+  CM.lastPos = pos;
+  
+  if (distanceBetweenLatLongs < 0.1) {
+    return;
   }
+  
+  const rotation = position.coords.heading + 90;
+  const chevron = {
+    path: 'M 13 3 L 7 12 L 13 21 L 17 21 L 11 12 L 17 3 L 13 3 z',
+    strokeColor: '#F00',
+    fillColor: '#F00',
+    fillOpacity: 1,
+    rotation: rotation
+  };
+  const chevronOld = $.extend({}, chevron, {fillColor: '#FF0', strokeColor: '#FF0'});
+  new google.maps.Marker({
+    position: CM.googleMap.getCenter(),
+    icon: chevron,
+    map: CM.googleMap
+  });
 };
-window.distanceBetweenLatLongs = function(lat1, lon1, lat2, lon2) {
+window.distanceBetweenLatLongs = function(lat1, lat2, lon1, lon2) {
   var R = 6371e3; // metres
   var φ1 = lat1.toRadians();
   var φ2 = lat2.toRadians();
