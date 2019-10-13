@@ -1,12 +1,19 @@
 [Unit]
 Description=gunicorn daemon
+Requires=gunicorn.socket
 After=network.target
 
 [Service]
+PIDFile=/run/gunicorn/pid
 User=sclay
 Group=www-data
 WorkingDirectory=/srv/comfortmaps
-ExecStart=/home/sclay/.virtualenvs/comfortmaps/bin/gunicorn -c /srv/comfortmaps/config/gunicorn.conf comfortmaps.wsgi
+RuntimeDirectory=gunicorn
+ExecStart=/home/sclay/.virtualenvs/comfortmaps/bin/gunicorn --pid /run/gunicorn/pid   \
+          --bind unix:/run/gunicorn/socket comfortmaps.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
