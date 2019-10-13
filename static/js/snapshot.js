@@ -88,21 +88,15 @@ window.processGpsPosition = function(position) {
   });
 };
 window.distanceBetweenLatLongs = function(lat1, lat2, lon1, lon2) {
-  var R = 6371e3; // metres
-  var φ1 = lat1.toRadians();
-  var φ2 = lat2.toRadians();
-  var Δφ = (lat2-lat1).toRadians();
-  var Δλ = (lon2-lon1).toRadians();
+  var p = 0.017453292519943295;    // Math.PI / 180
+  var c = Math.cos;
+  var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+          c(lat1 * p) * c(lat2 * p) * 
+          (1 - c((lon2 - lon1) * p))/2;
 
-  var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-          Math.cos(φ1) * Math.cos(φ2) *
-          Math.sin(Δλ/2) * Math.sin(Δλ/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-  var d = R * c;
-  
-  return d;
+  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
 }
+
 window.collectGpsInterval = setInterval(window.collectGps, 5 * 1000);
 navigator.geolocation.watchPosition(window.processGpsPosition, function() {
   console.log(['No permission for GPS', true]);
