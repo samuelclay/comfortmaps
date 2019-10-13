@@ -12,13 +12,13 @@
 
 - name: Add comfortmaps-web.pem.pub
   template:
-    src: /mnt/comfortmaps-secrets/keys/comfortmaps-web.pem.pub
+    src: /srv/comfortmaps-secrets/keys/comfortmaps-web.pem.pub
     dest: ~/.ssh/comfortmaps-web.pem.pub
     mode: 0600
 
 - name: Add comfortmaps-web.pem
   template:
-    src: /mnt/comfortmaps-secrets/keys/comfortmaps-web.pem
+    src: /srv/comfortmaps-secrets/keys/comfortmaps-web.pem
     dest: ~/.ssh/comfortmaps-web.pem
     mode: 0600
     
@@ -27,7 +27,7 @@
     repo: "{{ repo_url }}"
     dest: "{{ repo_dir }}"
     accept_hostkey: yes
-    key_file: /mnt/comfortmaps-secrets/keys/comfortmaps-web.pem
+    key_file: /srv/comfortmaps-secrets/keys/comfortmaps-web.pem
     update: yes
 
 - name: Reloading app server (supervisord)

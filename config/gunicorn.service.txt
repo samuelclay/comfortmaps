@@ -6,7 +6,7 @@ After=network.target
 User=sclay
 Group=www-data
 WorkingDirectory=/srv/comfortmaps
-ExecStart=/home/sclay/.virtualenvs/comfortmaps/bin/gunicorn /srv/comfortmaps/config/gunicorn.conf
+ExecStart=/home/sclay/.virtualenvs/comfortmaps/bin/gunicorn -c /srv/comfortmaps/config/gunicorn.conf comfortmaps.wsgi
 
 [Install]
 WantedBy=multi-user.target
