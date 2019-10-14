@@ -64,14 +64,6 @@ window.processGpsPosition = function(position) {
   if (!CM.googleMap) return;
   CM.googleMap.setCenter(pos);
   CM.googleMap.setZoom(16);
-  const distance = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, 
-                                                               pos.lng, CM.lastPos.lng);
-  console.log(['New position', pos, distance, distance < 0.05]);
-  if (distance < 0.05 && CM.lastMarker) {
-    CM.lastMarker.setPosition(CM.googleMap.getCenter());
-    return;
-  }
-  CM.lastPos = pos;
   
   const rotation = position.coords.heading + 90;
   const chevron = {
@@ -81,6 +73,16 @@ window.processGpsPosition = function(position) {
     fillOpacity: 1,
     rotation: rotation
   };
+  const distance = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, 
+                                                               pos.lng, CM.lastPos.lng);
+
+  if (distance < 0.05 && CM.lastMarker) {
+    CM.lastMarker.setPosition(CM.googleMap.getCenter());
+    CM.lastMarker.setIcon(chevron);
+    return;
+  }
+  CM.lastPos = pos;
+
   const chevronOld = $.extend({}, chevron, {fillColor: '#FF0', strokeColor: '#FF0'});
   CM.lastMarker = new google.maps.Marker({
     position: CM.googleMap.getCenter(),
