@@ -67,8 +67,8 @@ window.processGpsPosition = function(position) {
   const distance = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, 
                                                                pos.lng, CM.lastPos.lng);
   console.log(['New position', pos, distance, distance < 0.05]);
-  if (distance < 0.05) {
-    if (CM.lastMarker) CM.lastMarker.setPosition(CM.googleMap.getCenter());
+  if (distance < 0.05 && CM.lastMarker) {
+    CM.lastMarker.setPosition(CM.googleMap.getCenter());
     return;
   }
   CM.lastPos = pos;
