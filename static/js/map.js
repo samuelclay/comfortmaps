@@ -4,8 +4,8 @@ window.initMap = function() {
   CM.googleMap = new google.maps.Map(document.getElementById('map'), {
     center: {lat: -34.397, lng: 150.644},
     zoom: 12,
-    disableDefaultUI: true,
-    gestureHandling: 'cooperative'
+    disableDefaultUI: false,
+    // gestureHandling: 'cooperative'
   });
 
   var bikeLayer = new google.maps.BicyclingLayer();
@@ -33,7 +33,7 @@ window.collectGps = function() {
 
 window.processGpsPosition = function(position) {
   CM.geolocation = position;
-  CM.seenLocations = CM.seenLocations || [];
+  CM.seenLocations = CM.seenLocations || {};
   CM.lastPos = CM.lastPos || {lat: 10, long: 10};
   
   var pos = {
@@ -51,7 +51,14 @@ window.processGpsPosition = function(position) {
   }, function(data) {
     for (var p in data.points) {
       var point = data.points[p];
-      console.log(['Point', point]);
+      
+      if (CM.seenLocations[point.lat] && CM.seenLocations[point.lat].includes(point.lng)) {
+        continue;
+      }
+      if (!CM.seenLocations[point.lat]) 
+        CM.seenLocations[point.lat] = [];
+      CM.seenLocations[point.lat].push(point.lng);
+      
       new google.maps.Marker({
         position: {lat: point.lat, lng: point.lng},
         label: ""+point.rating,
@@ -61,8 +68,6 @@ window.processGpsPosition = function(position) {
     }
   }, 'json');
 };
-
-window.collectGpsInterval = setInterval(window.collectGps, 5 * 1000);
 
 function resizeVh() {
   let vh = window.innerHeight * 0.01;

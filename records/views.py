@@ -41,7 +41,7 @@ def map(request):
 def snapshots_from_point(request):
     lat = float(request.POST['lat'])
     lng = float(request.POST['lng'])
-    print(f" ---> Snapshots near {lat},{lng}")
     locations = Snapshot.objects.filter(location__distance_lt=(Point(lat, lng), Distance(km=2)))
+    print(f" ---> Snapshots near {lat},{lng}: {locations.count()}")
     points = [dict(lat=l.location.x, lng=l.location.y, rating=l.rating, user=l.user.pk) for l in locations]
     return JsonResponse({'points': points})
