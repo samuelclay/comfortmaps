@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block style %}
+<style type="text/css">
+body {
+  background: #eee !important;
+  overflow: hidden;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="CM-map vh-100">
+  <div class="row flex-row vh-100">
+    <div class="CM-ratings col-sm-8 align-items-sm-stretch flex-fill my-auto vh-100" id="map"></div>
+    <div class="CM-map col-sm-4 align-items-sm-stretch flex-fill vh-100" id="desc">
+      
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+{% csrf_token %}
+<script type="text/javascript">
+// using jQuery
+window.csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+</script>
+
+<script src="{% static "js/map.js" %}"></script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap">
+</script>
+
+{% endblock %}

@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from .models import SnapshotRatingScale, Snapshot
 from django.conf import settings
 from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import Distance  
+from django.http import JsonResponse
 
 
 @login_required()
@@ -27,3 +29,19 @@ def record_snapshot(request):
                         location=Point(gps_lat, gps_long))
     snapshot.save()
     return HttpResponse("OK")
+    
+
+@login_required()
+def map(request):
+    return render(request, "records/map.html", {        
+        'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY
+    })
+
+@login_required()
+def snapshots_from_point(request):
+    lat = float(request.POST['lat'])
+    lng = float(request.POST['lng'])
+    print(f" ---> Snapshots near {lat},{lng}")
+    locations = Snapshot.objects.filter(location__distance_lt=(Point(lat, lng), Distance(km=2)))
+    points = [dict(lat=l.location.x, lng=l.location.y, rating=l.rating, user=l.user.pk) for l in locations]
+    return JsonResponse({'points': points})
