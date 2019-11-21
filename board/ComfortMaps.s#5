@@ -6192,7 +6192,7 @@ Source: &lt;a href="http://www.molex.com/webdocs/datasheets/pdf/en-us//054548227
 <sheets>
 <sheet>
 <plain>
-<text x="238.252" y="5.842" size="5.08" layer="94">11</text>
+<text x="238.252" y="5.842" size="5.08" layer="94">Rev 1</text>
 <text x="2.54" y="2.54" size="1.778" layer="94">Original wake-on-shake concept by
 Nitzan Gadish, Analog Devices</text>
 <text x="2.54" y="-2.54" size="1.778" layer="94">Originally designed by Mike Hord and 
@@ -7128,12 +7128,22 @@ revised by:Patrick Alberts</text>
 <wire x1="256.54" y1="139.7" x2="251.46" y2="139.7" width="0.1524" layer="91"/>
 <label x="251.46" y="139.7" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="1"/>
+<wire x1="302.26" y1="139.7" x2="307.34" y2="139.7" width="0.1524" layer="91"/>
+<label x="302.26" y="139.7" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI3" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="3"/>
 <wire x1="256.54" y1="137.16" x2="251.46" y2="137.16" width="0.1524" layer="91"/>
 <label x="251.46" y="137.16" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="3"/>
+<wire x1="302.26" y1="137.16" x2="307.34" y2="137.16" width="0.1524" layer="91"/>
+<label x="302.26" y="137.16" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI5" class="0">
@@ -7142,12 +7152,22 @@ revised by:Patrick Alberts</text>
 <wire x1="256.54" y1="134.62" x2="251.46" y2="134.62" width="0.1524" layer="91"/>
 <label x="251.46" y="134.62" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="5"/>
+<wire x1="302.26" y1="134.62" x2="307.34" y2="134.62" width="0.1524" layer="91"/>
+<label x="302.26" y="134.62" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI7" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="7"/>
 <wire x1="256.54" y1="132.08" x2="251.46" y2="132.08" width="0.1524" layer="91"/>
 <label x="251.46" y="132.08" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="7"/>
+<wire x1="302.26" y1="132.08" x2="307.34" y2="132.08" width="0.1524" layer="91"/>
+<label x="302.26" y="132.08" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI9" class="0">
@@ -7156,12 +7176,22 @@ revised by:Patrick Alberts</text>
 <wire x1="256.54" y1="129.54" x2="251.46" y2="129.54" width="0.1524" layer="91"/>
 <label x="251.46" y="129.54" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="9"/>
+<wire x1="302.26" y1="129.54" x2="307.34" y2="129.54" width="0.1524" layer="91"/>
+<label x="302.26" y="129.54" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI11" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="11"/>
 <wire x1="256.54" y1="127" x2="251.46" y2="127" width="0.1524" layer="91"/>
 <label x="251.46" y="127" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="11"/>
+<wire x1="302.26" y1="127" x2="307.34" y2="127" width="0.1524" layer="91"/>
+<label x="302.26" y="127" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI13" class="0">
@@ -7170,12 +7200,22 @@ revised by:Patrick Alberts</text>
 <wire x1="256.54" y1="124.46" x2="251.46" y2="124.46" width="0.1524" layer="91"/>
 <label x="251.46" y="124.46" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="13"/>
+<wire x1="302.26" y1="124.46" x2="307.34" y2="124.46" width="0.1524" layer="91"/>
+<label x="302.26" y="124.46" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI15" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="15"/>
 <wire x1="251.46" y1="121.92" x2="256.54" y2="121.92" width="0.1524" layer="91"/>
 <label x="251.46" y="121.92" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="15"/>
+<wire x1="302.26" y1="121.92" x2="307.34" y2="121.92" width="0.1524" layer="91"/>
+<label x="302.26" y="121.92" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI19" class="0">
@@ -7184,12 +7224,22 @@ revised by:Patrick Alberts</text>
 <wire x1="251.46" y1="116.84" x2="256.54" y2="116.84" width="0.1524" layer="91"/>
 <label x="251.46" y="116.84" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="19"/>
+<wire x1="302.26" y1="116.84" x2="307.34" y2="116.84" width="0.1524" layer="91"/>
+<label x="302.26" y="116.84" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI23" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="23"/>
 <wire x1="251.46" y1="111.76" x2="256.54" y2="111.76" width="0.1524" layer="91"/>
 <label x="251.46" y="111.76" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="23"/>
+<wire x1="302.26" y1="111.76" x2="307.34" y2="111.76" width="0.1524" layer="91"/>
+<label x="302.26" y="111.76" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI21" class="0">
@@ -7198,12 +7248,22 @@ revised by:Patrick Alberts</text>
 <wire x1="251.46" y1="114.3" x2="256.54" y2="114.3" width="0.1524" layer="91"/>
 <label x="251.46" y="114.3" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="21"/>
+<wire x1="302.26" y1="114.3" x2="307.34" y2="114.3" width="0.1524" layer="91"/>
+<label x="302.26" y="114.3" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI2" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="2"/>
 <wire x1="284.48" y1="139.7" x2="279.4" y2="139.7" width="0.1524" layer="91"/>
 <label x="284.48" y="139.7" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="2"/>
+<wire x1="335.28" y1="139.7" x2="330.2" y2="139.7" width="0.1524" layer="91"/>
+<label x="335.28" y="139.7" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI4" class="0">
@@ -7212,12 +7272,22 @@ revised by:Patrick Alberts</text>
 <wire x1="284.48" y1="137.16" x2="279.4" y2="137.16" width="0.1524" layer="91"/>
 <label x="284.48" y="137.16" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="4"/>
+<wire x1="335.28" y1="137.16" x2="330.2" y2="137.16" width="0.1524" layer="91"/>
+<label x="335.28" y="137.16" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI6" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="6"/>
 <wire x1="284.48" y1="134.62" x2="279.4" y2="134.62" width="0.1524" layer="91"/>
 <label x="284.48" y="134.62" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="6"/>
+<wire x1="335.28" y1="134.62" x2="330.2" y2="134.62" width="0.1524" layer="91"/>
+<label x="335.28" y="134.62" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI8" class="0">
@@ -7226,12 +7296,22 @@ revised by:Patrick Alberts</text>
 <wire x1="284.48" y1="132.08" x2="279.4" y2="132.08" width="0.1524" layer="91"/>
 <label x="284.48" y="132.08" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="8"/>
+<wire x1="335.28" y1="132.08" x2="330.2" y2="132.08" width="0.1524" layer="91"/>
+<label x="335.28" y="132.08" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI10" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="10"/>
 <wire x1="284.48" y1="129.54" x2="279.4" y2="129.54" width="0.1524" layer="91"/>
 <label x="284.48" y="129.54" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="10"/>
+<wire x1="335.28" y1="129.54" x2="330.2" y2="129.54" width="0.1524" layer="91"/>
+<label x="335.28" y="129.54" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI12" class="0">
@@ -7240,12 +7320,22 @@ revised by:Patrick Alberts</text>
 <wire x1="284.48" y1="127" x2="279.4" y2="127" width="0.1524" layer="91"/>
 <label x="284.48" y="127" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="12"/>
+<wire x1="335.28" y1="127" x2="330.2" y2="127" width="0.1524" layer="91"/>
+<label x="335.28" y="127" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI14" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="14"/>
 <wire x1="284.48" y1="124.46" x2="279.4" y2="124.46" width="0.1524" layer="91"/>
 <label x="284.48" y="124.46" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="14"/>
+<wire x1="335.28" y1="124.46" x2="330.2" y2="124.46" width="0.1524" layer="91"/>
+<label x="335.28" y="124.46" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI16" class="0">
@@ -7254,12 +7344,22 @@ revised by:Patrick Alberts</text>
 <wire x1="284.48" y1="121.92" x2="279.4" y2="121.92" width="0.1524" layer="91"/>
 <label x="284.48" y="121.92" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="16"/>
+<wire x1="335.28" y1="121.92" x2="330.2" y2="121.92" width="0.1524" layer="91"/>
+<label x="335.28" y="121.92" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI18" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="18"/>
 <wire x1="284.48" y1="119.38" x2="279.4" y2="119.38" width="0.1524" layer="91"/>
 <label x="284.48" y="119.38" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="18"/>
+<wire x1="335.28" y1="119.38" x2="330.2" y2="119.38" width="0.1524" layer="91"/>
+<label x="335.28" y="119.38" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI20" class="0">
@@ -7268,12 +7368,22 @@ revised by:Patrick Alberts</text>
 <wire x1="284.48" y1="116.84" x2="279.4" y2="116.84" width="0.1524" layer="91"/>
 <label x="284.48" y="116.84" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="20"/>
+<wire x1="335.28" y1="116.84" x2="330.2" y2="116.84" width="0.1524" layer="91"/>
+<label x="335.28" y="116.84" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="CSI22" class="0">
 <segment>
 <pinref part="J5" gate="G$1" pin="22"/>
 <wire x1="284.48" y1="114.3" x2="279.4" y2="114.3" width="0.1524" layer="91"/>
 <label x="284.48" y="114.3" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="22"/>
+<wire x1="335.28" y1="114.3" x2="330.2" y2="114.3" width="0.1524" layer="91"/>
+<label x="335.28" y="114.3" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="CSI24" class="0">
@@ -7282,169 +7392,6 @@ revised by:Patrick Alberts</text>
 <wire x1="284.48" y1="111.76" x2="279.4" y2="111.76" width="0.1524" layer="91"/>
 <label x="284.48" y="111.76" size="1.778" layer="95"/>
 </segment>
-</net>
-<net name="N$38" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="1"/>
-<wire x1="302.26" y1="139.7" x2="307.34" y2="139.7" width="0.1524" layer="91"/>
-<label x="302.26" y="139.7" size="1.778" layer="95"/>
-<label x="302.26" y="137.16" size="1.778" layer="95"/>
-<label x="302.26" y="134.62" size="1.778" layer="95"/>
-<label x="302.26" y="132.08" size="1.778" layer="95"/>
-<label x="302.26" y="129.54" size="1.778" layer="95"/>
-<label x="302.26" y="127" size="1.778" layer="95"/>
-<label x="302.26" y="124.46" size="1.778" layer="95"/>
-<label x="302.26" y="121.92" size="1.778" layer="95"/>
-<label x="302.26" y="119.38" size="1.778" layer="95"/>
-<label x="302.26" y="116.84" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$39" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="3"/>
-<wire x1="302.26" y1="137.16" x2="307.34" y2="137.16" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$40" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="5"/>
-<wire x1="302.26" y1="134.62" x2="307.34" y2="134.62" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$41" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="7"/>
-<wire x1="302.26" y1="132.08" x2="307.34" y2="132.08" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$42" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="9"/>
-<wire x1="302.26" y1="129.54" x2="307.34" y2="129.54" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$43" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="11"/>
-<wire x1="302.26" y1="127" x2="307.34" y2="127" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$44" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="13"/>
-<wire x1="302.26" y1="124.46" x2="307.34" y2="124.46" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$45" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="15"/>
-<wire x1="302.26" y1="121.92" x2="307.34" y2="121.92" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$46" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="17"/>
-<wire x1="302.26" y1="119.38" x2="307.34" y2="119.38" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$47" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="19"/>
-<wire x1="302.26" y1="116.84" x2="307.34" y2="116.84" width="0.1524" layer="91"/>
-<label x="302.26" y="114.3" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$48" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="21"/>
-<wire x1="302.26" y1="114.3" x2="307.34" y2="114.3" width="0.1524" layer="91"/>
-</segment>
-</net>
-<net name="N$49" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="23"/>
-<wire x1="302.26" y1="111.76" x2="307.34" y2="111.76" width="0.1524" layer="91"/>
-<label x="302.26" y="111.76" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$50" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="2"/>
-<wire x1="335.28" y1="139.7" x2="330.2" y2="139.7" width="0.1524" layer="91"/>
-<label x="335.28" y="139.7" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$51" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="4"/>
-<wire x1="335.28" y1="137.16" x2="330.2" y2="137.16" width="0.1524" layer="91"/>
-<label x="335.28" y="137.16" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$52" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="6"/>
-<wire x1="335.28" y1="134.62" x2="330.2" y2="134.62" width="0.1524" layer="91"/>
-<label x="335.28" y="134.62" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$53" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="8"/>
-<wire x1="335.28" y1="132.08" x2="330.2" y2="132.08" width="0.1524" layer="91"/>
-<label x="335.28" y="132.08" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$54" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="10"/>
-<wire x1="335.28" y1="129.54" x2="330.2" y2="129.54" width="0.1524" layer="91"/>
-<label x="335.28" y="129.54" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$55" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="12"/>
-<wire x1="335.28" y1="127" x2="330.2" y2="127" width="0.1524" layer="91"/>
-<label x="335.28" y="127" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$56" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="16"/>
-<wire x1="335.28" y1="121.92" x2="330.2" y2="121.92" width="0.1524" layer="91"/>
-<label x="335.28" y="121.92" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$57" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="14"/>
-<wire x1="335.28" y1="124.46" x2="330.2" y2="124.46" width="0.1524" layer="91"/>
-<label x="335.28" y="124.46" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$58" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="18"/>
-<wire x1="335.28" y1="119.38" x2="330.2" y2="119.38" width="0.1524" layer="91"/>
-<label x="335.28" y="119.38" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$59" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="20"/>
-<wire x1="335.28" y1="116.84" x2="330.2" y2="116.84" width="0.1524" layer="91"/>
-<label x="335.28" y="116.84" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$60" class="0">
-<segment>
-<pinref part="J6" gate="G$1" pin="22"/>
-<wire x1="335.28" y1="114.3" x2="330.2" y2="114.3" width="0.1524" layer="91"/>
-<label x="335.28" y="114.3" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$61" class="0">
 <segment>
 <pinref part="J6" gate="G$1" pin="24"/>
 <wire x1="335.28" y1="111.76" x2="330.2" y2="111.76" width="0.1524" layer="91"/>
@@ -7456,6 +7403,11 @@ revised by:Patrick Alberts</text>
 <pinref part="J5" gate="G$1" pin="17"/>
 <wire x1="256.54" y1="119.38" x2="251.46" y2="119.38" width="0.1524" layer="91"/>
 <label x="251.46" y="119.38" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="J6" gate="G$1" pin="17"/>
+<wire x1="302.26" y1="119.38" x2="307.34" y2="119.38" width="0.1524" layer="91"/>
+<label x="302.26" y="119.38" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
