@@ -1,0 +1,691 @@
+Archive member included because of file (symbol)
+
+/usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+                              ui.o (__mulhi3)
+/usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+                              serial.o (__udivmodhi4)
+/usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+                              /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o (exit)
+/usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+                              wake-on-shake.o (__do_copy_data)
+/usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                              wake-on-shake.o (__do_clear_bss)
+
+Allocating common symbols
+Common symbol       size              file
+
+t1Offset            0x2               wake-on-shake.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00002000         xr
+data             0x00800060         0x0000ffa0         rw !x
+eeprom           0x00810000         0x00010000         rw !x
+fuse             0x00820000         0x00000400         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+user_signatures  0x00850000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+LOAD wake-on-shake.o
+LOAD ui.o
+LOAD serial.o
+LOAD interrupts.o
+LOAD ADXL362.o
+LOAD eeprom.o
+LOAD spi.o
+LOAD /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/libm.a
+START GROUP
+LOAD /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a
+LOAD /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/libm.a
+LOAD /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/libc.a
+END GROUP
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000      0x6c4
+ *(.vectors)
+ .vectors       0x00000000       0x2a /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+                0x00000000                __vectors
+                0x00000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+                0x0000002a                . = ALIGN (0x2)
+                0x0000002a                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000002a        0x0 linker stubs
+ *(.trampolines*)
+                0x0000002a                __trampolines_end = .
+ *(.progmem*)
+                0x0000002a                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000002a                __ctors_start = .
+ *(.ctors)
+                0x0000002a                __ctors_end = .
+                0x0000002a                __dtors_start = .
+ *(.dtors)
+                0x0000002a                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000002a        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+                0x0000002a                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000002a        0x8 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000032       0x16 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+                0x00000032                __do_copy_data
+ .init4         0x00000048       0x10 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                0x00000048                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x00000058        0x4 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+ *(.init9)
+ *(.text)
+ .text          0x0000005c        0x2 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+                0x0000005c                __vector_20
+                0x0000005c                __bad_interrupt
+                0x0000005c                __vector_6
+                0x0000005c                __vector_3
+                0x0000005c                __vector_11
+                0x0000005c                __vector_13
+                0x0000005c                __vector_17
+                0x0000005c                __vector_19
+                0x0000005c                __vector_7
+                0x0000005c                __vector_4
+                0x0000005c                __vector_9
+                0x0000005c                __vector_15
+                0x0000005c                __vector_8
+                0x0000005c                __vector_14
+                0x0000005c                __vector_10
+                0x0000005c                __vector_16
+                0x0000005c                __vector_18
+                0x0000005c                __vector_12
+ .text          0x0000005e       0x62 wake-on-shake.o
+                0x0000005e                EEPROMRetrieve
+                0x0000008a                EEPROMConfig
+ .text          0x000000c0      0x2a2 ui.o
+                0x000000c0                printMenu
+                0x000000c6                abortInput
+                0x000000cc                serialParse
+ .text          0x00000362       0xc2 serial.o
+                0x00000362                serialWriteChar
+                0x0000036c                serialNewline
+                0x00000374                serialWrite
+                0x0000038a                serialWriteInt
+ .text          0x00000424       0xa8 interrupts.o
+                0x00000424                __vector_5
+                0x00000442                __vector_1
+                0x00000470                __vector_2
+                0x0000049e                USART_RX_vect
+ .text          0x000004cc       0x96 ADXL362.o
+                0x000004cc                ADXLReadByte
+                0x000004e6                ADXLWriteByte
+                0x00000514                ADXLConfig
+ .text          0x00000562       0x66 eeprom.o
+                0x00000562                EEPROMWriteByte
+                0x00000576                EEPROMWriteWord
+                0x0000058e                EEPROMReadByte
+                0x000005a2                EEPROMReadWord
+ .text          0x000005c8       0x14 spi.o
+                0x000005c8                spiXfer
+ .text          0x000005dc        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text          0x000005dc        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text          0x000005dc        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text          0x000005dc        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text          0x000005dc        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                0x000005dc                . = ALIGN (0x2)
+ *(.text.*)
+ .text.startup  0x000005dc       0x9a wake-on-shake.o
+                0x000005dc                main
+ .text.libgcc.mul
+                0x00000676       0x22 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+                0x00000676                __mulhi3
+ .text.libgcc.div
+                0x00000698        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc   0x00000698        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.prologue
+                0x00000698        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.builtins
+                0x00000698        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.fmul
+                0x00000698        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.fixed
+                0x00000698        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.mul
+                0x00000698        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.div
+                0x00000698       0x28 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+                0x00000698                __udivmodhi4
+ .text.libgcc   0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.mul
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc   0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc   0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                0x000006c0                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x000006c0        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+                0x000006c0                exit
+                0x000006c0                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x000006c0        0x4 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ *(.fini0)
+                0x000006c4                _etext = .
+
+.data           0x00800060        0xc load address 0x000006c4
+                0x00800060                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x00800060        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+ .data          0x00800060        0x0 wake-on-shake.o
+ .data          0x00800060        0x1 ui.o
+ .data          0x00800061        0x0 serial.o
+ .data          0x00800061        0x0 interrupts.o
+ .data          0x00800061        0x0 ADXL362.o
+ .data          0x00800061        0x0 eeprom.o
+ .data          0x00800061        0x0 spi.o
+ .data          0x00800061        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .data          0x00800061        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .data          0x00800061        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .data          0x00800061        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .data          0x00800061        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ *(.data*)
+ *(.rodata)
+ *(.rodata*)
+ .rodata.str1.1
+                0x00800061        0x2 wake-on-shake.o
+ .rodata.str1.1
+                0x00800063        0x8 ui.o
+ *(.gnu.linkonce.d*)
+                0x0080006c                . = ALIGN (0x2)
+ *fill*         0x0080006b        0x1 
+                0x0080006c                _edata = .
+                0x0080006c                PROVIDE (__data_end, .)
+
+.bss            0x0080006c        0x7
+                0x0080006c                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x0080006c        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+ .bss           0x0080006c        0x2 wake-on-shake.o
+                0x0080006c                serialRxData
+                0x0080006d                sleepyTime
+ .bss           0x0080006e        0x3 ui.o
+ .bss           0x00800071        0x0 serial.o
+ .bss           0x00800071        0x0 interrupts.o
+ .bss           0x00800071        0x0 ADXL362.o
+ .bss           0x00800071        0x0 eeprom.o
+ .bss           0x00800071        0x0 spi.o
+ .bss           0x00800071        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .bss           0x00800071        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .bss           0x00800071        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .bss           0x00800071        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .bss           0x00800071        0x0 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x00800071        0x2 wake-on-shake.o
+                0x00800071                t1Offset
+                0x00800073                PROVIDE (__bss_end, .)
+                0x000006c4                __data_load_start = LOADADDR (.data)
+                0x000006d0                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00800073        0x0
+                0x00800073                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x00800073                PROVIDE (__noinit_end, .)
+                0x00800073                _end = .
+                0x00800073                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x11
+ *(.comment)
+ .comment       0x00000000       0x11 wake-on-shake.o
+                                 0x12 (size before relaxing)
+ .comment       0x00000000       0x12 ui.o
+ .comment       0x00000000       0x12 serial.o
+ .comment       0x00000000       0x12 interrupts.o
+ .comment       0x00000000       0x12 ADXL362.o
+ .comment       0x00000000       0x12 eeprom.o
+ .comment       0x00000000       0x12 spi.o
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x188
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x28 wake-on-shake.o
+ .debug_aranges
+                0x00000028       0x20 ui.o
+ .debug_aranges
+                0x00000048       0x20 serial.o
+ .debug_aranges
+                0x00000068       0x20 interrupts.o
+ .debug_aranges
+                0x00000088       0x20 ADXL362.o
+ .debug_aranges
+                0x000000a8       0x20 eeprom.o
+ .debug_aranges
+                0x000000c8       0x20 spi.o
+ .debug_aranges
+                0x000000e8       0x20 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_aranges
+                0x00000108       0x20 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_aranges
+                0x00000128       0x20 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_aranges
+                0x00000148       0x20 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_aranges
+                0x00000168       0x20 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0x113e
+ *(.debug_info)
+ .debug_info    0x00000000      0x310 wake-on-shake.o
+ .debug_info    0x00000310      0x26e ui.o
+ .debug_info    0x0000057e      0x1e2 serial.o
+ .debug_info    0x00000760       0xf8 interrupts.o
+ .debug_info    0x00000858      0x2b2 ADXL362.o
+ .debug_info    0x00000b0a      0x1a0 eeprom.o
+ .debug_info    0x00000caa       0x93 spi.o
+ .debug_info    0x00000d3d       0xcd /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_info    0x00000e0a       0xcd /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_info    0x00000ed7       0xcd /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_info    0x00000fa4       0xcd /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_info    0x00001071       0xcd /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev   0x00000000      0x689
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000      0x139 wake-on-shake.o
+ .debug_abbrev  0x00000139      0x11d ui.o
+ .debug_abbrev  0x00000256       0xf9 serial.o
+ .debug_abbrev  0x0000034f       0x67 interrupts.o
+ .debug_abbrev  0x000003b6      0x102 ADXL362.o
+ .debug_abbrev  0x000004b8      0x10d eeprom.o
+ .debug_abbrev  0x000005c5       0x60 spi.o
+ .debug_abbrev  0x00000625       0x14 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_abbrev  0x00000639       0x14 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_abbrev  0x0000064d       0x14 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_abbrev  0x00000661       0x14 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_abbrev  0x00000675       0x14 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_line     0x00000000      0x701
+ *(.debug_line)
+ .debug_line    0x00000000       0xf9 wake-on-shake.o
+ .debug_line    0x000000f9      0x147 ui.o
+ .debug_line    0x00000240       0x9b serial.o
+ .debug_line    0x000002db       0x83 interrupts.o
+ .debug_line    0x0000035e       0x9e ADXL362.o
+ .debug_line    0x000003fc       0x97 eeprom.o
+ .debug_line    0x00000493       0x77 spi.o
+ .debug_line    0x0000050a       0x6a /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_line    0x00000574       0x6d /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_line    0x000005e1       0x5b /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_line    0x0000063c       0x64 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_line    0x000006a0       0x61 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_frame    0x00000000      0x2c0
+ *(.debug_frame)
+ .debug_frame   0x00000000       0x50 wake-on-shake.o
+ .debug_frame   0x00000050       0x44 ui.o
+ .debug_frame   0x00000094       0x80 serial.o
+ .debug_frame   0x00000114       0xb0 interrupts.o
+ .debug_frame   0x000001c4       0x64 ADXL362.o
+ .debug_frame   0x00000228       0x74 eeprom.o
+ .debug_frame   0x0000029c       0x24 spi.o
+
+.debug_str      0x00000000      0x2db
+ *(.debug_str)
+ .debug_str     0x00000000      0x1c3 wake-on-shake.o
+                                0x1fc (size before relaxing)
+ .debug_str     0x000001c3       0x6c ui.o
+                                0x208 (size before relaxing)
+ .debug_str     0x0000022f       0x36 serial.o
+                                0x187 (size before relaxing)
+ .debug_str     0x00000265       0x3c interrupts.o
+                                0x17e (size before relaxing)
+ .debug_str     0x000002a1       0x17 ADXL362.o
+                                0x169 (size before relaxing)
+ .debug_str     0x000002b8       0x1d eeprom.o
+                                0x186 (size before relaxing)
+ .debug_str     0x000002d5        0x6 spi.o
+                                0x12b (size before relaxing)
+
+.debug_loc      0x00000000      0x667
+ *(.debug_loc)
+ .debug_loc     0x00000000       0x57 wake-on-shake.o
+ .debug_loc     0x00000057       0x60 ui.o
+ .debug_loc     0x000000b7      0x24a serial.o
+ .debug_loc     0x00000301      0x117 interrupts.o
+ .debug_loc     0x00000418       0xed ADXL362.o
+ .debug_loc     0x00000505      0x141 eeprom.o
+ .debug_loc     0x00000646       0x21 spi.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x00000000       0x18
+ *(.debug_ranges)
+ .debug_ranges  0x00000000       0x18 wake-on-shake.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(wake-on-shake.elf elf32-avr)
+LOAD linker stubs
+
+Cross Reference Table
+
+Symbol                                            File
+ADXLConfig                                        ADXL362.o
+                                                  wake-on-shake.o
+ADXLReadByte                                      ADXL362.o
+                                                  ui.o
+ADXLWriteByte                                     ADXL362.o
+                                                  ui.o
+EEPROMConfig                                      wake-on-shake.o
+EEPROMReadByte                                    eeprom.o
+                                                  ADXL362.o
+                                                  ui.o
+                                                  wake-on-shake.o
+EEPROMReadWord                                    eeprom.o
+                                                  wake-on-shake.o
+EEPROMRetrieve                                    wake-on-shake.o
+EEPROMWriteByte                                   eeprom.o
+                                                  ui.o
+                                                  wake-on-shake.o
+EEPROMWriteWord                                   eeprom.o
+                                                  ui.o
+                                                  wake-on-shake.o
+USART_RX_vect                                     interrupts.o
+__bad_interrupt                                   /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__bss_end                                         /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+__bss_start                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+__data_end                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+__data_load_start                                 /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+__data_start                                      /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+__do_clear_bss                                    /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                                                  ui.o
+                                                  wake-on-shake.o
+__do_copy_data                                    /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_copy_data.o)
+                                                  ui.o
+                                                  wake-on-shake.o
+__heap_end                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__init                                            /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__mulhi3                                          /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+                                                  serial.o
+                                                  ui.o
+__stack                                           /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__udivmodhi4                                      /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+                                                  serial.o
+__vector_1                                        interrupts.o
+                                                  /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_10                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_11                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_12                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_13                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_14                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_15                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_16                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_17                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_18                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_19                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_2                                        interrupts.o
+                                                  /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_20                                       /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_3                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_4                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_5                                        interrupts.o
+                                                  /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_6                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_7                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_8                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_9                                        /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vector_default                                  /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+__vectors                                         /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+_exit                                             /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+abortInput                                        ui.o
+exit                                              /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/avr25/tiny-stack/libgcc.a(_exit.o)
+                                                  /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+main                                              wake-on-shake.o
+                                                  /usr/local/CrossPack-AVR-20131216/lib/gcc/avr/4.8.1/../../../../avr/lib/avr25/tiny-stack/crttn2313a.o
+printMenu                                         ui.o
+                                                  wake-on-shake.o
+serialNewline                                     serial.o
+serialParse                                       ui.o
+                                                  wake-on-shake.o
+serialRxData                                      wake-on-shake.o
+                                                  interrupts.o
+                                                  ui.o
+serialWrite                                       serial.o
+                                                  ui.o
+                                                  wake-on-shake.o
+serialWriteChar                                   serial.o
+                                                  ui.o
+serialWriteInt                                    serial.o
+                                                  ui.o
+                                                  wake-on-shake.o
+sleepyTime                                        wake-on-shake.o
+                                                  interrupts.o
+spiXfer                                           spi.o
+                                                  ADXL362.o
+t1Offset                                          interrupts.o
+                                                  ui.o
+                                                  wake-on-shake.o

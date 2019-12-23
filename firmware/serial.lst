@@ -1,0 +1,345 @@
+   1               		.file	"serial.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.text
+   7               	.Ltext0:
+   8               		.cfi_sections	.debug_frame
+   9               	.global	serialWriteChar
+  11               	serialWriteChar:
+  12               	.LFB1:
+  13               		.file 1 "serial.c"
+   1:serial.c      **** /******************************************************************************
+   2:serial.c      **** Created 26 Nov 2012 by Mike Hord at SparkFun Electronics.
+   3:serial.c      **** Wake-on-Shake hardware and firmware are released under the Creative Commons 
+   4:serial.c      **** Share Alike v3.0 license:
+   5:serial.c      **** 	http://creativecommons.org/licenses/by-sa/3.0/
+   6:serial.c      **** Feel free to use, distribute, and sell variants of Wake-on-Shake. All we ask 
+   7:serial.c      **** is that you include attribution of 'Based on Wake-on-Shake by SparkFun'.
+   8:serial.c      **** 
+   9:serial.c      **** serial.cpp
+  10:serial.c      **** Function implementation for serial write handling.
+  11:serial.c      **** ******************************************************************************/
+  12:serial.c      **** 
+  13:serial.c      **** #include <avr/io.h>
+  14:serial.c      **** #include <stdio.h>
+  15:serial.c      **** #include "serial.h"
+  16:serial.c      **** 
+  17:serial.c      **** // Print a single character out to the serial port. Blocks until write has
+  18:serial.c      **** //   completed- is that a mistake?
+  19:serial.c      **** void serialWriteChar(char data)
+  20:serial.c      **** {
+  14               		.loc 1 20 0
+  15               		.cfi_startproc
+  16               	.LVL0:
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+  21:serial.c      **** 	UDR = data;
+  21               		.loc 1 21 0
+  22 0000 8CB9      		out 0xc,r24
+  23               	.L3:
+  22:serial.c      **** 	while ((UCSRA & (1<<TXC))==0){}   // Wait for the transmit to finish.
+  24               		.loc 1 22 0 discriminator 1
+  25 0002 5E9B      		sbis 0xb,6
+  26 0004 00C0      		rjmp .L3
+  23:serial.c      **** 	UCSRA |= (1<<TXC);				// Clear the "transmit complete" flag.
+  27               		.loc 1 23 0
+  28 0006 5E9A      		sbi 0xb,6
+  29 0008 0895      		ret
+  30               		.cfi_endproc
+  31               	.LFE1:
+  33               	.global	serialNewline
+  35               	serialNewline:
+  36               	.LFB4:
+  24:serial.c      **** }
+  25:serial.c      **** 
+  26:serial.c      **** // serialWrite() takes a pointer to a string and iterates over that string
+  27:serial.c      **** //   until it finds the C end-of-string character ('\0'). It's a blocking
+  28:serial.c      **** //   operation and does not return until the print operation is completed.
+  29:serial.c      **** void serialWrite(char* data)
+  30:serial.c      **** {
+  31:serial.c      **** 	do
+  32:serial.c      **** 	{
+  33:serial.c      **** 		serialWriteChar((char)*data);   // Print the first character.
+  34:serial.c      **** 		data++;							// Increment the pointer.
+  35:serial.c      **** 	} while (*data != '\0');			// Check for the end of the string.
+  36:serial.c      **** 	serialNewline();
+  37:serial.c      **** }
+  38:serial.c      **** 
+  39:serial.c      **** // Convert a 16-bit unsigned value into ASCII characters and dump it out
+  40:serial.c      **** //   to the serial port.
+  41:serial.c      **** void serialWriteInt(unsigned int data)
+  42:serial.c      **** {	
+  43:serial.c      **** 	uint8_t tenth = 0;
+  44:serial.c      **** 	uint8_t thou = 0;
+  45:serial.c      **** 	uint8_t huns = 0;
+  46:serial.c      **** 	uint8_t tens = 0;
+  47:serial.c      **** 	uint8_t ones = 0;
+  48:serial.c      **** 	// This is an awkward shifting/dividing method of isolating the individual
+  49:serial.c      **** 	//   digits of the number. I'm sure there's a better way, but done is.
+  50:serial.c      **** 	tenth = (data/10000);
+  51:serial.c      **** 	data -= tenth*10000;
+  52:serial.c      **** 	thou = (uint8_t)(data/1000);
+  53:serial.c      **** 	data -= (uint16_t)thou*1000;
+  54:serial.c      **** 	huns = (uint8_t)(data/100);
+  55:serial.c      **** 	data -= (uint16_t)huns*100;
+  56:serial.c      **** 	tens = (uint8_t)(data/10);
+  57:serial.c      **** 	ones = (uint8_t)(data%10);
+  58:serial.c      **** 	
+  59:serial.c      **** 	tenth += 48;
+  60:serial.c      **** 	thou += 48;
+  61:serial.c      **** 	huns += 48;
+  62:serial.c      **** 	tens += 48;
+  63:serial.c      **** 	ones += 48;
+  64:serial.c      **** 	// Write the individual digits out, followed by a line feed and CR.
+  65:serial.c      **** 	serialWriteChar(tenth);
+  66:serial.c      **** 	serialWriteChar(thou);
+  67:serial.c      **** 	serialWriteChar(huns);
+  68:serial.c      **** 	serialWriteChar(tens);
+  69:serial.c      **** 	serialWriteChar(ones);
+  70:serial.c      **** 	serialNewline();
+  71:serial.c      **** }
+  72:serial.c      **** 
+  73:serial.c      **** void serialNewline(void)
+  74:serial.c      **** {
+  37               		.loc 1 74 0
+  38               		.cfi_startproc
+  39               	/* prologue: function */
+  40               	/* frame size = 0 */
+  41               	/* stack size = 0 */
+  42               	.L__stack_usage = 0
+  75:serial.c      **** 	serialWriteChar((char)'\n');
+  43               		.loc 1 75 0
+  44 000a 8AE0      		ldi r24,lo8(10)
+  45 000c 00D0      		rcall serialWriteChar
+  46               	.LVL1:
+  76:serial.c      **** 	serialWriteChar((char)'\r');
+  47               		.loc 1 76 0
+  48 000e 8DE0      		ldi r24,lo8(13)
+  49 0010 00C0      		rjmp serialWriteChar
+  50               	.LVL2:
+  51               		.cfi_endproc
+  52               	.LFE4:
+  54               	.global	serialWrite
+  56               	serialWrite:
+  57               	.LFB2:
+  30:serial.c      **** {
+  58               		.loc 1 30 0
+  59               		.cfi_startproc
+  60               	.LVL3:
+  61 0012 CF93      		push r28
+  62               	.LCFI0:
+  63               		.cfi_def_cfa_offset 3
+  64               		.cfi_offset 28, -2
+  65 0014 DF93      		push r29
+  66               	.LCFI1:
+  67               		.cfi_def_cfa_offset 4
+  68               		.cfi_offset 29, -3
+  69               	/* prologue: function */
+  70               	/* frame size = 0 */
+  71               	/* stack size = 2 */
+  72               	.L__stack_usage = 2
+  73 0016 EC01      		movw r28,r24
+  74               	.LVL4:
+  75               	.L8:
+  33:serial.c      **** 		serialWriteChar((char)*data);   // Print the first character.
+  76               		.loc 1 33 0 discriminator 1
+  77 0018 8991      		ld r24,Y+
+  78               	.LVL5:
+  79 001a 00D0      		rcall serialWriteChar
+  80               	.LVL6:
+  35:serial.c      **** 	} while (*data != '\0');			// Check for the end of the string.
+  81               		.loc 1 35 0 discriminator 1
+  82 001c 8881      		ld r24,Y
+  83 001e 8111      		cpse r24,__zero_reg__
+  84 0020 00C0      		rjmp .L8
+  85               	/* epilogue start */
+  37:serial.c      **** }
+  86               		.loc 1 37 0
+  87 0022 DF91      		pop r29
+  88 0024 CF91      		pop r28
+  89               	.LVL7:
+  36:serial.c      **** 	serialNewline();
+  90               		.loc 1 36 0
+  91 0026 00C0      		rjmp serialNewline
+  92               	.LVL8:
+  93               		.cfi_endproc
+  94               	.LFE2:
+  96               	.global	serialWriteInt
+  98               	serialWriteInt:
+  99               	.LFB3:
+  42:serial.c      **** {	
+ 100               		.loc 1 42 0
+ 101               		.cfi_startproc
+ 102               	.LVL9:
+ 103 0028 0F93      		push r16
+ 104               	.LCFI2:
+ 105               		.cfi_def_cfa_offset 3
+ 106               		.cfi_offset 16, -2
+ 107 002a 1F93      		push r17
+ 108               	.LCFI3:
+ 109               		.cfi_def_cfa_offset 4
+ 110               		.cfi_offset 17, -3
+ 111 002c CF93      		push r28
+ 112               	.LCFI4:
+ 113               		.cfi_def_cfa_offset 5
+ 114               		.cfi_offset 28, -4
+ 115 002e DF93      		push r29
+ 116               	.LCFI5:
+ 117               		.cfi_def_cfa_offset 6
+ 118               		.cfi_offset 29, -5
+ 119 0030 CDB7      		in r28,__SP_L__
+ 120 0032 DD27      		clr r29
+ 121               	.LCFI6:
+ 122               		.cfi_def_cfa_register 28
+ 123 0034 C350      		subi r28,lo8(-(-3))
+ 124               	.LCFI7:
+ 125               		.cfi_def_cfa_offset 9
+ 126 0036 CDBF      		out __SP_L__,r28
+ 127               	/* prologue: function */
+ 128               	/* frame size = 3 */
+ 129               	/* stack size = 7 */
+ 130               	.L__stack_usage = 7
+ 131 0038 9C01      		movw r18,r24
+ 132               	.LVL10:
+  50:serial.c      **** 	tenth = (data/10000);
+ 133               		.loc 1 50 0
+ 134 003a 60E1      		ldi r22,lo8(16)
+ 135 003c 77E2      		ldi r23,lo8(39)
+ 136 003e 00D0      		rcall __udivmodhi4
+ 137               	.LVL11:
+ 138 0040 E62F      		mov r30,r22
+ 139 0042 972F      		mov r25,r23
+ 140               	.LVL12:
+  51:serial.c      **** 	data -= tenth*10000;
+ 141               		.loc 1 51 0
+ 142 0044 862F      		mov r24,r22
+ 143 0046 60EF      		ldi r22,lo8(-16)
+ 144 0048 78ED      		ldi r23,lo8(-40)
+ 145               	.LVL13:
+ 146 004a 00D0      		rcall __mulhi3
+ 147               	.LVL14:
+ 148 004c 280F      		add r18,r24
+ 149 004e 391F      		adc r19,r25
+ 150               	.LVL15:
+  52:serial.c      **** 	thou = (uint8_t)(data/1000);
+ 151               		.loc 1 52 0
+ 152 0050 C901      		movw r24,r18
+ 153 0052 68EE      		ldi r22,lo8(-24)
+ 154 0054 73E0      		ldi r23,lo8(3)
+ 155 0056 00D0      		rcall __udivmodhi4
+ 156 0058 162F      		mov r17,r22
+ 157 005a 972F      		mov r25,r23
+ 158               	.LVL16:
+  53:serial.c      **** 	data -= (uint16_t)thou*1000;
+ 159               		.loc 1 53 0
+ 160 005c 862F      		mov r24,r22
+ 161 005e 68EE      		ldi r22,lo8(-24)
+ 162 0060 73E0      		ldi r23,lo8(3)
+ 163 0062 00D0      		rcall __mulhi3
+ 164 0064 281B      		sub r18,r24
+ 165 0066 390B      		sbc r19,r25
+ 166               	.LVL17:
+  54:serial.c      **** 	huns = (uint8_t)(data/100);
+ 167               		.loc 1 54 0
+ 168 0068 C901      		movw r24,r18
+ 169 006a 64E6      		ldi r22,lo8(100)
+ 170 006c 70E0      		ldi r23,0
+ 171 006e 00D0      		rcall __udivmodhi4
+ 172 0070 AB01      		movw r20,r22
+ 173               	.LVL18:
+  55:serial.c      **** 	data -= (uint16_t)huns*100;
+ 174               		.loc 1 55 0
+ 175 0072 CB01      		movw r24,r22
+ 176 0074 9927      		clr r25
+ 177 0076 64E6      		ldi r22,lo8(100)
+ 178 0078 70E0      		ldi r23,0
+ 179 007a 00D0      		rcall __mulhi3
+ 180 007c B901      		movw r22,r18
+ 181 007e 681B      		sub r22,r24
+ 182 0080 790B      		sbc r23,r25
+ 183 0082 CB01      		movw r24,r22
+ 184               	.LVL19:
+  56:serial.c      **** 	tens = (uint8_t)(data/10);
+ 185               		.loc 1 56 0
+ 186 0084 6AE0      		ldi r22,lo8(10)
+ 187 0086 70E0      		ldi r23,0
+ 188               	.LVL20:
+ 189 0088 00D0      		rcall __udivmodhi4
+ 190               	.LVL21:
+ 191 008a 082F      		mov r16,r24
+ 192               	.LVL22:
+  65:serial.c      **** 	serialWriteChar(tenth);
+ 193               		.loc 1 65 0
+ 194 008c 80E3      		ldi r24,lo8(48)
+ 195 008e 8E0F      		add r24,r30
+ 196               	.LVL23:
+ 197 0090 4983      		std Y+1,r20
+ 198 0092 5A83      		std Y+2,r21
+ 199 0094 6B83      		std Y+3,r22
+ 200 0096 00D0      		rcall serialWriteChar
+ 201               	.LVL24:
+  66:serial.c      **** 	serialWriteChar(thou);
+ 202               		.loc 1 66 0
+ 203 0098 80E3      		ldi r24,lo8(48)
+ 204 009a 810F      		add r24,r17
+ 205               	.LVL25:
+ 206 009c 00D0      		rcall serialWriteChar
+ 207               	.LVL26:
+  67:serial.c      **** 	serialWriteChar(huns);
+ 208               		.loc 1 67 0
+ 209 009e 4981      		ldd r20,Y+1
+ 210 00a0 80E3      		ldi r24,lo8(48)
+ 211 00a2 840F      		add r24,r20
+ 212 00a4 00D0      		rcall serialWriteChar
+ 213               	.LVL27:
+  68:serial.c      **** 	serialWriteChar(tens);
+ 214               		.loc 1 68 0
+ 215 00a6 6B81      		ldd r22,Y+3
+ 216 00a8 80E3      		ldi r24,lo8(48)
+ 217 00aa 860F      		add r24,r22
+ 218 00ac 00D0      		rcall serialWriteChar
+ 219               	.LVL28:
+  69:serial.c      **** 	serialWriteChar(ones);
+ 220               		.loc 1 69 0
+ 221 00ae 80E3      		ldi r24,lo8(48)
+ 222 00b0 800F      		add r24,r16
+ 223               	.LVL29:
+ 224 00b2 00D0      		rcall serialWriteChar
+ 225               	.LVL30:
+ 226               	/* epilogue start */
+  71:serial.c      **** }
+ 227               		.loc 1 71 0
+ 228 00b4 CD5F      		subi r28,lo8(-(3))
+ 229 00b6 CDBF      		out __SP_L__,r28
+ 230 00b8 DF91      		pop r29
+ 231 00ba CF91      		pop r28
+ 232 00bc 1F91      		pop r17
+ 233               	.LVL31:
+ 234 00be 0F91      		pop r16
+ 235               	.LVL32:
+  70:serial.c      **** 	serialNewline();
+ 236               		.loc 1 70 0
+ 237 00c0 00C0      		rjmp serialNewline
+ 238               	.LVL33:
+ 239               		.cfi_endproc
+ 240               	.LFE3:
+ 242               	.Letext0:
+ 243               		.file 2 "/usr/local/CrossPack-AVR-20131216/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 serial.c
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:2      *ABS*:0000003d __SP_L__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:3      *ABS*:0000003f __SREG__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:4      *ABS*:00000000 __tmp_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:5      *ABS*:00000001 __zero_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:11     .text:00000000 serialWriteChar
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:35     .text:0000000a serialNewline
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:56     .text:00000012 serialWrite
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccRkGyXZ.s:98     .text:00000028 serialWriteInt
+
+UNDEFINED SYMBOLS
+__udivmodhi4
+__mulhi3

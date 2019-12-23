@@ -204,7 +204,7 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 #
 # Type: avrdude -c ?
 # to get a full listing.
-AVRDUDE_PROGRAMMER = avrispmkii
+AVRDUDE_PROGRAMMER = usbtiny
 #AVRDUDE_PROGRAMMER = jtag2isp
 #AVRDUDE_PROGRAMMER = ponyser
 
