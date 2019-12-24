@@ -3491,6 +3491,8 @@ design rules under a new name.</description>
 <wire x1="48.768" y1="25.908" x2="52.324" y2="29.464" width="0.1524" layer="16"/>
 <wire x1="52.324" y1="29.464" x2="52.316" y2="29.464" width="0.1524" layer="16"/>
 <via x="52.316" y="29.464" extent="1-16" drill="0.2"/>
+<wire x1="12.192" y1="6.858" x2="12.192" y2="25.908" width="0.1524" layer="16"/>
+<wire x1="8.382" y1="29.718" x2="12.192" y2="25.908" width="0.1524" layer="16"/>
 <wire x1="62.65" y1="34.544" x2="68.146" y2="34.052" width="0" layer="19" extent="1-1"/>
 <wire x1="28.155" y1="37.846" x2="28.155" y2="31.75" width="0" layer="19" extent="1-1"/>
 </signal>
