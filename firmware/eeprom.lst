@@ -1,0 +1,318 @@
+   1               		.file	"eeprom.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.text
+   7               	.Ltext0:
+   8               		.cfi_sections	.debug_frame
+   9               	.global	EEPROMWriteByte
+  11               	EEPROMWriteByte:
+  12               	.LVL0:
+  13               	.LFB2:
+  14               		.file 1 "eeprom.c"
+   1:eeprom.c      **** /******************************************************************************
+   2:eeprom.c      **** Created 26 Nov 2012 by Mike Hord at SparkFun Electronics.
+   3:eeprom.c      **** Wake-on-Shake hardware and firmware are released under the Creative Commons 
+   4:eeprom.c      **** Share Alike v3.0 license:
+   5:eeprom.c      **** 	http://creativecommons.org/licenses/by-sa/3.0/
+   6:eeprom.c      **** Feel free to use, distribute, and sell variants of Wake-on-Shake. All we ask 
+   7:eeprom.c      **** is that you include attribution of 'Based on Wake-on-Shake by SparkFun'.
+   8:eeprom.c      **** 
+   9:eeprom.c      **** eeprom.cpp
+  10:eeprom.c      **** Function implementations for handling the EEPROM. Rolled my own because it
+  11:eeprom.c      **** didn't seem that the built-in functions were working; in retrospect that's
+  12:eeprom.c      **** probably not the case, but done is done.
+  13:eeprom.c      **** ******************************************************************************/
+  14:eeprom.c      **** 
+  15:eeprom.c      **** #include <avr/io.h>
+  16:eeprom.c      **** #include "eeprom.h"
+  17:eeprom.c      **** #include <avr/interrupt.h>
+  18:eeprom.c      **** #include "serial.h"
+  19:eeprom.c      **** #include "wake-on-shake.h"
+  20:eeprom.c      **** 
+  21:eeprom.c      **** extern uint16_t				t1Offset;  // See Wake-on-Shake.cpp
+  22:eeprom.c      **** 
+  23:eeprom.c      **** // Write a 16-bit value to EEPROM. Data is written big-endian. Note that
+  24:eeprom.c      **** //   blocking while waiting for prior writes to EEPROM to complete is
+  25:eeprom.c      **** //   handled in the byte read/write calls, which are called from here,
+  26:eeprom.c      **** //   so blocking is NOT needed in this function.
+  27:eeprom.c      **** void EEPROMWriteWord(uint8_t addr, uint16_t data)
+  28:eeprom.c      **** {
+  29:eeprom.c      **** 	uint16_t dataTemp = data>>8;				// Isolate the high byte.
+  30:eeprom.c      **** 	EEPROMWriteByte(addr, (uint8_t)dataTemp);   // Write high byte to EEPROM.
+  31:eeprom.c      **** 	EEPROMWriteByte(addr+1, (uint8_t)data);		// Write low byte to EEPROM.
+  32:eeprom.c      **** }
+  33:eeprom.c      **** 
+  34:eeprom.c      **** // Read a 16-bit value from EEPROM. Data is written big-endian. Note that
+  35:eeprom.c      **** //   blocking while waiting for prior writes to EEPROM to complete is
+  36:eeprom.c      **** //   handled in the byte read/write calls, which are called from here,
+  37:eeprom.c      **** //   so blocking is NOT needed in this function.
+  38:eeprom.c      **** uint16_t EEPROMReadWord(uint8_t addr)
+  39:eeprom.c      **** {
+  40:eeprom.c      **** 	uint16_t readResult;
+  41:eeprom.c      **** 	readResult = (uint16_t)EEPROMReadByte(addr);	// Retrieve the high byte.
+  42:eeprom.c      **** 	readResult = readResult<<8;						// Left shift the hight byte.
+  43:eeprom.c      **** 	readResult |= (uint16_t)EEPROMReadByte(addr+1); // OR-in the low byte.
+  44:eeprom.c      **** 	return readResult;
+  45:eeprom.c      **** }
+  46:eeprom.c      **** 
+  47:eeprom.c      **** // 8-bit write to EEPROM. Since EEPROM writes can take rather a long time, we
+  48:eeprom.c      **** //   want to disable interrupts to avoid any unforeseen register mashing.
+  49:eeprom.c      **** void EEPROMWriteByte(uint8_t addr, uint8_t data)
+  50:eeprom.c      **** {
+  15               		.loc 1 50 1 view -0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+  51:eeprom.c      **** 	cli();							// Disable interrupts.
+  21               		.loc 1 51 2 view .LVU1
+  22               	/* #APP */
+  23               	 ;  51 "eeprom.c" 1
+  24 0000 F894      		cli
+  25               	 ;  0 "" 2
+  52:eeprom.c      **** 	while (EECR & (1<<EEPE));		// Wait for in-progress EEPROM writes to
+  26               		.loc 1 52 2 view .LVU2
+  27               	/* #NOAPP */
+  28               	.L2:
+  29               		.loc 1 52 26 discriminator 1 view .LVU3
+  30               		.loc 1 52 8 discriminator 1 view .LVU4
+  31 0002 E199      		sbic 0x1c,1
+  32 0004 00C0      		rjmp .L2
+  53:eeprom.c      **** 									//  complete before using their resources.
+  54:eeprom.c      **** 	EECR = (0<<EEPM1) | (0<<EEPM0); // See datasheet for details on the hows
+  33               		.loc 1 54 2 view .LVU5
+  34               		.loc 1 54 7 is_stmt 0 view .LVU6
+  35 0006 1CBA      		out 0x1c,__zero_reg__
+  55:eeprom.c      **** 	EEAR = addr;					//  and whys of this write process.
+  36               		.loc 1 55 2 is_stmt 1 view .LVU7
+  37               		.loc 1 55 7 is_stmt 0 view .LVU8
+  38 0008 8EBB      		out 0x1e,r24
+  56:eeprom.c      **** 	EEDR = data;
+  39               		.loc 1 56 2 is_stmt 1 view .LVU9
+  40               		.loc 1 56 7 is_stmt 0 view .LVU10
+  41 000a 6DBB      		out 0x1d,r22
+  57:eeprom.c      **** 	EECR |= (1<<EEMPE);
+  42               		.loc 1 57 2 is_stmt 1 view .LVU11
+  43               		.loc 1 57 7 is_stmt 0 view .LVU12
+  44 000c E29A      		sbi 0x1c,2
+  58:eeprom.c      **** 	EECR |= (1<<EEPE);
+  45               		.loc 1 58 2 is_stmt 1 view .LVU13
+  46               		.loc 1 58 7 is_stmt 0 view .LVU14
+  47 000e E19A      		sbi 0x1c,1
+  59:eeprom.c      **** 	sei();							// Re-enable interrupts once the write is
+  48               		.loc 1 59 2 is_stmt 1 view .LVU15
+  49               	/* #APP */
+  50               	 ;  59 "eeprom.c" 1
+  51 0010 7894      		sei
+  52               	 ;  0 "" 2
+  53               	/* #NOAPP */
+  54               	/* epilogue start */
+  60:eeprom.c      **** 									//  underway- they can't hurt the process.
+  61:eeprom.c      **** }
+  55               		.loc 1 61 1 is_stmt 0 view .LVU16
+  56 0012 0895      		ret
+  57               		.cfi_endproc
+  58               	.LFE2:
+  60               	.global	EEPROMWriteWord
+  62               	EEPROMWriteWord:
+  63               	.LVL1:
+  64               	.LFB0:
+  28:eeprom.c      **** 	uint16_t dataTemp = data>>8;				// Isolate the high byte.
+  65               		.loc 1 28 1 is_stmt 1 view -0
+  66               		.cfi_startproc
+  28:eeprom.c      **** 	uint16_t dataTemp = data>>8;				// Isolate the high byte.
+  67               		.loc 1 28 1 is_stmt 0 view .LVU18
+  68 0014 CF93      		push r28
+  69               	.LCFI0:
+  70               		.cfi_def_cfa_offset 3
+  71               		.cfi_offset 28, -2
+  72 0016 DF93      		push r29
+  73               	.LCFI1:
+  74               		.cfi_def_cfa_offset 4
+  75               		.cfi_offset 29, -3
+  76               	/* prologue: function */
+  77               	/* frame size = 0 */
+  78               	/* stack size = 2 */
+  79               	.L__stack_usage = 2
+  80 0018 C82F      		mov r28,r24
+  81 001a D62F      		mov r29,r22
+  82 001c 672F      		mov r22,r23
+  83               	.LVL2:
+  29:eeprom.c      **** 	EEPROMWriteByte(addr, (uint8_t)dataTemp);   // Write high byte to EEPROM.
+  84               		.loc 1 29 2 is_stmt 1 view .LVU19
+  30:eeprom.c      **** 	EEPROMWriteByte(addr+1, (uint8_t)data);		// Write low byte to EEPROM.
+  85               		.loc 1 30 2 view .LVU20
+  86 001e 00D0      		rcall EEPROMWriteByte
+  87               	.LVL3:
+  31:eeprom.c      **** }
+  88               		.loc 1 31 2 view .LVU21
+  89 0020 6D2F      		mov r22,r29
+  90 0022 81E0      		ldi r24,lo8(1)
+  91 0024 8C0F      		add r24,r28
+  92               	/* epilogue start */
+  32:eeprom.c      **** 
+  93               		.loc 1 32 1 is_stmt 0 view .LVU22
+  94 0026 DF91      		pop r29
+  32:eeprom.c      **** 
+  95               		.loc 1 32 1 view .LVU23
+  96 0028 CF91      		pop r28
+  97               	.LVL4:
+  31:eeprom.c      **** }
+  98               		.loc 1 31 2 view .LVU24
+  99 002a 00C0      		rjmp EEPROMWriteByte
+ 100               	.LVL5:
+  31:eeprom.c      **** }
+ 101               		.loc 1 31 2 view .LVU25
+ 102               		.cfi_endproc
+ 103               	.LFE0:
+ 105               	.global	EEPROMReadByte
+ 107               	EEPROMReadByte:
+ 108               	.LVL6:
+ 109               	.LFB3:
+  62:eeprom.c      **** 
+  63:eeprom.c      **** // 8-bit read from EEPROM. The read needs to be atomic, so we want to disable
+  64:eeprom.c      **** //   interrupts before starting it up to keep registers intact.
+  65:eeprom.c      **** uint8_t EEPROMReadByte(uint8_t addr)
+  66:eeprom.c      **** {
+ 110               		.loc 1 66 1 is_stmt 1 view -0
+ 111               		.cfi_startproc
+ 112               	/* prologue: function */
+ 113               	/* frame size = 0 */
+ 114               	/* stack size = 0 */
+ 115               	.L__stack_usage = 0
+  67:eeprom.c      **** 	cli();						// Disable interrupts.
+ 116               		.loc 1 67 2 view .LVU27
+ 117               	/* #APP */
+ 118               	 ;  67 "eeprom.c" 1
+ 119 002c F894      		cli
+ 120               	 ;  0 "" 2
+  68:eeprom.c      **** 	while (EECR & (1<<EEPE));	// Wait for any writes to finish, to avoid
+ 121               		.loc 1 68 2 view .LVU28
+ 122               	/* #NOAPP */
+ 123               	.L6:
+ 124               		.loc 1 68 26 discriminator 1 view .LVU29
+ 125               		.loc 1 68 8 discriminator 1 view .LVU30
+ 126 002e E199      		sbic 0x1c,1
+ 127 0030 00C0      		rjmp .L6
+  69:eeprom.c      **** 								//   a resource conflict.
+  70:eeprom.c      **** 	EEAR = addr;				// See the datasheet for more details about
+ 128               		.loc 1 70 2 view .LVU31
+ 129               		.loc 1 70 7 is_stmt 0 view .LVU32
+ 130 0032 8EBB      		out 0x1e,r24
+  71:eeprom.c      **** 	EECR += (1<<EERE);			//  this process.
+ 131               		.loc 1 71 2 is_stmt 1 view .LVU33
+ 132               		.loc 1 71 7 is_stmt 0 view .LVU34
+ 133 0034 8CB3      		in r24,0x1c
+ 134               	.LVL7:
+ 135               		.loc 1 71 7 view .LVU35
+ 136 0036 8F5F      		subi r24,lo8(-(1))
+ 137 0038 8CBB      		out 0x1c,r24
+ 138               	.LVL8:
+  72:eeprom.c      **** 	sei();						// Re-enable the interrupts.
+ 139               		.loc 1 72 2 is_stmt 1 view .LVU36
+ 140               	/* #APP */
+ 141               	 ;  72 "eeprom.c" 1
+ 142 003a 7894      		sei
+ 143               	 ;  0 "" 2
+  73:eeprom.c      **** 	return EEDR;				// Return the value at the address in question.
+ 144               		.loc 1 73 2 view .LVU37
+ 145               		.loc 1 73 9 is_stmt 0 view .LVU38
+ 146               	/* #NOAPP */
+ 147 003c 8DB3      		in r24,0x1d
+ 148               	/* epilogue start */
+  74:eeprom.c      **** }
+ 149               		.loc 1 74 1 view .LVU39
+ 150 003e 0895      		ret
+ 151               		.cfi_endproc
+ 152               	.LFE3:
+ 154               	.global	EEPROMReadWord
+ 156               	EEPROMReadWord:
+ 157               	.LVL9:
+ 158               	.LFB1:
+  39:eeprom.c      **** 	uint16_t readResult;
+ 159               		.loc 1 39 1 is_stmt 1 view -0
+ 160               		.cfi_startproc
+  39:eeprom.c      **** 	uint16_t readResult;
+ 161               		.loc 1 39 1 is_stmt 0 view .LVU41
+ 162 0040 1F93      		push r17
+ 163               	.LCFI2:
+ 164               		.cfi_def_cfa_offset 3
+ 165               		.cfi_offset 17, -2
+ 166 0042 CF93      		push r28
+ 167               	.LCFI3:
+ 168               		.cfi_def_cfa_offset 4
+ 169               		.cfi_offset 28, -3
+ 170 0044 DF93      		push r29
+ 171               	.LCFI4:
+ 172               		.cfi_def_cfa_offset 5
+ 173               		.cfi_offset 29, -4
+ 174               	/* prologue: function */
+ 175               	/* frame size = 0 */
+ 176               	/* stack size = 3 */
+ 177               	.L__stack_usage = 3
+ 178 0046 182F      		mov r17,r24
+  40:eeprom.c      **** 	readResult = (uint16_t)EEPROMReadByte(addr);	// Retrieve the high byte.
+ 179               		.loc 1 40 2 is_stmt 1 view .LVU42
+  41:eeprom.c      **** 	readResult = readResult<<8;						// Left shift the hight byte.
+ 180               		.loc 1 41 2 view .LVU43
+  41:eeprom.c      **** 	readResult = readResult<<8;						// Left shift the hight byte.
+ 181               		.loc 1 41 25 is_stmt 0 view .LVU44
+ 182 0048 00D0      		rcall EEPROMReadByte
+ 183               	.LVL10:
+  41:eeprom.c      **** 	readResult = readResult<<8;						// Left shift the hight byte.
+ 184               		.loc 1 41 13 view .LVU45
+ 185 004a C82F      		mov r28,r24
+ 186 004c D0E0      		ldi r29,0
+ 187               	.LVL11:
+  42:eeprom.c      **** 	readResult |= (uint16_t)EEPROMReadByte(addr+1); // OR-in the low byte.
+ 188               		.loc 1 42 2 is_stmt 1 view .LVU46
+  42:eeprom.c      **** 	readResult |= (uint16_t)EEPROMReadByte(addr+1); // OR-in the low byte.
+ 189               		.loc 1 42 13 is_stmt 0 view .LVU47
+ 190 004e DC2F      		mov r29,r28
+ 191 0050 CC27      		clr r28
+ 192               	.LVL12:
+  43:eeprom.c      **** 	return readResult;
+ 193               		.loc 1 43 2 is_stmt 1 view .LVU48
+  43:eeprom.c      **** 	return readResult;
+ 194               		.loc 1 43 26 is_stmt 0 view .LVU49
+ 195 0052 81E0      		ldi r24,lo8(1)
+ 196 0054 810F      		add r24,r17
+ 197 0056 00D0      		rcall EEPROMReadByte
+ 198               	.LVL13:
+  44:eeprom.c      **** }
+ 199               		.loc 1 44 2 is_stmt 1 view .LVU50
+  45:eeprom.c      **** 
+ 200               		.loc 1 45 1 is_stmt 0 view .LVU51
+ 201 0058 9E01      		movw r18,r28
+ 202 005a 282B      		or r18,r24
+ 203 005c C901      		movw r24,r18
+ 204               	.LVL14:
+ 205               	/* epilogue start */
+  45:eeprom.c      **** 
+ 206               		.loc 1 45 1 view .LVU52
+ 207 005e DF91      		pop r29
+ 208 0060 CF91      		pop r28
+ 209 0062 1F91      		pop r17
+ 210               	.LVL15:
+  45:eeprom.c      **** 
+ 211               		.loc 1 45 1 view .LVU53
+ 212 0064 0895      		ret
+ 213               		.cfi_endproc
+ 214               	.LFE1:
+ 216               	.Letext0:
+ 217               		.file 2 "/usr/local/Cellar/avr-gcc/9.2.0/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 eeprom.c
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:2      *ABS*:000000000000003d __SP_L__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:3      *ABS*:000000000000003f __SREG__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:4      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:5      *ABS*:0000000000000001 __zero_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:11     .text:0000000000000000 EEPROMWriteByte
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:62     .text:0000000000000014 EEPROMWriteWord
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:107    .text:000000000000002c EEPROMReadByte
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccJaSeLP.s:156    .text:0000000000000040 EEPROMReadWord
+
+NO UNDEFINED SYMBOLS

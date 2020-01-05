@@ -1,0 +1,284 @@
+   1               		.file	"ADXL362.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.text
+   7               	.Ltext0:
+   8               		.cfi_sections	.debug_frame
+   9               	.global	ADXLReadByte
+  11               	ADXLReadByte:
+  12               	.LVL0:
+  13               	.LFB1:
+  14               		.file 1 "ADXL362.c"
+   1:ADXL362.c     **** /******************************************************************************
+   2:ADXL362.c     **** Created 26 Nov 2012 by Mike Hord at SparkFun Electronics.
+   3:ADXL362.c     **** Wake-on-Shake hardware and firmware are released under the Creative Commons 
+   4:ADXL362.c     **** Share Alike v3.0 license:
+   5:ADXL362.c     **** 	http://creativecommons.org/licenses/by-sa/3.0/
+   6:ADXL362.c     **** Feel free to use, distribute, and sell variants of Wake-on-Shake. All we ask 
+   7:ADXL362.c     **** is that you include attribution of 'Based on Wake-on-Shake by SparkFun'.
+   8:ADXL362.c     **** 
+   9:ADXL362.c     **** ADXL362.cpp
+  10:ADXL362.c     **** Function code for the ADXL362. If you're looking for register aliases,
+  11:ADXL362.c     **** check out xl362.h, which was provided by Analog Devices.
+  12:ADXL362.c     **** ******************************************************************************/
+  13:ADXL362.c     **** 
+  14:ADXL362.c     **** #include <avr/io.h>
+  15:ADXL362.c     **** #include "ADXL362.h"
+  16:ADXL362.c     **** #include "spi.h"
+  17:ADXL362.c     **** #include "xl362.h"
+  18:ADXL362.c     **** #include "eeprom.h"
+  19:ADXL362.c     **** #include "wake-on-shake.h"
+  20:ADXL362.c     **** 
+  21:ADXL362.c     **** // ADXLConfig() sets all the necessary registers on the ADXL362 up to support
+  22:ADXL362.c     **** //   the wake-on-shake type application.
+  23:ADXL362.c     **** void ADXLConfig(void)
+  24:ADXL362.c     **** {
+  25:ADXL362.c     **** 	// Activity threshold level (0x20)-
+  26:ADXL362.c     **** 	//   Defaults to 150mg; user can change this.
+  27:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_ACTH, EEPROMReadByte(ATHRESH));
+  28:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_ACTL, EEPROMReadByte(ATHRESH + 1));
+  29:ADXL362.c     **** 	// Inactivity threshold level (0x23)-
+  30:ADXL362.c     **** 	//   Written to 50 to give a 50mg sleep detection level
+  31:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_INACTH, EEPROMReadByte(ITHRESH));
+  32:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_INACTL, EEPROMReadByte(ITHRESH+1));
+  33:ADXL362.c     **** 	// Inactivity timer (0x25)-
+  34:ADXL362.c     **** 	//   Written to 15; wait 15 samples (~2.5 seconds) before going back
+  35:ADXL362.c     **** 	//   to sleep.
+  36:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_TIME_INACTH, EEPROMReadByte(ITIME));
+  37:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_TIME_INACTL, EEPROMReadByte(ITIME+1));	
+  38:ADXL362.c     **** 	// Activity/Inactivity control register (0x27)-
+  39:ADXL362.c     **** 	//   Needs to be set to LOOP mode (5:4 = 11)
+  40:ADXL362.c     **** 	//   We want referenced measurement mode for inactivity (3 = 1)
+  41:ADXL362.c     **** 	//   We need to activate inactivity detection (2 = 1)
+  42:ADXL362.c     **** 	//   We want referenced measurement mode for activity (1 = 1)
+  43:ADXL362.c     **** 	//   We need to activate activity detection (0 = 1)
+  44:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_ACT_INACT_CTL, (uint8_t)0xFF);
+  45:ADXL362.c     **** 	// INT1 function map register (0x2A)-
+  46:ADXL362.c     **** 	//   Needs to be set to "Active Low" (7 = 1)
+  47:ADXL362.c     **** 	//   Needs to be set to activity mode (4 = 1)
+  48:ADXL362.c     **** 	//   Other bits must be zero.
+  49:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_INTMAP1, (uint8_t)0b10010000);
+  50:ADXL362.c     **** 	// Power control register (0x2D)-
+  51:ADXL362.c     **** 	//   Needs to be set to wake mode (3 = 1)
+  52:ADXL362.c     **** 	//   Need to turn on sampling mode (1:0 = 10)
+  53:ADXL362.c     **** 	//   Other bits must be zero
+  54:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_POWER_CTL, (uint8_t)0x0A);
+  55:ADXL362.c     **** }
+  56:ADXL362.c     **** 
+  57:ADXL362.c     **** // Simple functions to assert chip select and copy data in and out of the
+  58:ADXL362.c     **** //   ADXL362. 
+  59:ADXL362.c     **** uint8_t ADXLReadByte(uint8_t addr)
+  60:ADXL362.c     **** {
+  15               		.loc 1 60 1 view -0
+  16               		.cfi_startproc
+  17               		.loc 1 60 1 is_stmt 0 view .LVU1
+  18 0000 CF93      		push r28
+  19               	.LCFI0:
+  20               		.cfi_def_cfa_offset 3
+  21               		.cfi_offset 28, -2
+  22               	/* prologue: function */
+  23               	/* frame size = 0 */
+  24               	/* stack size = 1 */
+  25               	.L__stack_usage = 1
+  26 0002 C82F      		mov r28,r24
+  61:ADXL362.c     **** 	PORTB &= !(1<<PB4);	
+  27               		.loc 1 61 2 is_stmt 1 view .LVU2
+  28               		.loc 1 61 8 is_stmt 0 view .LVU3
+  29 0004 88B3      		in r24,0x18
+  30               	.LVL1:
+  31               		.loc 1 61 8 view .LVU4
+  32 0006 18BA      		out 0x18,__zero_reg__
+  62:ADXL362.c     **** 	spiXfer((uint8_t)XL362_REG_READ);
+  33               		.loc 1 62 2 is_stmt 1 view .LVU5
+  34 0008 8BE0      		ldi r24,lo8(11)
+  35 000a 00D0      		rcall spiXfer
+  36               	.LVL2:
+  63:ADXL362.c     **** 	spiXfer(addr);
+  37               		.loc 1 63 2 view .LVU6
+  38 000c 8C2F      		mov r24,r28
+  39 000e 00D0      		rcall spiXfer
+  40               	.LVL3:
+  64:ADXL362.c     **** 	addr = spiXfer(addr);
+  41               		.loc 1 64 2 view .LVU7
+  42               		.loc 1 64 9 is_stmt 0 view .LVU8
+  43 0010 8C2F      		mov r24,r28
+  44 0012 00D0      		rcall spiXfer
+  45               	.LVL4:
+  65:ADXL362.c     **** 	PORTB |= (1<<PB4);
+  46               		.loc 1 65 2 is_stmt 1 view .LVU9
+  47               		.loc 1 65 8 is_stmt 0 view .LVU10
+  48 0014 C49A      		sbi 0x18,4
+  66:ADXL362.c     **** 	return addr;
+  49               		.loc 1 66 2 is_stmt 1 view .LVU11
+  50               	/* epilogue start */
+  67:ADXL362.c     **** }
+  51               		.loc 1 67 1 is_stmt 0 view .LVU12
+  52 0016 CF91      		pop r28
+  53 0018 0895      		ret
+  54               		.cfi_endproc
+  55               	.LFE1:
+  57               	.global	ADXLWriteByte
+  59               	ADXLWriteByte:
+  60               	.LVL5:
+  61               	.LFB2:
+  68:ADXL362.c     **** 
+  69:ADXL362.c     **** void ADXLWriteByte(uint8_t addr, uint8_t data)
+  70:ADXL362.c     **** {
+  62               		.loc 1 70 1 is_stmt 1 view -0
+  63               		.cfi_startproc
+  64               		.loc 1 70 1 is_stmt 0 view .LVU14
+  65 001a CF93      		push r28
+  66               	.LCFI1:
+  67               		.cfi_def_cfa_offset 3
+  68               		.cfi_offset 28, -2
+  69 001c DF93      		push r29
+  70               	.LCFI2:
+  71               		.cfi_def_cfa_offset 4
+  72               		.cfi_offset 29, -3
+  73               	/* prologue: function */
+  74               	/* frame size = 0 */
+  75               	/* stack size = 2 */
+  76               	.L__stack_usage = 2
+  77 001e D82F      		mov r29,r24
+  78 0020 C62F      		mov r28,r22
+  71:ADXL362.c     **** 	PORTB &= !(1<<PB4);
+  79               		.loc 1 71 2 is_stmt 1 view .LVU15
+  80               		.loc 1 71 8 is_stmt 0 view .LVU16
+  81 0022 88B3      		in r24,0x18
+  82               	.LVL6:
+  83               		.loc 1 71 8 view .LVU17
+  84 0024 18BA      		out 0x18,__zero_reg__
+  72:ADXL362.c     **** 	spiXfer((uint8_t)XL362_REG_WRITE);
+  85               		.loc 1 72 2 is_stmt 1 view .LVU18
+  86 0026 8AE0      		ldi r24,lo8(10)
+  87 0028 00D0      		rcall spiXfer
+  88               	.LVL7:
+  73:ADXL362.c     **** 	spiXfer(addr);
+  89               		.loc 1 73 2 view .LVU19
+  90 002a 8D2F      		mov r24,r29
+  91 002c 00D0      		rcall spiXfer
+  92               	.LVL8:
+  74:ADXL362.c     **** 	spiXfer(data);
+  93               		.loc 1 74 2 view .LVU20
+  94 002e 8C2F      		mov r24,r28
+  95 0030 00D0      		rcall spiXfer
+  96               	.LVL9:
+  75:ADXL362.c     **** 	PORTB |= (1<<PB4);
+  97               		.loc 1 75 2 view .LVU21
+  98               		.loc 1 75 8 is_stmt 0 view .LVU22
+  99 0032 C49A      		sbi 0x18,4
+ 100               	/* epilogue start */
+  76:ADXL362.c     **** }...
+ 101               		.loc 1 76 1 view .LVU23
+ 102 0034 DF91      		pop r29
+ 103               	.LVL10:
+ 104               		.loc 1 76 1 view .LVU24
+ 105 0036 CF91      		pop r28
+ 106               	.LVL11:
+ 107               		.loc 1 76 1 view .LVU25
+ 108 0038 0895      		ret
+ 109               		.cfi_endproc
+ 110               	.LFE2:
+ 112               	.global	ADXLConfig
+ 114               	ADXLConfig:
+ 115               	.LFB0:
+  24:ADXL362.c     **** {
+ 116               		.loc 1 24 1 is_stmt 1 view -0
+ 117               		.cfi_startproc
+ 118               	/* prologue: function */
+ 119               	/* frame size = 0 */
+ 120               	/* stack size = 0 */
+ 121               	.L__stack_usage = 0
+  27:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_ACTH, EEPROMReadByte(ATHRESH));
+ 122               		.loc 1 27 2 view .LVU27
+ 123 003a 80E0      		ldi r24,0
+ 124 003c 00D0      		rcall EEPROMReadByte
+ 125               	.LVL12:
+ 126 003e 682F      		mov r22,r24
+ 127 0040 81E2      		ldi r24,lo8(33)
+ 128 0042 00D0      		rcall ADXLWriteByte
+ 129               	.LVL13:
+  28:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_ACTL, EEPROMReadByte(ATHRESH + 1));
+ 130               		.loc 1 28 2 view .LVU28
+ 131 0044 81E0      		ldi r24,lo8(1)
+ 132 0046 00D0      		rcall EEPROMReadByte
+ 133               	.LVL14:
+ 134 0048 682F      		mov r22,r24
+ 135 004a 80E2      		ldi r24,lo8(32)
+ 136 004c 00D0      		rcall ADXLWriteByte
+ 137               	.LVL15:
+  31:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_INACTH, EEPROMReadByte(ITHRESH));
+ 138               		.loc 1 31 2 view .LVU29
+ 139 004e 84E0      		ldi r24,lo8(4)
+ 140 0050 00D0      		rcall EEPROMReadByte
+ 141               	.LVL16:
+ 142 0052 682F      		mov r22,r24
+ 143 0054 84E2      		ldi r24,lo8(36)
+ 144 0056 00D0      		rcall ADXLWriteByte
+ 145               	.LVL17:
+  32:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_THRESH_INACTL, EEPROMReadByte(ITHRESH+1));
+ 146               		.loc 1 32 2 view .LVU30
+ 147 0058 85E0      		ldi r24,lo8(5)
+ 148 005a 00D0      		rcall EEPROMReadByte
+ 149               	.LVL18:
+ 150 005c 682F      		mov r22,r24
+ 151 005e 83E2      		ldi r24,lo8(35)
+ 152 0060 00D0      		rcall ADXLWriteByte
+ 153               	.LVL19:
+  36:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_TIME_INACTH, EEPROMReadByte(ITIME));
+ 154               		.loc 1 36 2 view .LVU31
+ 155 0062 86E0      		ldi r24,lo8(6)
+ 156 0064 00D0      		rcall EEPROMReadByte
+ 157               	.LVL20:
+ 158 0066 682F      		mov r22,r24
+ 159 0068 86E2      		ldi r24,lo8(38)
+ 160 006a 00D0      		rcall ADXLWriteByte
+ 161               	.LVL21:
+  37:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_TIME_INACTL, EEPROMReadByte(ITIME+1));	
+ 162               		.loc 1 37 2 view .LVU32
+ 163 006c 87E0      		ldi r24,lo8(7)
+ 164 006e 00D0      		rcall EEPROMReadByte
+ 165               	.LVL22:
+ 166 0070 682F      		mov r22,r24
+ 167 0072 85E2      		ldi r24,lo8(37)
+ 168 0074 00D0      		rcall ADXLWriteByte
+ 169               	.LVL23:
+  44:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_ACT_INACT_CTL, (uint8_t)0xFF);
+ 170               		.loc 1 44 2 view .LVU33
+ 171 0076 6FEF      		ldi r22,lo8(-1)
+ 172 0078 87E2      		ldi r24,lo8(39)
+ 173 007a 00D0      		rcall ADXLWriteByte
+ 174               	.LVL24:
+  49:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_INTMAP1, (uint8_t)0b10010000);
+ 175               		.loc 1 49 2 view .LVU34
+ 176 007c 60E9      		ldi r22,lo8(-112)
+ 177 007e 8AE2      		ldi r24,lo8(42)
+ 178 0080 00D0      		rcall ADXLWriteByte
+ 179               	.LVL25:
+  54:ADXL362.c     **** 	ADXLWriteByte((uint8_t)XL362_POWER_CTL, (uint8_t)0x0A);
+ 180               		.loc 1 54 2 view .LVU35
+ 181 0082 6AE0      		ldi r22,lo8(10)
+ 182 0084 8DE2      		ldi r24,lo8(45)
+ 183 0086 00C0      		rjmp ADXLWriteByte
+ 184               	.LVL26:
+ 185               		.cfi_endproc
+ 186               	.LFE0:
+ 188               	.Letext0:
+ 189               		.file 2 "spi.h"
+ 190               		.file 3 "eeprom.h"
+ 191               		.file 4 "/usr/local/Cellar/avr-gcc/9.2.0/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ADXL362.c
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccSCvVrH.s:2      *ABS*:000000000000003d __SP_L__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccSCvVrH.s:3      *ABS*:000000000000003f __SREG__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccSCvVrH.s:4      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccSCvVrH.s:5      *ABS*:0000000000000001 __zero_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccSCvVrH.s:11     .text:0000000000000000 ADXLReadByte
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccSCvVrH.s:59     .text:000000000000001a ADXLWriteByte
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccSCvVrH.s:114    .text:000000000000003a ADXLConfig
+
+UNDEFINED SYMBOLS
+spiXfer
+EEPROMReadByte

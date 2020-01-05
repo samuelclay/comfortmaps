@@ -1,0 +1,1165 @@
+   1               		.file	"ui.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.text
+   7               	.Ltext0:
+   8               		.cfi_sections	.debug_frame
+   9               		.section	.rodata.str1.1,"aMS",@progbits,1
+  10               	.LC0:
+  11 0000 3A2D 2900 		.string	":-)"
+  12               		.text
+  13               	.global	printMenu
+  15               	printMenu:
+  16               	.LFB1:
+  17               		.file 1 "ui.c"
+   1:ui.c          **** /******************************************************************************
+   2:ui.c          **** Created 26 Nov 2012 by Mike Hord at SparkFun Electronics.
+   3:ui.c          **** Wake-on-Shake hardware and firmware are released under the Creative Commons 
+   4:ui.c          **** Share Alike v3.0 license:
+   5:ui.c          **** 	http://creativecommons.org/licenses/by-sa/3.0/
+   6:ui.c          **** Feel free to use, distribute, and sell variants of Wake-on-Shake. All we ask 
+   7:ui.c          **** is that you include attribution of 'Based on Wake-on-Shake by SparkFun'.
+   8:ui.c          **** 
+   9:ui.c          **** ui.cpp
+  10:ui.c          **** This file contains implementations of the various user interface functionality.
+  11:ui.c          **** Primarily, it contains a very large state machine for parsing data received
+  12:ui.c          **** across the serial port into commands.
+  13:ui.c          **** ******************************************************************************/
+  14:ui.c          **** 
+  15:ui.c          **** #include<avr/io.h>
+  16:ui.c          **** #include "ui.h"
+  17:ui.c          **** #include "wake-on-shake.h"
+  18:ui.c          **** #include "eeprom.h"
+  19:ui.c          **** #include "serial.h"
+  20:ui.c          **** #include "ADXL362.h"
+  21:ui.c          **** 
+  22:ui.c          **** extern uint16_t				t1Offset;		// see Wake-on-Shake.cpp
+  23:ui.c          **** extern volatile uint8_t		serialRxData;	// see Wake-on-Shake.cpp
+  24:ui.c          **** 
+  25:ui.c          **** // Probably the most complex part of the code, serialParse() is a state machine
+  26:ui.c          **** //   which provides a limited user interface for setting and getting the parameters
+  27:ui.c          **** //   which dictate the operation of the Wake-on-shake. It gets called by the main
+  28:ui.c          **** //   code whenever a serial interrupt receives a non-null value over the serial
+  29:ui.c          **** //   port. It echoes back the received data (primarily for user convenience), then
+  30:ui.c          **** //   handles the data depending on current state and received data.
+  31:ui.c          **** void serialParse(void)
+  32:ui.c          **** {
+  33:ui.c          **** 	// Static variables- these need to persist between calls to this function.
+  34:ui.c          **** 	
+  35:ui.c          **** 	// inputBufferValue is the number that the user is currently entering in-
+  36:ui.c          **** 	//  it could be a threshold value, a delay value, a value to be written
+  37:ui.c          **** 	//  to the ADXL362 or into EEPROM, or something else. We parse it in by
+  38:ui.c          **** 	//  multiplying the old value by ten and adding the recently received value
+  39:ui.c          **** 	//  to the previous value, so we need the current value to persist between
+  40:ui.c          **** 	//  calls.
+  41:ui.c          **** 	static uint16_t		inputBufferValue = 0;
+  42:ui.c          **** 	// mode lets the function know how it should respond to data. In some cases,
+  43:ui.c          **** 	//   we just want to keep incrementing inputBufferValue; in others, we want
+  44:ui.c          **** 	//   to take immediate action.
+  45:ui.c          **** 	static uint8_t		mode = ' ';
+  46:ui.c          **** 	// serialDataBuffer is used to store a value the user wants to either send
+  47:ui.c          **** 	//   to the ADXL362 or put into EEPROM. For ease of implementation, we only
+  48:ui.c          **** 	//   do one byte at a time- first put in the data, then tell the device
+  49:ui.c          **** 	//   where to send it.
+  50:ui.c          **** 	static uint8_t		serialDataBuffer = 0;
+  51:ui.c          **** 	// localData buffers serialRxData. Because of the length of time it can
+  52:ui.c          **** 	//   take for this function to complete (at 2400 baud, serial writes take
+  53:ui.c          **** 	//   quite some time, as do EEPROM writes), we want to know that nothing
+  54:ui.c          **** 	//   has changed between when we enter the function and code we encounter
+  55:ui.c          **** 	//   further down. The only way to ensure that is to buffer serialRxData
+  56:ui.c          **** 	//   locally, since serialRxData can be changed by the serial receive ISR
+  57:ui.c          **** 	//   at any time.
+  58:ui.c          **** 	uint8_t				localData = serialRxData;
+  59:ui.c          **** 	
+  60:ui.c          **** 	serialRxData = 0;					// Clear serialRxData
+  61:ui.c          **** 	//serialWriteChar(localData);		// Echo received data. Removed from
+  62:ui.c          **** 										//  released version b/c there's no
+  63:ui.c          **** 										//  real need to do this.
+  64:ui.c          **** 	
+  65:ui.c          **** // The state machine is implemented as an if/else group.
+  66:ui.c          **** 	
+  67:ui.c          **** // First case: carriage returns/newlines when we're in the "no data" state.
+  68:ui.c          **** //   Basically, we can just ignore these. This is important, because we don't
+  69:ui.c          **** //   know for sure what the serial program the user is entering data from will
+  70:ui.c          **** //   send at the end of the line, so we need to respond to either if they
+  71:ui.c          **** //   happen at the end of data entry, and ignore them any other time, since
+  72:ui.c          **** //   some programs may send BOTH CR and LF. We also don't want to let this be
+  73:ui.c          **** //   the default case, because it would be annoying to see "Invalid input"
+  74:ui.c          **** //   every time we enter a value.
+  75:ui.c          **** 	if (((localData == '\n') | (localData == '\r')) & (mode == ' '));
+  76:ui.c          **** 	
+  77:ui.c          **** // CR/LF when we're in data reading mode: respond to whichever one happens first
+  78:ui.c          **** //   by parsing the received data.
+  79:ui.c          **** 	else if (((localData == '\n') | (localData == '\r')) & (mode != ' '))
+  80:ui.c          **** 	{
+  81:ui.c          **** 		// Now, make a decision about what to do with the data depending on the mode.
+  82:ui.c          **** 		switch(mode)
+  83:ui.c          **** 		{
+  84:ui.c          **** 			// 't' indicates that user wanted to change the threshold setting, so
+  85:ui.c          **** 			//   let's store the inputBufferValue in EEPROM and update the value in
+  86:ui.c          **** 			//   memory. We won't bother updating the ADXL362 just yet; that will
+  87:ui.c          **** 			//   happen right before we go to sleep.
+  88:ui.c          **** 			case 't':
+  89:ui.c          **** 			EEPROMWriteWord((uint8_t)ATHRESH, inputBufferValue);
+  90:ui.c          **** 			break;
+  91:ui.c          **** 			// 'd' indicates that user wanted to change the delay before sleep, so
+  92:ui.c          **** 			//   so we need to convert the user's value in milliseconds to an offset
+  93:ui.c          **** 			//   value that can be loaded into TCNT1. We'll also include a check so
+  94:ui.c          **** 			//   the user can't accidentally set the timeout period so short as to
+  95:ui.c          **** 			//   render the device difficult to program.
+  96:ui.c          **** 			case 'd':
+  97:ui.c          **** 			t1Offset = 65535 - inputBufferValue;
+  98:ui.c          **** 			if (t1Offset > 63535) t1Offset = 63535;
+  99:ui.c          **** 			EEPROMWriteWord((uint8_t)WAKE_OFFS, t1Offset);
+ 100:ui.c          **** 			break;
+ 101:ui.c          **** 			// 'b' indicates that the user wishes to buffer a value to be written
+ 102:ui.c          **** 			//   to something, either the ADXL362 -or- an EEPROM location in the tiny.
+ 103:ui.c          **** 			case 'b':
+ 104:ui.c          **** 			serialDataBuffer = (uint8_t)inputBufferValue;
+ 105:ui.c          **** 			break;
+ 106:ui.c          **** 			// 'w' indicates that the user wants to write a value directly to the
+ 107:ui.c          **** 			//   ADXL362 part. In this case, inputBufferValue is taken as an
+ 108:ui.c          **** 			//   address to write to, and the data to be written is in the
+ 109:ui.c          **** 			//   serialDataBuffer variable.
+ 110:ui.c          **** 			case 'w':
+ 111:ui.c          **** 			ADXLWriteByte((uint8_t)inputBufferValue, serialDataBuffer);
+ 112:ui.c          **** 			break;
+ 113:ui.c          **** 			// 'r' indicates a desire to read from an address in the ADXL part.
+ 114:ui.c          **** 			//   inputBufferValue provides an address to read from.
+ 115:ui.c          **** 			case 'r':
+ 116:ui.c          **** 			serialWriteInt((uint16_t)ADXLReadByte((uint8_t)inputBufferValue));
+ 117:ui.c          **** 			break;
+ 118:ui.c          **** 			// 'e' directs the device to store the buffered value into the
+ 119:ui.c          **** 			//   address provided by inputBufferValue.
+ 120:ui.c          **** 			case 'e':
+ 121:ui.c          **** 			EEPROMWriteByte((uint8_t)inputBufferValue, serialDataBuffer);
+ 122:ui.c          **** 			break;
+ 123:ui.c          **** 			// 'E' directs the device to return a value stored in the EEPROM
+ 124:ui.c          **** 			//   over the serial port from the address specified.
+ 125:ui.c          **** 			case 'E':
+ 126:ui.c          **** 			serialWriteInt((uint16_t)EEPROMReadByte((uint8_t)inputBufferValue));
+ 127:ui.c          **** 			break;
+ 128:ui.c          **** 		}
+ 129:ui.c          **** 		inputBufferValue = 0;		// Clear the input buffer for next data stream.
+ 130:ui.c          **** 		mode = ' ';					// Reset the mode for next data stream.
+ 131:ui.c          **** 		printMenu();				// Just an indicator of success.
+ 132:ui.c          **** 	}
+ 133:ui.c          **** 	
+ 134:ui.c          **** // If the mode is currently null, and the character entered is a valid mode,
+ 135:ui.c          **** //   let's activate that mode. In some cases, we want immediate action, and
+ 136:ui.c          **** //   then to return to null mode.
+ 137:ui.c          **** 	else if ((mode == ' ')&(
+ 138:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 139:ui.c          **** 			(localData == 'd') |	// Change the delay before sleep
+ 140:ui.c          **** 			(localData == 'z') |	// Force sleep in ~35ms
+ 141:ui.c          **** 			(localData == 'b') |	// Buffer a byte for EEPROM or ADXL write
+ 142:ui.c          **** 			(localData == 'w') |	// Write buffered byte to ADXL362 register
+ 143:ui.c          **** 			(localData == 'r') |	// Read ADXL362 register
+ 144:ui.c          **** 			(localData == 'e') |	// Write buffered byte to EEPROM address
+ 145:ui.c          **** 			(localData == 'E') |	// Read byte from EEPROM address
+ 146:ui.c          **** 			(localData == 'p') |	// Read pin level (pins on header only)
+ 147:ui.c          **** 			(localData == 'H') |	// Set pin high (pins on header only)
+ 148:ui.c          **** 			(localData == 'L')		// Set pin low (pins on header only)
+ 149:ui.c          **** 			))
+ 150:ui.c          **** 	{
+ 151:ui.c          **** 		mode = localData;
+ 152:ui.c          **** 		// Most of the time, we need more information from the user. SOMETIMES,
+ 153:ui.c          **** 		//   we may want to take immediate action. ATM, only a 'z' spurs that,
+ 154:ui.c          **** 		//   indicating to the device that we want it to go to sleep post-haste
+ 155:ui.c          **** 		//   and not buffer more data. Future immediate commands should be
+ 156:ui.c          **** 		//   added here.
+ 157:ui.c          **** 	    if (mode == 'z')
+ 158:ui.c          **** 		{
+ 159:ui.c          **** 			TCNT1 = 65500;	// Set TCNT1 to *almost* overflowing. Sleep will
+ 160:ui.c          **** 							//   occur right after an overflow of TCNT1.
+ 161:ui.c          **** 			mode = ' ';		// Clear mode for later.
+ 162:ui.c          **** 		}
+ 163:ui.c          **** 	}
+ 164:ui.c          **** // Mode handler. Depending on the mode, the current input character should
+ 165:ui.c          **** //   be handled differently. Code for handling what happens before a user
+ 166:ui.c          **** //   has finished inputting a number goes here.
+ 167:ui.c          **** 	else if (	(mode == 't')|\
+ 168:ui.c          **** 				(mode == 'd')|\
+ 169:ui.c          **** 				(mode == 'w')|\
+ 170:ui.c          **** 				(mode == 'r')|\
+ 171:ui.c          **** 				(mode == 'e')|\
+ 172:ui.c          **** 				(mode == 'E')|\
+ 173:ui.c          **** 				(mode == 'p')|\
+ 174:ui.c          **** 				(mode == 'H')|\
+ 175:ui.c          **** 				(mode == 'L')|\
+ 176:ui.c          **** 				(mode == 'b'))
+ 177:ui.c          **** 	{
+ 178:ui.c          **** 		// case 'p': indicates user wants to print out the state of a given
+ 179:ui.c          **** 		//   pin. Pins available for this are PB0:3 and PD6; we'll respond
+ 180:ui.c          **** 		//   based on a numerical input 0-3 or 6. Other values print an
+ 181:ui.c          **** 		//   error message. Note that no cr/lf is needed to complete this
+ 182:ui.c          **** 		//   operation- it just...ends, as soon as another character has
+ 183:ui.c          **** 		//   been received.
+ 184:ui.c          **** 		if (mode == 'p')
+ 185:ui.c          **** 		{
+ 186:ui.c          **** 			mode = ' ';   // clear mode. We'll do this regardless of outcome.
+ 187:ui.c          **** 			switch(localData)
+ 188:ui.c          **** 			{
+ 189:ui.c          **** 				case '0':
+ 190:ui.c          **** 				DDRB &= ~(1<<PB0);							// make pin input
+ 191:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB0))>>PB0));    // isolate bit and
+ 192:ui.c          **** 														    //   read it out
+ 193:ui.c          **** 				break;
+ 194:ui.c          **** 				case '1':
+ 195:ui.c          **** 				DDRB &= ~(1<<PB1);
+ 196:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB1))>>PB1));
+ 197:ui.c          **** 				break;
+ 198:ui.c          **** 				case '2':
+ 199:ui.c          **** 				DDRB &= ~(1<<PB2);
+ 200:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB2))>>PB2));
+ 201:ui.c          **** 				break;
+ 202:ui.c          **** 				case '3':
+ 203:ui.c          **** 				DDRB &= ~(1<<PB3);
+ 204:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB3))>>PB3));
+ 205:ui.c          **** 				break;
+ 206:ui.c          **** 				case '6':
+ 207:ui.c          **** 				DDRD &= ~(1<<PD6);
+ 208:ui.c          **** 				serialWriteChar('0'+((PIND & (1<<PD6))>>PD6));
+ 209:ui.c          **** 				break;
+ 210:ui.c          **** 				default:
+ 211:ui.c          **** 				abortInput();
+ 212:ui.c          **** 				break;
+ 213:ui.c          **** 			}
+ 214:ui.c          **** 		}
+ 215:ui.c          **** 		// case 'H': indicates user wants to set the state of a given pin to
+ 216:ui.c          **** 		//   high. Pins available for this are PB0:3 and PD6; we'll respond
+ 217:ui.c          **** 		//   based on a numerical input 0-3 or 6. Other values print an
+ 218:ui.c          **** 		//   error message.
+ 219:ui.c          **** 		else if (mode == 'H')
+ 220:ui.c          **** 		{
+ 221:ui.c          **** 			mode = ' ';   // clear mode. We'll do this regardless of outcome.
+ 222:ui.c          **** 			switch(localData)
+ 223:ui.c          **** 			{
+ 224:ui.c          **** 				case '0':
+ 225:ui.c          **** 				DDRB |= (1<<PB0);	// make pin an output
+ 226:ui.c          **** 				PORTB |= (1<<PB0);  // set pin high
+ 227:ui.c          **** 				break;
+ 228:ui.c          **** 				case '1':
+ 229:ui.c          **** 				DDRB |= (1<<PB1);
+ 230:ui.c          **** 				PORTB |= (1<<PB1);
+ 231:ui.c          **** 				break;
+ 232:ui.c          **** 				case '2':
+ 233:ui.c          **** 				DDRB |= (1<<PB2);
+ 234:ui.c          **** 				PORTB |= (1<<PB2);
+ 235:ui.c          **** 				break;
+ 236:ui.c          **** 				case '3':
+ 237:ui.c          **** 				DDRB |= (1<<PB3);
+ 238:ui.c          **** 				PORTB |= (1<<PB3);
+ 239:ui.c          **** 				break;
+ 240:ui.c          **** 				case '6':
+ 241:ui.c          **** 				DDRD |= (1<<PD6);
+ 242:ui.c          **** 				PORTD |= (1<<PD6);
+ 243:ui.c          **** 				break;
+ 244:ui.c          **** 				default:
+ 245:ui.c          **** 				abortInput();
+ 246:ui.c          **** 				break;
+ 247:ui.c          **** 			}
+ 248:ui.c          **** 		}
+ 249:ui.c          **** 		// case 'L': indicates user wants to set the state of a given pin to
+ 250:ui.c          **** 		//   low. Pins available for this are PB0:3 and PD6; we'll respond
+ 251:ui.c          **** 		//   based on a numerical input 0-3 or 6. Other values print an
+ 252:ui.c          **** 		//   error message.
+ 253:ui.c          **** 		else if (mode == 'L')
+ 254:ui.c          **** 		{
+ 255:ui.c          **** 			mode = ' ';   // clear mode. We'll do this regardless of outcome.
+ 256:ui.c          **** 			switch(localData)
+ 257:ui.c          **** 			{
+ 258:ui.c          **** 				case '0':
+ 259:ui.c          **** 				DDRB |= (1<<PB0);	// make pin an output
+ 260:ui.c          **** 				PORTB &= ~(1<<PB0); // set pin low
+ 261:ui.c          **** 				break;
+ 262:ui.c          **** 				case '1':
+ 263:ui.c          **** 				DDRB |= (1<<PB1);
+ 264:ui.c          **** 				PORTB &= ~(1<<PB1);
+ 265:ui.c          **** 				break;
+ 266:ui.c          **** 				case '2':
+ 267:ui.c          **** 				DDRB |= (1<<PB2);
+ 268:ui.c          **** 				PORTB &= ~(1<<PB2);
+ 269:ui.c          **** 				break;
+ 270:ui.c          **** 				case '3':
+ 271:ui.c          **** 				DDRB |= (1<<PB3);
+ 272:ui.c          **** 				PORTB &= ~(1<<PB3);
+ 273:ui.c          **** 				break;
+ 274:ui.c          **** 				case '6':
+ 275:ui.c          **** 				DDRD |= (1<<PD6);
+ 276:ui.c          **** 				PORTD &= ~(1<<PD6);
+ 277:ui.c          **** 				break;
+ 278:ui.c          **** 				default:
+ 279:ui.c          **** 				abortInput();
+ 280:ui.c          **** 				break;
+ 281:ui.c          **** 			}
+ 282:ui.c          **** 		}
+ 283:ui.c          **** 		// Case numeric value AND some other state not involving pins-
+ 284:ui.c          **** 		//   store the value into input buffer.
+ 285:ui.c          **** 		else if (('0' <= localData) & (localData <= '9'))
+ 286:ui.c          **** 		{
+ 287:ui.c          **** 			inputBufferValue *= 10;
+ 288:ui.c          **** 			inputBufferValue += (localData - '0');
+ 289:ui.c          **** 		}
+ 290:ui.c          **** 		// Case ANYTHING ELSE entered by user- clear mode, and whine a bit
+ 291:ui.c          **** 		//   so they know the screwed up.
+ 292:ui.c          **** 		else
+ 293:ui.c          **** 		{
+ 294:ui.c          **** 			mode = ' ';
+ 295:ui.c          **** 			abortInput();
+ 296:ui.c          **** 		}
+ 297:ui.c          **** 	}
+ 298:ui.c          **** 	
+ 299:ui.c          **** // Otherwise, just ignore what's happening and go back to null mode.
+ 300:ui.c          **** 	else 
+ 301:ui.c          **** 	{
+ 302:ui.c          **** 		mode = ' ';
+ 303:ui.c          **** 		abortInput();
+ 304:ui.c          **** 	}		
+ 305:ui.c          **** }
+ 306:ui.c          **** 
+ 307:ui.c          **** // Because of the nature of the processor, strings constants use up a 
+ 308:ui.c          **** //   disproportionate amount of flash memory. Therefore, it makes sense to 
+ 309:ui.c          **** //   minimize string constant storage in memory by writing a single function
+ 310:ui.c          **** //   to handle frequently called string constant print calls, even if it
+ 311:ui.c          **** //   would be simpler (and tidier) to put it inline.
+ 312:ui.c          **** void printMenu(void)
+ 313:ui.c          **** {
+  18               		.loc 1 313 1 view -0
+  19               		.cfi_startproc
+  20               	/* prologue: function */
+  21               	/* frame size = 0 */
+  22               	/* stack size = 0 */
+  23               	.L__stack_usage = 0
+ 314:ui.c          **** 	serialWrite(":-)");
+  24               		.loc 1 314 2 view .LVU1
+  25 0000 80E0      		ldi r24,lo8(.LC0)
+  26 0002 90E0      		ldi r25,hi8(.LC0)
+  27 0004 00C0      		rjmp serialWrite
+  28               	.LVL0:
+  29               		.cfi_endproc
+  30               	.LFE1:
+  32               		.section	.rodata.str1.1
+  33               	.LC1:
+  34 0004 3A2D 2800 		.string	":-("
+  35               		.text
+  36               	.global	abortInput
+  38               	abortInput:
+  39               	.LFB2:
+ 315:ui.c          **** }
+ 316:ui.c          **** 
+ 317:ui.c          **** void abortInput(void)
+ 318:ui.c          **** {
+  40               		.loc 1 318 1 view -0
+  41               		.cfi_startproc
+  42               	/* prologue: function */
+  43               	/* frame size = 0 */
+  44               	/* stack size = 0 */
+  45               	.L__stack_usage = 0
+ 319:ui.c          **** 	serialWrite(":-(");
+  46               		.loc 1 319 2 view .LVU3
+  47 0006 80E0      		ldi r24,lo8(.LC1)
+  48 0008 90E0      		ldi r25,hi8(.LC1)
+  49 000a 00C0      		rjmp serialWrite
+  50               	.LVL1:
+  51               		.cfi_endproc
+  52               	.LFE2:
+  54               	.global	serialParse
+  56               	serialParse:
+  57               	.LFB0:
+  32:ui.c          **** 	// Static variables- these need to persist between calls to this function.
+  58               		.loc 1 32 1 view -0
+  59               		.cfi_startproc
+  60               	/* prologue: function */
+  61               	/* frame size = 0 */
+  62               	/* stack size = 0 */
+  63               	.L__stack_usage = 0
+  41:ui.c          **** 	// mode lets the function know how it should respond to data. In some cases,
+  64               		.loc 1 41 2 view .LVU5
+  45:ui.c          **** 	// serialDataBuffer is used to store a value the user wants to either send
+  65               		.loc 1 45 2 view .LVU6
+  50:ui.c          **** 	// localData buffers serialRxData. Because of the length of time it can
+  66               		.loc 1 50 2 view .LVU7
+  58:ui.c          **** 	
+  67               		.loc 1 58 2 view .LVU8
+  58:ui.c          **** 	
+  68               		.loc 1 58 13 is_stmt 0 view .LVU9
+  69 000c 2091 0000 		lds r18,serialRxData
+  70               	.LVL2:
+  60:ui.c          **** 	//serialWriteChar(localData);		// Echo received data. Removed from
+  71               		.loc 1 60 2 is_stmt 1 view .LVU10
+  60:ui.c          **** 	//serialWriteChar(localData);		// Echo received data. Removed from
+  72               		.loc 1 60 15 is_stmt 0 view .LVU11
+  73 0010 1092 0000 		sts serialRxData,__zero_reg__
+  75:ui.c          **** 	
+  74               		.loc 1 75 2 is_stmt 1 view .LVU12
+  75:ui.c          **** 	
+  75               		.loc 1 75 27 is_stmt 0 view .LVU13
+  76 0014 91E0      		ldi r25,lo8(1)
+  77 0016 2A30      		cpi r18,lo8(10)
+  78 0018 01F0      		breq .L4
+  79 001a 90E0      		ldi r25,0
+  80               	.L4:
+  81 001c 81E0      		ldi r24,lo8(1)
+  82 001e 2D30      		cpi r18,lo8(13)
+  83 0020 01F0      		breq .L5
+  84 0022 80E0      		ldi r24,0
+  85               	.L5:
+  86 0024 982B      		or r25,r24
+  75:ui.c          **** 	
+  87               		.loc 1 75 58 view .LVU14
+  88 0026 8091 0000 		lds r24,mode.1533
+  89 002a 31E0      		ldi r19,lo8(1)
+  90 002c 8032      		cpi r24,lo8(32)
+  91 002e 01F0      		breq .L6
+  92 0030 30E0      		ldi r19,0
+  93               	.L6:
+  75:ui.c          **** 	
+  94               		.loc 1 75 5 view .LVU15
+  95 0032 9923      		tst r25
+  96 0034 01F0      		breq .L7
+  97 0036 3111      		cpse r19,__zero_reg__
+  98 0038 00C0      		rjmp .L3
+  99               	.L7:
+  79:ui.c          **** 	{
+ 100               		.loc 1 79 7 is_stmt 1 view .LVU16
+  79:ui.c          **** 	{
+ 101               		.loc 1 79 63 is_stmt 0 view .LVU17
+ 102 003a 8032      		cpi r24,lo8(32)
+ 103 003c 01F4      		brne .+2
+ 104 003e 00C0      		rjmp .L9
+  79:ui.c          **** 	{
+ 105               		.loc 1 79 10 view .LVU18
+ 106 0040 9923      		tst r25
+ 107 0042 01F4      		brne .+2
+ 108 0044 00C0      		rjmp .L9
+  82:ui.c          **** 		{
+ 109               		.loc 1 82 3 is_stmt 1 view .LVU19
+ 110 0046 8536      		cpi r24,lo8(101)
+ 111 0048 01F4      		brne .+2
+ 112 004a 00C0      		rjmp .L11
+ 113 004c 00F4      		brsh .L12
+ 114 004e 8236      		cpi r24,lo8(98)
+ 115 0050 01F0      		breq .L13
+ 116 0052 8436      		cpi r24,lo8(100)
+ 117 0054 01F0      		breq .L14
+ 118 0056 8534      		cpi r24,lo8(69)
+ 119 0058 01F4      		brne .+2
+ 120 005a 00C0      		rjmp .L15
+ 121               	.LVL3:
+ 122               	.L16:
+ 129:ui.c          **** 		mode = ' ';					// Reset the mode for next data stream.
+ 123               		.loc 1 129 3 view .LVU20
+ 129:ui.c          **** 		mode = ' ';					// Reset the mode for next data stream.
+ 124               		.loc 1 129 20 is_stmt 0 view .LVU21
+ 125 005c 1092 0000 		sts inputBufferValue.1532+1,__zero_reg__
+ 126 0060 1092 0000 		sts inputBufferValue.1532,__zero_reg__
+ 130:ui.c          **** 		printMenu();				// Just an indicator of success.
+ 127               		.loc 1 130 3 is_stmt 1 view .LVU22
+ 130:ui.c          **** 		printMenu();				// Just an indicator of success.
+ 128               		.loc 1 130 8 is_stmt 0 view .LVU23
+ 129 0064 80E2      		ldi r24,lo8(32)
+ 130 0066 8093 0000 		sts mode.1533,r24
+ 131:ui.c          **** 	}
+ 131               		.loc 1 131 3 is_stmt 1 view .LVU24
+ 132 006a 00C0      		rjmp printMenu
+ 133               	.LVL4:
+ 134               	.L12:
+  82:ui.c          **** 		{
+ 135               		.loc 1 82 3 is_stmt 0 view .LVU25
+ 136 006c 8437      		cpi r24,lo8(116)
+ 137 006e 01F0      		breq .L17
+ 138 0070 8737      		cpi r24,lo8(119)
+ 139 0072 01F0      		breq .L18
+ 140 0074 8237      		cpi r24,lo8(114)
+ 141 0076 01F4      		brne .L16
+ 116:ui.c          **** 			break;
+ 142               		.loc 1 116 4 is_stmt 1 view .LVU26
+ 116:ui.c          **** 			break;
+ 143               		.loc 1 116 29 is_stmt 0 view .LVU27
+ 144 0078 8091 0000 		lds r24,inputBufferValue.1532
+ 145 007c 00D0      		rcall ADXLReadByte
+ 146               	.LVL5:
+ 147               	.L124:
+ 126:ui.c          **** 			break;
+ 148               		.loc 1 126 4 view .LVU28
+ 149 007e 90E0      		ldi r25,0
+ 150 0080 00D0      		rcall serialWriteInt
+ 151               	.LVL6:
+ 127:ui.c          **** 		}
+ 152               		.loc 1 127 4 is_stmt 1 view .LVU29
+ 153 0082 00C0      		rjmp .L16
+ 154               	.LVL7:
+ 155               	.L17:
+  89:ui.c          **** 			break;
+ 156               		.loc 1 89 4 view .LVU30
+ 157 0084 6091 0000 		lds r22,inputBufferValue.1532
+ 158 0088 7091 0000 		lds r23,inputBufferValue.1532+1
+ 159 008c 80E0      		ldi r24,0
+ 160               	.LVL8:
+ 161               	.L123:
+  99:ui.c          **** 			break;
+ 162               		.loc 1 99 4 is_stmt 0 view .LVU31
+ 163 008e 00D0      		rcall EEPROMWriteWord
+ 164               	.LVL9:
+ 100:ui.c          **** 			// 'b' indicates that the user wishes to buffer a value to be written
+ 165               		.loc 1 100 4 is_stmt 1 view .LVU32
+ 166 0090 00C0      		rjmp .L16
+ 167               	.LVL10:
+ 168               	.L14:
+  97:ui.c          **** 			if (t1Offset > 63535) t1Offset = 63535;
+ 169               		.loc 1 97 4 view .LVU33
+  97:ui.c          **** 			if (t1Offset > 63535) t1Offset = 63535;
+ 170               		.loc 1 97 21 is_stmt 0 view .LVU34
+ 171 0092 8091 0000 		lds r24,inputBufferValue.1532
+ 172 0096 9091 0000 		lds r25,inputBufferValue.1532+1
+ 173 009a 8095      		com r24
+ 174 009c 9095      		com r25
+  98:ui.c          **** 			EEPROMWriteWord((uint8_t)WAKE_OFFS, t1Offset);
+ 175               		.loc 1 98 4 is_stmt 1 view .LVU35
+  98:ui.c          **** 			EEPROMWriteWord((uint8_t)WAKE_OFFS, t1Offset);
+ 176               		.loc 1 98 7 is_stmt 0 view .LVU36
+ 177 009e 8033      		cpi r24,48
+ 178 00a0 28EF      		ldi r18,-8
+ 179 00a2 9207      		cpc r25,r18
+ 180               	.LVL11:
+  98:ui.c          **** 			EEPROMWriteWord((uint8_t)WAKE_OFFS, t1Offset);
+ 181               		.loc 1 98 7 view .LVU37
+ 182 00a4 00F4      		brsh .L20
+ 183               	.L122:
+  98:ui.c          **** 			EEPROMWriteWord((uint8_t)WAKE_OFFS, t1Offset);
+ 184               		.loc 1 98 35 discriminator 1 view .LVU38
+ 185 00a6 9093 0000 		sts t1Offset+1,r25
+ 186 00aa 8093 0000 		sts t1Offset,r24
+  99:ui.c          **** 			break;
+ 187               		.loc 1 99 4 is_stmt 1 discriminator 1 view .LVU39
+ 188 00ae 6091 0000 		lds r22,t1Offset
+ 189 00b2 7091 0000 		lds r23,t1Offset+1
+ 190 00b6 82E0      		ldi r24,lo8(2)
+ 191 00b8 00C0      		rjmp .L123
+ 192               	.L20:
+  98:ui.c          **** 			EEPROMWriteWord((uint8_t)WAKE_OFFS, t1Offset);
+ 193               		.loc 1 98 26 discriminator 1 view .LVU40
+  98:ui.c          **** 			EEPROMWriteWord((uint8_t)WAKE_OFFS, t1Offset);
+ 194               		.loc 1 98 35 is_stmt 0 discriminator 1 view .LVU41
+ 195 00ba 8FE2      		ldi r24,lo8(47)
+ 196 00bc 98EF      		ldi r25,lo8(-8)
+ 197 00be 00C0      		rjmp .L122
+ 198               	.LVL12:
+ 199               	.L13:
+ 104:ui.c          **** 			break;
+ 200               		.loc 1 104 4 is_stmt 1 view .LVU42
+ 104:ui.c          **** 			break;
+ 201               		.loc 1 104 23 is_stmt 0 view .LVU43
+ 202 00c0 8091 0000 		lds r24,inputBufferValue.1532
+ 203 00c4 8093 0000 		sts serialDataBuffer.1534,r24
+ 105:ui.c          **** 			// 'w' indicates that the user wants to write a value directly to the
+ 204               		.loc 1 105 4 is_stmt 1 view .LVU44
+ 205 00c8 00C0      		rjmp .L16
+ 206               	.L18:
+ 111:ui.c          **** 			break;
+ 207               		.loc 1 111 4 view .LVU45
+ 208 00ca 6091 0000 		lds r22,serialDataBuffer.1534
+ 209 00ce 8091 0000 		lds r24,inputBufferValue.1532
+ 210 00d2 00D0      		rcall ADXLWriteByte
+ 211               	.LVL13:
+ 112:ui.c          **** 			// 'r' indicates a desire to read from an address in the ADXL part.
+ 212               		.loc 1 112 4 view .LVU46
+ 213 00d4 00C0      		rjmp .L16
+ 214               	.LVL14:
+ 215               	.L11:
+ 121:ui.c          **** 			break;
+ 216               		.loc 1 121 4 view .LVU47
+ 217 00d6 6091 0000 		lds r22,serialDataBuffer.1534
+ 218 00da 8091 0000 		lds r24,inputBufferValue.1532
+ 219 00de 00D0      		rcall EEPROMWriteByte
+ 220               	.LVL15:
+ 122:ui.c          **** 			// 'E' directs the device to return a value stored in the EEPROM
+ 221               		.loc 1 122 4 view .LVU48
+ 222 00e0 00C0      		rjmp .L16
+ 223               	.LVL16:
+ 224               	.L15:
+ 126:ui.c          **** 			break;
+ 225               		.loc 1 126 4 view .LVU49
+ 126:ui.c          **** 			break;
+ 226               		.loc 1 126 29 is_stmt 0 view .LVU50
+ 227 00e2 8091 0000 		lds r24,inputBufferValue.1532
+ 228 00e6 00D0      		rcall EEPROMReadByte
+ 229               	.LVL17:
+ 126:ui.c          **** 			break;
+ 230               		.loc 1 126 29 view .LVU51
+ 231 00e8 00C0      		rjmp .L124
+ 232               	.LVL18:
+ 233               	.L9:
+ 137:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 234               		.loc 1 137 7 is_stmt 1 view .LVU52
+ 146:ui.c          **** 			(localData == 'H') |	// Set pin high (pins on header only)
+ 235               		.loc 1 146 15 is_stmt 0 view .LVU53
+ 236 00ea 522F      		mov r21,r18
+ 237 00ec 5B7F      		andi r21,lo8(-5)
+ 140:ui.c          **** 			(localData == 'b') |	// Buffer a byte for EEPROM or ADXL write
+ 238               		.loc 1 140 15 view .LVU54
+ 239 00ee 91E0      		ldi r25,lo8(1)
+ 240 00f0 2A37      		cpi r18,lo8(122)
+ 241 00f2 01F0      		breq .L23
+ 242 00f4 90E0      		ldi r25,0
+ 243               	.L23:
+ 142:ui.c          **** 			(localData == 'r') |	// Read ADXL362 register
+ 244               		.loc 1 142 15 view .LVU55
+ 245 00f6 41E0      		ldi r20,lo8(1)
+ 246 00f8 2737      		cpi r18,lo8(119)
+ 247 00fa 01F0      		breq .L24
+ 248 00fc 40E0      		ldi r20,0
+ 249               	.L24:
+ 137:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 250               		.loc 1 137 10 view .LVU56
+ 251 00fe 942B      		or r25,r20
+ 145:ui.c          **** 			(localData == 'p') |	// Read pin level (pins on header only)
+ 252               		.loc 1 145 15 view .LVU57
+ 253 0100 41E0      		ldi r20,lo8(1)
+ 254 0102 2534      		cpi r18,lo8(69)
+ 255 0104 01F0      		breq .L25
+ 256 0106 40E0      		ldi r20,0
+ 257               	.L25:
+ 137:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 258               		.loc 1 137 10 view .LVU58
+ 259 0108 942B      		or r25,r20
+ 138:ui.c          **** 			(localData == 'd') |	// Change the delay before sleep
+ 260               		.loc 1 138 23 view .LVU59
+ 261 010a 61E0      		ldi r22,lo8(1)
+ 262 010c 4CE9      		ldi r20,lo8(-100)
+ 263 010e 420F      		add r20,r18
+ 264 0110 4230      		cpi r20,lo8(2)
+ 265 0112 00F0      		brlo .L26
+ 266 0114 60E0      		ldi r22,0
+ 267               	.L26:
+ 137:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 268               		.loc 1 137 10 view .LVU60
+ 269 0116 962B      		or r25,r22
+ 141:ui.c          **** 			(localData == 'w') |	// Write buffered byte to ADXL362 register
+ 270               		.loc 1 141 15 view .LVU61
+ 271 0118 61E0      		ldi r22,lo8(1)
+ 272 011a 422F      		mov r20,r18
+ 273 011c 4F7E      		andi r20,lo8(-17)
+ 274 011e 4236      		cpi r20,lo8(98)
+ 275 0120 01F0      		breq .L27
+ 276 0122 60E0      		ldi r22,0
+ 277               	.L27:
+ 137:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 278               		.loc 1 137 10 view .LVU62
+ 279 0124 962B      		or r25,r22
+ 146:ui.c          **** 			(localData == 'H') |	// Set pin high (pins on header only)
+ 280               		.loc 1 146 15 view .LVU63
+ 281 0126 41E0      		ldi r20,lo8(1)
+ 282 0128 5037      		cpi r21,lo8(112)
+ 283 012a 01F0      		breq .L28
+ 284 012c 40E0      		ldi r20,0
+ 285               	.L28:
+ 137:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 286               		.loc 1 137 10 view .LVU64
+ 287 012e 942B      		or r25,r20
+ 147:ui.c          **** 			(localData == 'L')		// Set pin low (pins on header only)
+ 288               		.loc 1 147 15 view .LVU65
+ 289 0130 41E0      		ldi r20,lo8(1)
+ 290 0132 5834      		cpi r21,lo8(72)
+ 291 0134 01F0      		breq .L29
+ 292 0136 40E0      		ldi r20,0
+ 293               	.L29:
+ 137:ui.c          **** 			(localData == 't') |	// Change the threshold setting
+ 294               		.loc 1 137 10 view .LVU66
+ 295 0138 942B      		or r25,r20
+ 296 013a 01F0      		breq .L22
+ 297 013c 3323      		tst r19
+ 298 013e 01F0      		breq .L22
+ 151:ui.c          **** 		// Most of the time, we need more information from the user. SOMETIMES,
+ 299               		.loc 1 151 3 is_stmt 1 view .LVU67
+ 151:ui.c          **** 		// Most of the time, we need more information from the user. SOMETIMES,
+ 300               		.loc 1 151 8 is_stmt 0 view .LVU68
+ 301 0140 2093 0000 		sts mode.1533,r18
+ 157:ui.c          **** 		{
+ 302               		.loc 1 157 6 is_stmt 1 view .LVU69
+ 157:ui.c          **** 		{
+ 303               		.loc 1 157 9 is_stmt 0 view .LVU70
+ 304 0144 2A37      		cpi r18,lo8(122)
+ 305 0146 01F0      		breq .+2
+ 306 0148 00C0      		rjmp .L3
+ 159:ui.c          **** 							//   occur right after an overflow of TCNT1.
+ 307               		.loc 1 159 4 is_stmt 1 view .LVU71
+ 159:ui.c          **** 							//   occur right after an overflow of TCNT1.
+ 308               		.loc 1 159 10 is_stmt 0 view .LVU72
+ 309 014a 8CED      		ldi r24,lo8(-36)
+ 310 014c 9FEF      		ldi r25,lo8(-1)
+ 311 014e 9DBD      		out 0x2c+1,r25
+ 312 0150 8CBD      		out 0x2c,r24
+ 161:ui.c          **** 		}
+ 313               		.loc 1 161 4 is_stmt 1 view .LVU73
+ 161:ui.c          **** 		}
+ 314               		.loc 1 161 9 is_stmt 0 view .LVU74
+ 315 0152 80E2      		ldi r24,lo8(32)
+ 316 0154 8093 0000 		sts mode.1533,r24
+ 317 0158 0895      		ret
+ 318               	.L22:
+ 167:ui.c          **** 				(mode == 'd')|\
+ 319               		.loc 1 167 7 is_stmt 1 view .LVU75
+ 173:ui.c          **** 				(mode == 'H')|\
+ 320               		.loc 1 173 11 is_stmt 0 view .LVU76
+ 321 015a 482F      		mov r20,r24
+ 322 015c 4B7F      		andi r20,lo8(-5)
+ 169:ui.c          **** 				(mode == 'r')|\
+ 323               		.loc 1 169 11 view .LVU77
+ 324 015e 91E0      		ldi r25,lo8(1)
+ 325 0160 8737      		cpi r24,lo8(119)
+ 326 0162 01F0      		breq .L33
+ 327 0164 90E0      		ldi r25,0
+ 328               	.L33:
+ 172:ui.c          **** 				(mode == 'p')|\
+ 329               		.loc 1 172 11 view .LVU78
+ 330 0166 31E0      		ldi r19,lo8(1)
+ 331 0168 8534      		cpi r24,lo8(69)
+ 332 016a 01F0      		breq .L34
+ 333 016c 30E0      		ldi r19,0
+ 334               	.L34:
+ 167:ui.c          **** 				(mode == 'd')|\
+ 335               		.loc 1 167 10 view .LVU79
+ 336 016e 932B      		or r25,r19
+ 167:ui.c          **** 				(mode == 'd')|\
+ 337               		.loc 1 167 25 view .LVU80
+ 338 0170 51E0      		ldi r21,lo8(1)
+ 339 0172 3CE9      		ldi r19,lo8(-100)
+ 340 0174 380F      		add r19,r24
+ 341 0176 3230      		cpi r19,lo8(2)
+ 342 0178 00F0      		brlo .L35
+ 343 017a 50E0      		ldi r21,0
+ 344               	.L35:
+ 167:ui.c          **** 				(mode == 'd')|\
+ 345               		.loc 1 167 10 view .LVU81
+ 346 017c 952B      		or r25,r21
+ 173:ui.c          **** 				(mode == 'H')|\
+ 347               		.loc 1 173 11 view .LVU82
+ 348 017e 31E0      		ldi r19,lo8(1)
+ 349 0180 4037      		cpi r20,lo8(112)
+ 350 0182 01F0      		breq .L36
+ 351 0184 30E0      		ldi r19,0
+ 352               	.L36:
+ 167:ui.c          **** 				(mode == 'd')|\
+ 353               		.loc 1 167 10 view .LVU83
+ 354 0186 932B      		or r25,r19
+ 174:ui.c          **** 				(mode == 'L')|\
+ 355               		.loc 1 174 11 view .LVU84
+ 356 0188 31E0      		ldi r19,lo8(1)
+ 357 018a 4834      		cpi r20,lo8(72)
+ 358 018c 01F0      		breq .L37
+ 359 018e 30E0      		ldi r19,0
+ 360               	.L37:
+ 167:ui.c          **** 				(mode == 'd')|\
+ 361               		.loc 1 167 10 view .LVU85
+ 362 0190 932B      		or r25,r19
+ 363 0192 01F4      		brne .L61
+ 176:ui.c          **** 	{
+ 364               		.loc 1 176 11 view .LVU86
+ 365 0194 982F      		mov r25,r24
+ 366 0196 9F7E      		andi r25,lo8(-17)
+ 367 0198 9236      		cpi r25,lo8(98)
+ 368 019a 01F0      		breq .+2
+ 369 019c 00C0      		rjmp .L31
+ 370               	.L61:
+ 184:ui.c          **** 		{
+ 371               		.loc 1 184 3 is_stmt 1 view .LVU87
+ 184:ui.c          **** 		{
+ 372               		.loc 1 184 6 is_stmt 0 view .LVU88
+ 373 019e 8037      		cpi r24,lo8(112)
+ 374 01a0 01F4      		brne .L39
+ 186:ui.c          **** 			switch(localData)
+ 375               		.loc 1 186 4 is_stmt 1 view .LVU89
+ 186:ui.c          **** 			switch(localData)
+ 376               		.loc 1 186 9 is_stmt 0 view .LVU90
+ 377 01a2 80E2      		ldi r24,lo8(32)
+ 378 01a4 8093 0000 		sts mode.1533,r24
+ 187:ui.c          **** 			{
+ 379               		.loc 1 187 4 is_stmt 1 view .LVU91
+ 380 01a8 2233      		cpi r18,lo8(50)
+ 381 01aa 01F0      		breq .L40
+ 382 01ac 00F4      		brsh .L41
+ 383 01ae 2033      		cpi r18,lo8(48)
+ 384 01b0 01F0      		breq .L42
+ 385 01b2 2133      		cpi r18,lo8(49)
+ 386 01b4 01F0      		breq .L43
+ 387               	.L126:
+ 295:ui.c          **** 		}
+ 388               		.loc 1 295 4 view .LVU92
+ 389 01b6 00C0      		rjmp abortInput
+ 390               	.LVL19:
+ 391               	.L41:
+ 187:ui.c          **** 			{
+ 392               		.loc 1 187 4 is_stmt 0 view .LVU93
+ 393 01b8 2333      		cpi r18,lo8(51)
+ 394 01ba 01F0      		breq .L45
+ 395 01bc 2633      		cpi r18,lo8(54)
+ 396 01be 01F4      		brne .L126
+ 207:ui.c          **** 				serialWriteChar('0'+((PIND & (1<<PD6))>>PD6));
+ 397               		.loc 1 207 5 is_stmt 1 view .LVU94
+ 207:ui.c          **** 				serialWriteChar('0'+((PIND & (1<<PD6))>>PD6));
+ 398               		.loc 1 207 10 is_stmt 0 view .LVU95
+ 399 01c0 8E98      		cbi 0x11,6
+ 208:ui.c          **** 				break;
+ 400               		.loc 1 208 5 is_stmt 1 view .LVU96
+ 208:ui.c          **** 				break;
+ 401               		.loc 1 208 27 is_stmt 0 view .LVU97
+ 402 01c2 80B3      		in r24,0x10
+ 208:ui.c          **** 				break;
+ 403               		.loc 1 208 43 view .LVU98
+ 404 01c4 86FB      		bst r24,6
+ 405 01c6 8827      		clr r24
+ 406 01c8 80F9      		bld r24,0
+ 407 01ca 00C0      		rjmp .L125
+ 408               	.L42:
+ 190:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB0))>>PB0));    // isolate bit and
+ 409               		.loc 1 190 5 is_stmt 1 view .LVU99
+ 190:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB0))>>PB0));    // isolate bit and
+ 410               		.loc 1 190 10 is_stmt 0 view .LVU100
+ 411 01cc B898      		cbi 0x17,0
+ 191:ui.c          **** 														    //   read it out
+ 412               		.loc 1 191 5 is_stmt 1 view .LVU101
+ 191:ui.c          **** 														    //   read it out
+ 413               		.loc 1 191 43 is_stmt 0 view .LVU102
+ 414 01ce 86B3      		in r24,0x16
+ 415 01d0 8170      		andi r24,lo8(1)
+ 416               	.L125:
+ 196:ui.c          **** 				break;
+ 417               		.loc 1 196 5 view .LVU103
+ 418 01d2 805D      		subi r24,lo8(-(48))
+ 419 01d4 00C0      		rjmp serialWriteChar
+ 420               	.LVL20:
+ 421               	.L43:
+ 195:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB1))>>PB1));
+ 422               		.loc 1 195 5 is_stmt 1 view .LVU104
+ 195:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB1))>>PB1));
+ 423               		.loc 1 195 10 is_stmt 0 view .LVU105
+ 424 01d6 B998      		cbi 0x17,1
+ 196:ui.c          **** 				break;
+ 425               		.loc 1 196 5 is_stmt 1 view .LVU106
+ 196:ui.c          **** 				break;
+ 426               		.loc 1 196 27 is_stmt 0 view .LVU107
+ 427 01d8 86B3      		in r24,0x16
+ 196:ui.c          **** 				break;
+ 428               		.loc 1 196 43 view .LVU108
+ 429 01da 8695      		lsr r24
+ 430 01dc 8170      		andi r24,1
+ 431 01de 00C0      		rjmp .L125
+ 432               	.L40:
+ 199:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB2))>>PB2));
+ 433               		.loc 1 199 5 is_stmt 1 view .LVU109
+ 199:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB2))>>PB2));
+ 434               		.loc 1 199 10 is_stmt 0 view .LVU110
+ 435 01e0 BA98      		cbi 0x17,2
+ 200:ui.c          **** 				break;
+ 436               		.loc 1 200 5 is_stmt 1 view .LVU111
+ 200:ui.c          **** 				break;
+ 437               		.loc 1 200 27 is_stmt 0 view .LVU112
+ 438 01e2 86B3      		in r24,0x16
+ 200:ui.c          **** 				break;
+ 439               		.loc 1 200 43 view .LVU113
+ 440 01e4 82FB      		bst r24,2
+ 441 01e6 8827      		clr r24
+ 442 01e8 80F9      		bld r24,0
+ 443 01ea 00C0      		rjmp .L125
+ 444               	.L45:
+ 203:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB3))>>PB3));
+ 445               		.loc 1 203 5 is_stmt 1 view .LVU114
+ 203:ui.c          **** 				serialWriteChar('0'+((PINB & (1<<PB3))>>PB3));
+ 446               		.loc 1 203 10 is_stmt 0 view .LVU115
+ 447 01ec BB98      		cbi 0x17,3
+ 204:ui.c          **** 				break;
+ 448               		.loc 1 204 5 is_stmt 1 view .LVU116
+ 204:ui.c          **** 				break;
+ 449               		.loc 1 204 27 is_stmt 0 view .LVU117
+ 450 01ee 86B3      		in r24,0x16
+ 204:ui.c          **** 				break;
+ 451               		.loc 1 204 43 view .LVU118
+ 452 01f0 83FB      		bst r24,3
+ 453 01f2 8827      		clr r24
+ 454 01f4 80F9      		bld r24,0
+ 455 01f6 00C0      		rjmp .L125
+ 456               	.L39:
+ 219:ui.c          **** 		{
+ 457               		.loc 1 219 8 is_stmt 1 view .LVU119
+ 219:ui.c          **** 		{
+ 458               		.loc 1 219 11 is_stmt 0 view .LVU120
+ 459 01f8 8834      		cpi r24,lo8(72)
+ 460 01fa 01F4      		brne .L47
+ 221:ui.c          **** 			switch(localData)
+ 461               		.loc 1 221 4 is_stmt 1 view .LVU121
+ 221:ui.c          **** 			switch(localData)
+ 462               		.loc 1 221 9 is_stmt 0 view .LVU122
+ 463 01fc 80E2      		ldi r24,lo8(32)
+ 464 01fe 8093 0000 		sts mode.1533,r24
+ 222:ui.c          **** 			{
+ 465               		.loc 1 222 4 is_stmt 1 view .LVU123
+ 466 0202 2233      		cpi r18,lo8(50)
+ 467 0204 01F0      		breq .L48
+ 468 0206 00F4      		brsh .L49
+ 469 0208 2033      		cpi r18,lo8(48)
+ 470 020a 01F0      		breq .L50
+ 471 020c 2133      		cpi r18,lo8(49)
+ 472 020e 01F4      		brne .L126
+ 229:ui.c          **** 				PORTB |= (1<<PB1);
+ 473               		.loc 1 229 5 view .LVU124
+ 229:ui.c          **** 				PORTB |= (1<<PB1);
+ 474               		.loc 1 229 10 is_stmt 0 view .LVU125
+ 475 0210 B99A      		sbi 0x17,1
+ 230:ui.c          **** 				break;
+ 476               		.loc 1 230 5 is_stmt 1 view .LVU126
+ 230:ui.c          **** 				break;
+ 477               		.loc 1 230 11 is_stmt 0 view .LVU127
+ 478 0212 C19A      		sbi 0x18,1
+ 231:ui.c          **** 				case '2':
+ 479               		.loc 1 231 5 is_stmt 1 view .LVU128
+ 480 0214 0895      		ret
+ 481               	.L49:
+ 222:ui.c          **** 			{
+ 482               		.loc 1 222 4 is_stmt 0 view .LVU129
+ 483 0216 2333      		cpi r18,lo8(51)
+ 484 0218 01F0      		breq .L52
+ 485 021a 2633      		cpi r18,lo8(54)
+ 486 021c 01F4      		brne .L126
+ 241:ui.c          **** 				PORTD |= (1<<PD6);
+ 487               		.loc 1 241 5 is_stmt 1 view .LVU130
+ 241:ui.c          **** 				PORTD |= (1<<PD6);
+ 488               		.loc 1 241 10 is_stmt 0 view .LVU131
+ 489 021e 8E9A      		sbi 0x11,6
+ 242:ui.c          **** 				break;
+ 490               		.loc 1 242 5 is_stmt 1 view .LVU132
+ 242:ui.c          **** 				break;
+ 491               		.loc 1 242 11 is_stmt 0 view .LVU133
+ 492 0220 969A      		sbi 0x12,6
+ 243:ui.c          **** 				default:
+ 493               		.loc 1 243 5 is_stmt 1 view .LVU134
+ 494 0222 0895      		ret
+ 495               	.L50:
+ 225:ui.c          **** 				PORTB |= (1<<PB0);  // set pin high
+ 496               		.loc 1 225 5 view .LVU135
+ 225:ui.c          **** 				PORTB |= (1<<PB0);  // set pin high
+ 497               		.loc 1 225 10 is_stmt 0 view .LVU136
+ 498 0224 B89A      		sbi 0x17,0
+ 226:ui.c          **** 				break;
+ 499               		.loc 1 226 5 is_stmt 1 view .LVU137
+ 226:ui.c          **** 				break;
+ 500               		.loc 1 226 11 is_stmt 0 view .LVU138
+ 501 0226 C09A      		sbi 0x18,0
+ 227:ui.c          **** 				case '1':
+ 502               		.loc 1 227 5 is_stmt 1 view .LVU139
+ 503 0228 0895      		ret
+ 504               	.L48:
+ 233:ui.c          **** 				PORTB |= (1<<PB2);
+ 505               		.loc 1 233 5 view .LVU140
+ 233:ui.c          **** 				PORTB |= (1<<PB2);
+ 506               		.loc 1 233 10 is_stmt 0 view .LVU141
+ 507 022a BA9A      		sbi 0x17,2
+ 234:ui.c          **** 				break;
+ 508               		.loc 1 234 5 is_stmt 1 view .LVU142
+ 234:ui.c          **** 				break;
+ 509               		.loc 1 234 11 is_stmt 0 view .LVU143
+ 510 022c C29A      		sbi 0x18,2
+ 235:ui.c          **** 				case '3':
+ 511               		.loc 1 235 5 is_stmt 1 view .LVU144
+ 512 022e 0895      		ret
+ 513               	.L52:
+ 237:ui.c          **** 				PORTB |= (1<<PB3);
+ 514               		.loc 1 237 5 view .LVU145
+ 237:ui.c          **** 				PORTB |= (1<<PB3);
+ 515               		.loc 1 237 10 is_stmt 0 view .LVU146
+ 516 0230 BB9A      		sbi 0x17,3
+ 238:ui.c          **** 				break;
+ 517               		.loc 1 238 5 is_stmt 1 view .LVU147
+ 238:ui.c          **** 				break;
+ 518               		.loc 1 238 11 is_stmt 0 view .LVU148
+ 519 0232 C39A      		sbi 0x18,3
+ 239:ui.c          **** 				case '6':
+ 520               		.loc 1 239 5 is_stmt 1 view .LVU149
+ 521 0234 0895      		ret
+ 522               	.L47:
+ 253:ui.c          **** 		{
+ 523               		.loc 1 253 8 view .LVU150
+ 253:ui.c          **** 		{
+ 524               		.loc 1 253 11 is_stmt 0 view .LVU151
+ 525 0236 8C34      		cpi r24,lo8(76)
+ 526 0238 01F4      		brne .L54
+ 255:ui.c          **** 			switch(localData)
+ 527               		.loc 1 255 4 is_stmt 1 view .LVU152
+ 255:ui.c          **** 			switch(localData)
+ 528               		.loc 1 255 9 is_stmt 0 view .LVU153
+ 529 023a 80E2      		ldi r24,lo8(32)
+ 530 023c 8093 0000 		sts mode.1533,r24
+ 256:ui.c          **** 			{
+ 531               		.loc 1 256 4 is_stmt 1 view .LVU154
+ 532 0240 2233      		cpi r18,lo8(50)
+ 533 0242 01F0      		breq .L55
+ 534 0244 00F4      		brsh .L56
+ 535 0246 2033      		cpi r18,lo8(48)
+ 536 0248 01F0      		breq .L57
+ 537 024a 2133      		cpi r18,lo8(49)
+ 538 024c 01F0      		breq .+2
+ 539 024e 00C0      		rjmp .L126
+ 263:ui.c          **** 				PORTB &= ~(1<<PB1);
+ 540               		.loc 1 263 5 view .LVU155
+ 263:ui.c          **** 				PORTB &= ~(1<<PB1);
+ 541               		.loc 1 263 10 is_stmt 0 view .LVU156
+ 542 0250 B99A      		sbi 0x17,1
+ 264:ui.c          **** 				break;
+ 543               		.loc 1 264 5 is_stmt 1 view .LVU157
+ 264:ui.c          **** 				break;
+ 544               		.loc 1 264 11 is_stmt 0 view .LVU158
+ 545 0252 C198      		cbi 0x18,1
+ 265:ui.c          **** 				case '2':
+ 546               		.loc 1 265 5 is_stmt 1 view .LVU159
+ 547 0254 0895      		ret
+ 548               	.L56:
+ 256:ui.c          **** 			{
+ 549               		.loc 1 256 4 is_stmt 0 view .LVU160
+ 550 0256 2333      		cpi r18,lo8(51)
+ 551 0258 01F0      		breq .L59
+ 552 025a 2633      		cpi r18,lo8(54)
+ 553 025c 01F0      		breq .+2
+ 554 025e 00C0      		rjmp .L126
+ 275:ui.c          **** 				PORTD &= ~(1<<PD6);
+ 555               		.loc 1 275 5 is_stmt 1 view .LVU161
+ 275:ui.c          **** 				PORTD &= ~(1<<PD6);
+ 556               		.loc 1 275 10 is_stmt 0 view .LVU162
+ 557 0260 8E9A      		sbi 0x11,6
+ 276:ui.c          **** 				break;
+ 558               		.loc 1 276 5 is_stmt 1 view .LVU163
+ 276:ui.c          **** 				break;
+ 559               		.loc 1 276 11 is_stmt 0 view .LVU164
+ 560 0262 9698      		cbi 0x12,6
+ 277:ui.c          **** 				default:
+ 561               		.loc 1 277 5 is_stmt 1 view .LVU165
+ 562 0264 0895      		ret
+ 563               	.L57:
+ 259:ui.c          **** 				PORTB &= ~(1<<PB0); // set pin low
+ 564               		.loc 1 259 5 view .LVU166
+ 259:ui.c          **** 				PORTB &= ~(1<<PB0); // set pin low
+ 565               		.loc 1 259 10 is_stmt 0 view .LVU167
+ 566 0266 B89A      		sbi 0x17,0
+ 260:ui.c          **** 				break;
+ 567               		.loc 1 260 5 is_stmt 1 view .LVU168
+ 260:ui.c          **** 				break;
+ 568               		.loc 1 260 11 is_stmt 0 view .LVU169
+ 569 0268 C098      		cbi 0x18,0
+ 261:ui.c          **** 				case '1':
+ 570               		.loc 1 261 5 is_stmt 1 view .LVU170
+ 571 026a 0895      		ret
+ 572               	.L55:
+ 267:ui.c          **** 				PORTB &= ~(1<<PB2);
+ 573               		.loc 1 267 5 view .LVU171
+ 267:ui.c          **** 				PORTB &= ~(1<<PB2);
+ 574               		.loc 1 267 10 is_stmt 0 view .LVU172
+ 575 026c BA9A      		sbi 0x17,2
+ 268:ui.c          **** 				break;
+ 576               		.loc 1 268 5 is_stmt 1 view .LVU173
+ 268:ui.c          **** 				break;
+ 577               		.loc 1 268 11 is_stmt 0 view .LVU174
+ 578 026e C298      		cbi 0x18,2
+ 269:ui.c          **** 				case '3':
+ 579               		.loc 1 269 5 is_stmt 1 view .LVU175
+ 580 0270 0895      		ret
+ 581               	.L59:
+ 271:ui.c          **** 				PORTB &= ~(1<<PB3);
+ 582               		.loc 1 271 5 view .LVU176
+ 271:ui.c          **** 				PORTB &= ~(1<<PB3);
+ 583               		.loc 1 271 10 is_stmt 0 view .LVU177
+ 584 0272 BB9A      		sbi 0x17,3
+ 272:ui.c          **** 				break;
+ 585               		.loc 1 272 5 is_stmt 1 view .LVU178
+ 272:ui.c          **** 				break;
+ 586               		.loc 1 272 11 is_stmt 0 view .LVU179
+ 587 0274 C398      		cbi 0x18,3
+ 273:ui.c          **** 				case '6':
+ 588               		.loc 1 273 5 is_stmt 1 view .LVU180
+ 589 0276 0895      		ret
+ 590               	.L54:
+ 285:ui.c          **** 		{
+ 591               		.loc 1 285 8 view .LVU181
+ 285:ui.c          **** 		{
+ 592               		.loc 1 285 31 is_stmt 0 view .LVU182
+ 593 0278 80ED      		ldi r24,lo8(-48)
+ 594 027a 820F      		add r24,r18
+ 285:ui.c          **** 		{
+ 595               		.loc 1 285 11 view .LVU183
+ 596 027c 8A30      		cpi r24,lo8(10)
+ 597 027e 00F4      		brsh .L31
+ 287:ui.c          **** 			inputBufferValue += (localData - '0');
+ 598               		.loc 1 287 4 is_stmt 1 view .LVU184
+ 288:ui.c          **** 		}
+ 599               		.loc 1 288 4 view .LVU185
+ 287:ui.c          **** 			inputBufferValue += (localData - '0');
+ 600               		.loc 1 287 21 is_stmt 0 view .LVU186
+ 601 0280 8091 0000 		lds r24,inputBufferValue.1532
+ 602 0284 9091 0000 		lds r25,inputBufferValue.1532+1
+ 603 0288 6AE0      		ldi r22,lo8(10)
+ 604 028a 70E0      		ldi r23,0
+ 605 028c 00D0      		rcall __mulhi3
+ 288:ui.c          **** 		}
+ 606               		.loc 1 288 21 view .LVU187
+ 607 028e 820F      		add r24,r18
+ 608 0290 911D      		adc r25,__zero_reg__
+ 609 0292 C097      		sbiw r24,48
+ 610 0294 9093 0000 		sts inputBufferValue.1532+1,r25
+ 611 0298 8093 0000 		sts inputBufferValue.1532,r24
+ 612 029c 0895      		ret
+ 613               	.L31:
+ 294:ui.c          **** 			abortInput();
+ 614               		.loc 1 294 4 is_stmt 1 view .LVU188
+ 294:ui.c          **** 			abortInput();
+ 615               		.loc 1 294 9 is_stmt 0 view .LVU189
+ 616 029e 80E2      		ldi r24,lo8(32)
+ 617 02a0 8093 0000 		sts mode.1533,r24
+ 618 02a4 00C0      		rjmp .L126
+ 619               	.L3:
+ 620               	/* epilogue start */
+ 305:ui.c          **** 
+ 621               		.loc 1 305 1 view .LVU190
+ 622 02a6 0895      		ret
+ 623               		.cfi_endproc
+ 624               	.LFE0:
+ 626               		.local	serialDataBuffer.1534
+ 627               		.comm	serialDataBuffer.1534,1,1
+ 628               		.local	inputBufferValue.1532
+ 629               		.comm	inputBufferValue.1532,2,1
+ 630               		.data
+ 633               	mode.1533:
+ 634 0000 20        		.byte	32
+ 635               		.text
+ 636               	.Letext0:
+ 637               		.file 2 "/usr/local/Cellar/avr-gcc/9.2.0/avr/include/stdint.h"
+ 638               		.file 3 "serial.h"
+ 639               		.file 4 "ADXL362.h"
+ 640               		.file 5 "eeprom.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ui.c
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:2      *ABS*:000000000000003d __SP_L__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:3      *ABS*:000000000000003f __SREG__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:4      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:5      *ABS*:0000000000000001 __zero_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:15     .text:0000000000000000 printMenu
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:38     .text:0000000000000006 abortInput
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:56     .text:000000000000000c serialParse
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:633    .data:0000000000000000 mode.1533
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9ewCMR.s:627    .bss:0000000000000001 inputBufferValue.1532
+                             .bss:0000000000000000 serialDataBuffer.1534
+
+UNDEFINED SYMBOLS
+serialWrite
+serialRxData
+ADXLReadByte
+serialWriteInt
+EEPROMWriteWord
+t1Offset
+ADXLWriteByte
+EEPROMWriteByte
+EEPROMReadByte
+serialWriteChar
+__mulhi3
+__do_copy_data
+__do_clear_bss

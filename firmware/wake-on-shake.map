@@ -1,0 +1,733 @@
+Archive member included to satisfy reference by file (symbol)
+
+/usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+                              ui.o (__mulhi3)
+/usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+                              serial.o (__udivmodhi4)
+/usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+                              /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o (exit)
+/usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+                              wake-on-shake.o (__do_copy_data)
+/usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                              wake-on-shake.o (__do_clear_bss)
+
+Allocating common symbols
+Common symbol       size              file
+
+t1Offset            0x2               wake-on-shake.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x0000000000000000 0x0000000000002000 xr
+data             0x0000000000800060 0x000000000000ffa0 rw !x
+eeprom           0x0000000000810000 0x0000000000010000 rw !x
+fuse             0x0000000000820000 0x0000000000000400 rw !x
+lock             0x0000000000830000 0x0000000000000400 rw !x
+signature        0x0000000000840000 0x0000000000000400 rw !x
+user_signatures  0x0000000000850000 0x0000000000000400 rw !x
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+LOAD wake-on-shake.o
+LOAD ui.o
+LOAD serial.o
+LOAD interrupts.o
+LOAD ADXL362.o
+LOAD eeprom.o
+LOAD spi.o
+LOAD /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/libm.a
+START GROUP
+LOAD /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a
+LOAD /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/libm.a
+LOAD /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/libc.a
+LOAD /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/libattiny2313a.a
+END GROUP
+                0x0000000000002000                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x2000
+                0x000000000000ffa0                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                0x0000000000010000                __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                0x0000000000000400                __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x0000000000000400                __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x0000000000000400                __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x0000000000000400                __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x0000000000000000      0x67c
+ *(.vectors)
+ .vectors       0x0000000000000000       0x2a /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+                0x0000000000000000                __vectors
+                0x0000000000000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+                0x000000000000002a                . = ALIGN (0x2)
+                0x000000000000002a                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x000000000000002a        0x0 linker stubs
+ *(.trampolines*)
+                0x000000000000002a                __trampolines_end = .
+ *libprintf_flt.a:*(.progmem.data)
+ *libc.a:*(.progmem.data)
+ *(.progmem.*)
+                0x000000000000002a                . = ALIGN (0x2)
+ *(.lowtext)
+ *(.lowtext*)
+                0x000000000000002a                __ctors_start = .
+ *(.ctors)
+                0x000000000000002a                __ctors_end = .
+                0x000000000000002a                __dtors_start = .
+ *(.dtors)
+                0x000000000000002a                __dtors_end = .
+ SORT_BY_NAME(*)(.ctors)
+ SORT_BY_NAME(*)(.dtors)
+ *(.init0)
+ .init0         0x000000000000002a        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+                0x000000000000002a                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x000000000000002a        0x8 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x0000000000000032       0x16 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+                0x0000000000000032                __do_copy_data
+ .init4         0x0000000000000048       0x10 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                0x0000000000000048                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x0000000000000058        0x4 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ *(.init9)
+ *(.text)
+ .text          0x000000000000005c        0x2 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+                0x000000000000005c                __vector_20
+                0x000000000000005c                __bad_interrupt
+                0x000000000000005c                __vector_6
+                0x000000000000005c                __vector_3
+                0x000000000000005c                __vector_11
+                0x000000000000005c                __vector_13
+                0x000000000000005c                __vector_17
+                0x000000000000005c                __vector_19
+                0x000000000000005c                __vector_4
+                0x000000000000005c                __vector_9
+                0x000000000000005c                __vector_15
+                0x000000000000005c                __vector_8
+                0x000000000000005c                __vector_14
+                0x000000000000005c                __vector_10
+                0x000000000000005c                __vector_16
+                0x000000000000005c                __vector_18
+                0x000000000000005c                __vector_12
+ .text          0x000000000000005e       0x66 wake-on-shake.o
+                0x000000000000005e                EEPROMRetrieve
+                0x000000000000008e                EEPROMConfig
+ .text          0x00000000000000c4      0x2a8 ui.o
+                0x00000000000000c4                printMenu
+                0x00000000000000ca                abortInput
+                0x00000000000000d0                serialParse
+ .text          0x000000000000036c       0x8e serial.o
+                0x000000000000036c                serialWriteChar
+                0x0000000000000376                serialNewline
+                0x000000000000037e                serialWrite
+                0x0000000000000394                serialWriteInt
+ .text          0x00000000000003fa       0x98 interrupts.o
+                0x00000000000003fa                __vector_5
+                0x0000000000000406                __vector_1
+                0x0000000000000430                __vector_2
+                0x0000000000000476                __vector_7
+ .text          0x0000000000000492       0x88 ADXL362.o
+                0x0000000000000492                ADXLReadByte
+                0x00000000000004ac                ADXLWriteByte
+                0x00000000000004cc                ADXLConfig
+ .text          0x000000000000051a       0x66 eeprom.o
+                0x000000000000051a                EEPROMWriteByte
+                0x000000000000052e                EEPROMWriteWord
+                0x0000000000000546                EEPROMReadByte
+                0x000000000000055a                EEPROMReadWord
+ .text          0x0000000000000580       0x14 spi.o
+                0x0000000000000580                spiXfer
+ .text          0x0000000000000594        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text          0x0000000000000594        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text          0x0000000000000594        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text          0x0000000000000594        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text          0x0000000000000594        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                0x0000000000000594                . = ALIGN (0x2)
+ *(.text.*)
+ .text.startup  0x0000000000000594       0x9a wake-on-shake.o
+                0x0000000000000594                main
+ .text.libgcc.mul
+                0x000000000000062e       0x22 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+                0x000000000000062e                __mulhi3
+ .text.libgcc.div
+                0x0000000000000650        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc   0x0000000000000650        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.prologue
+                0x0000000000000650        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.builtins
+                0x0000000000000650        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.fmul
+                0x0000000000000650        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.fixed
+                0x0000000000000650        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .text.libgcc.mul
+                0x0000000000000650        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.div
+                0x0000000000000650       0x28 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+                0x0000000000000650                __udivmodhi4
+ .text.libgcc   0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.mul
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                0x0000000000000678                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000000000000678        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+                0x0000000000000678                exit
+                0x0000000000000678                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000000000000678        0x4 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ *(.fini0)
+ *(.hightext)
+ *(.hightext*)
+ *(.progmemx.*)
+                0x000000000000067c                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+                0x000000000000067c                _etext = .
+
+.data           0x0000000000800060        0xc load address 0x000000000000067c
+                0x0000000000800060                PROVIDE (__data_start = .)
+ *(.data)
+ .data          0x0000000000800060        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ .data          0x0000000000800060        0x0 wake-on-shake.o
+ .data          0x0000000000800060        0x1 ui.o
+ .data          0x0000000000800061        0x0 serial.o
+ .data          0x0000000000800061        0x0 interrupts.o
+ .data          0x0000000000800061        0x0 ADXL362.o
+ .data          0x0000000000800061        0x0 eeprom.o
+ .data          0x0000000000800061        0x0 spi.o
+ .data          0x0000000000800061        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .data          0x0000000000800061        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .data          0x0000000000800061        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .data          0x0000000000800061        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .data          0x0000000000800061        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ *(.data*)
+ *(.gnu.linkonce.d*)
+ *(.rodata)
+ *(.rodata*)
+ .rodata.str1.1
+                0x0000000000800061        0x2 wake-on-shake.o
+ .rodata.str1.1
+                0x0000000000800063        0x8 ui.o
+ *(.gnu.linkonce.r*)
+                0x000000000080006c                . = ALIGN (0x2)
+ *fill*         0x000000000080006b        0x1 
+                0x000000000080006c                _edata = .
+                0x000000000080006c                PROVIDE (__data_end = .)
+
+.bss            0x000000000080006c        0x7
+                0x000000000080006c                PROVIDE (__bss_start = .)
+ *(.bss)
+ .bss           0x000000000080006c        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ .bss           0x000000000080006c        0x2 wake-on-shake.o
+                0x000000000080006c                serialRxData
+                0x000000000080006d                sleepyTime
+ .bss           0x000000000080006e        0x3 ui.o
+ .bss           0x0000000000800071        0x0 serial.o
+ .bss           0x0000000000800071        0x0 interrupts.o
+ .bss           0x0000000000800071        0x0 ADXL362.o
+ .bss           0x0000000000800071        0x0 eeprom.o
+ .bss           0x0000000000800071        0x0 spi.o
+ .bss           0x0000000000800071        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .bss           0x0000000000800071        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .bss           0x0000000000800071        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .bss           0x0000000000800071        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .bss           0x0000000000800071        0x0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x0000000000800071        0x2 wake-on-shake.o
+                0x0000000000800071                t1Offset
+                0x0000000000800073                PROVIDE (__bss_end = .)
+                0x000000000000067c                __data_load_start = LOADADDR (.data)
+                0x0000000000000688                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x0000000000800073        0x0
+                [!provide]                        PROVIDE (__noinit_start = .)
+ *(.noinit*)
+                [!provide]                        PROVIDE (__noinit_end = .)
+                0x0000000000800073                _end = .
+                [!provide]                        PROVIDE (__heap_start = .)
+
+.eeprom         0x0000000000810000        0x0
+ *(.eeprom*)
+                0x0000000000810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x11
+ *(.comment)
+ .comment       0x0000000000000000       0x11 wake-on-shake.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000011       0x12 ui.o
+ .comment       0x0000000000000011       0x12 serial.o
+ .comment       0x0000000000000011       0x12 interrupts.o
+ .comment       0x0000000000000011       0x12 ADXL362.o
+ .comment       0x0000000000000011       0x12 eeprom.o
+ .comment       0x0000000000000011       0x12 spi.o
+
+.note.gnu.avr.deviceinfo
+                0x0000000000000000       0x40
+ .note.gnu.avr.deviceinfo
+                0x0000000000000000       0x40 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000      0x188
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000       0x28 wake-on-shake.o
+ .debug_aranges
+                0x0000000000000028       0x20 ui.o
+ .debug_aranges
+                0x0000000000000048       0x20 serial.o
+ .debug_aranges
+                0x0000000000000068       0x20 interrupts.o
+ .debug_aranges
+                0x0000000000000088       0x20 ADXL362.o
+ .debug_aranges
+                0x00000000000000a8       0x20 eeprom.o
+ .debug_aranges
+                0x00000000000000c8       0x20 spi.o
+ .debug_aranges
+                0x00000000000000e8       0x20 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_aranges
+                0x0000000000000108       0x20 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_aranges
+                0x0000000000000128       0x20 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_aranges
+                0x0000000000000148       0x20 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_aranges
+                0x0000000000000168       0x20 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x0000000000000000     0x1331
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x0000000000000000      0x456 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ .debug_info    0x0000000000000456      0x2d6 wake-on-shake.o
+ .debug_info    0x000000000000072c      0x22d ui.o
+ .debug_info    0x0000000000000959      0x300 serial.o
+ .debug_info    0x0000000000000c59       0xf4 interrupts.o
+ .debug_info    0x0000000000000d4d      0x2bc ADXL362.o
+ .debug_info    0x0000000000001009      0x1d0 eeprom.o
+ .debug_info    0x00000000000011d9       0x9a spi.o
+ .debug_info    0x0000000000001273       0x26 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_info    0x0000000000001299       0x26 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_info    0x00000000000012bf       0x26 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_info    0x00000000000012e5       0x26 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_info    0x000000000000130b       0x26 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_abbrev   0x0000000000000000      0xb47
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x41b /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ .debug_abbrev  0x000000000000041b      0x113 wake-on-shake.o
+ .debug_abbrev  0x000000000000052e       0xf7 ui.o
+ .debug_abbrev  0x0000000000000625      0x19c serial.o
+ .debug_abbrev  0x00000000000007c1       0x98 interrupts.o
+ .debug_abbrev  0x0000000000000859       0xe9 ADXL362.o
+ .debug_abbrev  0x0000000000000942      0x138 eeprom.o
+ .debug_abbrev  0x0000000000000a7a       0x69 spi.o
+ .debug_abbrev  0x0000000000000ae3       0x14 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_abbrev  0x0000000000000af7       0x14 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_abbrev  0x0000000000000b0b       0x14 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_abbrev  0x0000000000000b1f       0x14 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_abbrev  0x0000000000000b33       0x14 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_line     0x0000000000000000     0x1629
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x0000000000000000       0x1d /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ .debug_line    0x000000000000001d      0x3b8 wake-on-shake.o
+ .debug_line    0x00000000000003d5      0x6d9 ui.o
+ .debug_line    0x0000000000000aae      0x2ad serial.o
+ .debug_line    0x0000000000000d5b      0x11c interrupts.o
+ .debug_line    0x0000000000000e77      0x18d ADXL362.o
+ .debug_line    0x0000000000001004      0x238 eeprom.o
+ .debug_line    0x000000000000123c       0xd9 spi.o
+ .debug_line    0x0000000000001315       0xbe /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_line    0x00000000000013d3       0xd0 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_line    0x00000000000014a3       0x64 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_line    0x0000000000001507       0x9a /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_line    0x00000000000015a1       0x88 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_frame    0x0000000000000000      0x2b4
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000       0x50 wake-on-shake.o
+ .debug_frame   0x0000000000000050       0x44 ui.o
+ .debug_frame   0x0000000000000094       0x78 serial.o
+ .debug_frame   0x000000000000010c       0xb8 interrupts.o
+ .debug_frame   0x00000000000001c4       0x58 ADXL362.o
+ .debug_frame   0x000000000000021c       0x74 eeprom.o
+ .debug_frame   0x0000000000000290       0x24 spi.o
+
+.debug_str      0x0000000000000000      0x51b
+ *(.debug_str)
+ .debug_str     0x0000000000000000      0x17b /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+ .debug_str     0x000000000000017b      0x1d9 wake-on-shake.o
+                                        0x20d (size before relaxing)
+ .debug_str     0x0000000000000354       0x6c ui.o
+                                        0x219 (size before relaxing)
+ .debug_str     0x00000000000003c0       0x55 serial.o
+                                        0x1c1 (size before relaxing)
+ .debug_str     0x0000000000000415       0x39 interrupts.o
+                                        0x191 (size before relaxing)
+ .debug_str     0x000000000000044e       0x17 ADXL362.o
+                                        0x17f (size before relaxing)
+ .debug_str     0x0000000000000465       0x1d eeprom.o
+                                        0x1a5 (size before relaxing)
+ .debug_str     0x0000000000000482        0x6 spi.o
+                                        0x141 (size before relaxing)
+ .debug_str     0x0000000000000488       0x93 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+ .debug_str     0x000000000000051b       0x93 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+ .debug_str     0x000000000000051b       0x93 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+ .debug_str     0x000000000000051b       0x93 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+ .debug_str     0x000000000000051b       0x93 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+
+.debug_loc      0x0000000000000000      0x66d
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000       0x6d wake-on-shake.o
+ .debug_loc     0x000000000000006d       0x8a ui.o
+ .debug_loc     0x00000000000000f7      0x2ce serial.o
+ .debug_loc     0x00000000000003c5       0x44 interrupts.o
+ .debug_loc     0x0000000000000409       0xe4 ADXL362.o
+ .debug_loc     0x00000000000004ed      0x15b eeprom.o
+ .debug_loc     0x0000000000000648       0x25 spi.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x0000000000000000       0x18
+ *(.debug_ranges)
+ .debug_ranges  0x0000000000000000       0x18 wake-on-shake.o
+
+.debug_macro
+ *(.debug_macro)
+
+.debug_addr
+ *(.debug_addr)
+OUTPUT(wake-on-shake.elf elf32-avr)
+LOAD linker stubs
+
+Cross Reference Table
+
+Symbol                                            File
+ADXLConfig                                        ADXL362.o
+                                                  wake-on-shake.o
+ADXLReadByte                                      ADXL362.o
+                                                  ui.o
+ADXLWriteByte                                     ADXL362.o
+                                                  ui.o
+EEPROMConfig                                      wake-on-shake.o
+EEPROMReadByte                                    eeprom.o
+                                                  ADXL362.o
+                                                  ui.o
+                                                  wake-on-shake.o
+EEPROMReadWord                                    eeprom.o
+                                                  wake-on-shake.o
+EEPROMRetrieve                                    wake-on-shake.o
+EEPROMWriteByte                                   eeprom.o
+                                                  ui.o
+                                                  wake-on-shake.o
+EEPROMWriteWord                                   eeprom.o
+                                                  ui.o
+                                                  wake-on-shake.o
+__bad_interrupt                                   /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__bss_end                                         /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+__bss_start                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+__data_end                                        /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+__data_load_start                                 /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+__data_start                                      /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+__do_clear_bss                                    /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_clear_bss.o)
+                                                  ui.o
+                                                  wake-on-shake.o
+__do_copy_data                                    /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_copy_data.o)
+                                                  ui.o
+                                                  wake-on-shake.o
+__heap_end                                        /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__init                                            /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__mulhi3                                          /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_mulhi3.o)
+                                                  serial.o
+                                                  ui.o
+__stack                                           /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__udivmodhi4                                      /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_udivmodhi4.o)
+                                                  serial.o
+__vector_1                                        interrupts.o
+                                                  /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_10                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_11                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_12                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_13                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_14                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_15                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_16                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_17                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_18                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_19                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_2                                        interrupts.o
+                                                  /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_20                                       /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_3                                        /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_4                                        /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_5                                        interrupts.o
+                                                  /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_6                                        /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_7                                        interrupts.o
+                                                  /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_8                                        /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_9                                        /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vector_default                                  /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+__vectors                                         /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+_exit                                             /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+abortInput                                        ui.o
+exit                                              /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/avr25/tiny-stack/libgcc.a(_exit.o)
+                                                  /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+main                                              wake-on-shake.o
+                                                  /usr/local/Cellar/avr-gcc/9.2.0/lib/avr-gcc/9/gcc/avr/9.2.0/../../../../../../avr/lib/avr25/tiny-stack/crtattiny2313a.o
+printMenu                                         ui.o
+                                                  wake-on-shake.o
+serialNewline                                     serial.o
+serialParse                                       ui.o
+                                                  wake-on-shake.o
+serialRxData                                      wake-on-shake.o
+                                                  interrupts.o
+                                                  ui.o
+serialWrite                                       serial.o
+                                                  ui.o
+                                                  wake-on-shake.o
+serialWriteChar                                   serial.o
+                                                  ui.o
+serialWriteInt                                    serial.o
+                                                  ui.o
+                                                  wake-on-shake.o
+sleepyTime                                        wake-on-shake.o
+                                                  interrupts.o
+spiXfer                                           spi.o
+                                                  ADXL362.o
+t1Offset                                          wake-on-shake.o
+                                                  interrupts.o
+                                                  ui.o

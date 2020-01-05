@@ -1,0 +1,94 @@
+   1               		.file	"spi.c"
+   2               	__SP_L__ = 0x3d
+   3               	__SREG__ = 0x3f
+   4               	__tmp_reg__ = 0
+   5               	__zero_reg__ = 1
+   6               		.text
+   7               	.Ltext0:
+   8               		.cfi_sections	.debug_frame
+   9               	.global	spiXfer
+  11               	spiXfer:
+  12               	.LVL0:
+  13               	.LFB0:
+  14               		.file 1 "spi.c"
+   1:spi.c         **** /******************************************************************************
+   2:spi.c         **** Created 26 Nov 2012 by Mike Hord at SparkFun Electronics.
+   3:spi.c         **** Wake-on-Shake hardware and firmware are released under the Creative Commons 
+   4:spi.c         **** Share Alike v3.0 license:
+   5:spi.c         **** 	http://creativecommons.org/licenses/by-sa/3.0/
+   6:spi.c         **** Feel free to use, distribute, and sell variants of Wake-on-Shake. All we ask 
+   7:spi.c         **** is that you include attribution of 'Based on Wake-on-Shake by SparkFun'.
+   8:spi.c         **** 
+   9:spi.c         **** spi.cpp
+  10:spi.c         **** Functional support for the SPI. This doesn't seem to be well supported in the
+  11:spi.c         **** AVR libraries, but maybe I didn't look in the right places.
+  12:spi.c         **** ******************************************************************************/
+  13:spi.c         **** 
+  14:spi.c         **** #include <avr/io.h>
+  15:spi.c         **** #include "spi.h"
+  16:spi.c         **** 
+  17:spi.c         **** // spiXfer() takes a byte and sends it out via the USI function. It does
+  18:spi.c         **** //   NOT handle the chip select; user must do that before calling spiXfer().
+  19:spi.c         **** //   It returns the value that was shifted in. Please review the datasheet
+  20:spi.c         **** //   for an explanation of the hows and whys- it's important to note that
+  21:spi.c         **** //   unlike more advanced processors, the Tinty2313a does not support a
+  22:spi.c         **** //   hands-off shift method. The data must be clocked out under software
+  23:spi.c         **** //   control!
+  24:spi.c         **** uint8_t spiXfer(uint8_t data)
+  25:spi.c         **** {
+  15               		.loc 1 25 1 view -0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+  26:spi.c         **** 	USIDR = data;
+  21               		.loc 1 26 2 view .LVU1
+  22               		.loc 1 26 8 is_stmt 0 view .LVU2
+  23 0000 8FB9      		out 0xf,r24
+  27:spi.c         **** 	while ((USISR & (1<<USIOIF)) == 0)
+  24               		.loc 1 27 2 is_stmt 1 view .LVU3
+  28:spi.c         **** 	{
+  29:spi.c         **** 		USICR = (0<<USIWM1) | (1<<USIWM0) | (1<<USICS1) | (0<<USICS0) | (1<<USICLK) | (1<<USITC);
+  25               		.loc 1 29 9 is_stmt 0 view .LVU4
+  26 0002 8BE1      		ldi r24,lo8(27)
+  27               	.LVL1:
+  28               	.L2:
+  27:spi.c         **** 	while ((USISR & (1<<USIOIF)) == 0)
+  29               		.loc 1 27 8 is_stmt 1 view .LVU5
+  30 0004 769B      		sbis 0xe,6
+  31 0006 00C0      		rjmp .L3
+  30:spi.c         **** 	}
+  31:spi.c         **** 	USISR = (1<<USIOIF);
+  32               		.loc 1 31 2 view .LVU6
+  33               		.loc 1 31 8 is_stmt 0 view .LVU7
+  34 0008 80E4      		ldi r24,lo8(64)
+  35 000a 8EB9      		out 0xe,r24
+  32:spi.c         **** 	return USIDR;
+  36               		.loc 1 32 2 is_stmt 1 view .LVU8
+  37               		.loc 1 32 9 is_stmt 0 view .LVU9
+  38 000c 8FB1      		in r24,0xf
+  39               	/* epilogue start */
+  33:spi.c         **** }...
+  40               		.loc 1 33 1 view .LVU10
+  41 000e 0895      		ret
+  42               	.L3:
+  29:spi.c         **** 		USICR = (0<<USIWM1) | (1<<USIWM0) | (1<<USICS1) | (0<<USICS0) | (1<<USICLK) | (1<<USITC);
+  43               		.loc 1 29 3 is_stmt 1 view .LVU11
+  29:spi.c         **** 		USICR = (0<<USIWM1) | (1<<USIWM0) | (1<<USICS1) | (0<<USICS0) | (1<<USICLK) | (1<<USITC);
+  44               		.loc 1 29 9 is_stmt 0 view .LVU12
+  45 0010 8DB9      		out 0xd,r24
+  46 0012 00C0      		rjmp .L2
+  47               		.cfi_endproc
+  48               	.LFE0:
+  50               	.Letext0:
+  51               		.file 2 "/usr/local/Cellar/avr-gcc/9.2.0/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 spi.c
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDf8ZXn.s:2      *ABS*:000000000000003d __SP_L__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDf8ZXn.s:3      *ABS*:000000000000003f __SREG__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDf8ZXn.s:4      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDf8ZXn.s:5      *ABS*:0000000000000001 __zero_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDf8ZXn.s:11     .text:0000000000000000 spiXfer
+
+NO UNDEFINED SYMBOLS
