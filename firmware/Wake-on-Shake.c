@@ -221,7 +221,8 @@ void EEPROMRetrieve(void)
 //   high for practicality.
 void EEPROMConfig(void)
 {
-	t1Offset  = 60535;		// Corresponds to ~5s delay before going to sleep
+    // t1Offset  = 60535;        // Corresponds to ~5s delay before going to sleep
+	t1Offset  = 535;		// Corresponds to ~59.5s delay before going to sleep
 	// Now let's store these, along with the "key" that let's us know we've done this.
 	EEPROMWriteWord((uint8_t)ATHRESH, (uint16_t) 150);
 	EEPROMWriteWord((uint8_t)WAKE_OFFS, (uint16_t)t1Offset);
