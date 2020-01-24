@@ -158,7 +158,7 @@
 <layer number="255" name="routoute" color="7" fill="1" visible="no" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.cGVyc29uYWw6dWUyOWU3ZjE5" projecturn="a.cGVyc29uYWw6dWUyOWU3ZjE5IzIwMTkxMTEzMjM3NzExOTA2" f3durn="urn:adsk.wipprod:dm.lineage:RZ2mMRiFRdChzNC1zMwHtw" pcbguid="77f222ba-65ef-4889-b7d3-d71ba8ceccf3" lastpulledtime="2019-11-22T15:30:33Z" lastsyncedchangeguid="3e048e30-a6dc-7760-70c2-8fa56e73e183"/>
+<fusionsync huburn="a.cGVyc29uYWw6dWUyOWU3ZjE5" projecturn="a.cGVyc29uYWw6dWUyOWU3ZjE5IzIwMTkxMTEzMjM3NzExOTA2" f3durn="urn:adsk.wipprod:dm.lineage:RZ2mMRiFRdChzNC1zMwHtw" pcbguid="77f222ba-65ef-4889-b7d3-d71ba8ceccf3" lastpulledtime="2019-11-22T15:30:33Z" lastsyncedchangeguid="7582d25e-669e-dd4f-ccbc-642bc1206aa7"/>
 <plain>
 <text x="80.01" y="31.496" size="1.016" layer="25" font="vector" ratio="15">Comfort Maps
 Samuel Clay
@@ -182,10 +182,10 @@ V1 2019-11-22</text>
 <wire x1="92.964" y1="7.874" x2="99.314" y2="13.208" width="0.254" layer="20" curve="-90"/>
 <wire x1="99.314" y1="13.208" x2="99.568" y2="13.208" width="0.254" layer="20"/>
 <wire x1="99.568" y1="13.208" x2="100.584" y2="14.224" width="0.254" layer="20" curve="90"/>
-<hole x="9.398" y="30.353" drill="1.9812"/>
-<hole x="9.398" y="7.239" drill="1.9812"/>
-<hole x="67.564" y="7.366" drill="1.9812"/>
-<hole x="67.437" y="30.353" drill="1.9812"/>
+<hole x="10.668" y="30.353" drill="1.9812"/>
+<hole x="10.668" y="7.366" drill="1.9812"/>
+<hole x="68.707" y="7.366" drill="1.9812"/>
+<hole x="68.707" y="30.353" drill="1.9812"/>
 </plain>
 <libraries>
 <library name="SparkFun-DiscreteSemi">
@@ -3726,6 +3726,8 @@ design rules under a new name.</description>
 <wire x1="37.2226" y1="35.8276875" x2="37.2226" y2="33.7683125" width="0.1524" layer="1"/>
 <wire x1="37.2226" y1="33.7683125" x2="36.3472875" y2="32.893" width="0.1524" layer="1"/>
 <wire x1="36.3472875" y1="32.893" x2="35.894" y2="32.893" width="0.1524" layer="1"/>
+<contactref element="X1" pad="8"/>
+<wire x1="33.782" y1="2.286" x2="54.991" y2="5.969" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="TXO">
 <contactref element="U2" pad="3"/>
@@ -4149,6 +4151,9 @@ design rules under a new name.</description>
 </signal>
 <signal name="3V3A">
 <contactref element="X1" pad="1"/>
+</signal>
+<signal name="TX0">
+<contactref element="X1" pad="10"/>
 </signal>
 </signals>
 <mfgpreviewcolors>

@@ -10253,7 +10253,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <sheets>
 <sheet>
 <plain>
-<text x="238.252" y="5.842" size="5.08" layer="94">Rev 1</text>
+<text x="238.252" y="5.842" size="5.08" layer="94">Rev 2</text>
 <text x="2.54" y="2.54" size="1.778" layer="94">Original wake-on-shake concept by
 Nitzan Gadish, Analog Devices</text>
 <text x="2.54" y="-2.54" size="1.778" layer="94">Originally designed by Mike Hord and 
