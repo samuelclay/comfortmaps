@@ -172,7 +172,7 @@
 <layer number="255" name="routoute" color="7" fill="1" visible="no" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.cGVyc29uYWw6dWUyOWU3ZjE5" projecturn="a.cGVyc29uYWw6dWUyOWU3ZjE5IzIwMTkxMTEzMjM3NzExOTA2" f3durn="urn:adsk.wipprod:dm.lineage:RZ2mMRiFRdChzNC1zMwHtw" pcbguid="77f222ba-65ef-4889-b7d3-d71ba8ceccf3" lastpulledtime="2019-11-22T15:30:33Z" lastsyncedchangeguid="e70446ce-074b-0792-aa06-0c3d726f87b8"/>
+<fusionsync huburn="a.cGVyc29uYWw6dWUyOWU3ZjE5" projecturn="a.cGVyc29uYWw6dWUyOWU3ZjE5IzIwMTkxMTEzMjM3NzExOTA2" f3durn="urn:adsk.wipprod:dm.lineage:RZ2mMRiFRdChzNC1zMwHtw" pcbguid="77f222ba-65ef-4889-b7d3-d71ba8ceccf3" lastpulledtime="2019-11-22T15:30:33Z" lastsyncedchangeguid="f30411c7-fb2f-3353-fefe-e5c05993fd76"/>
 <plain>
 <text x="8.382" y="35.56" size="1.524" layer="25" font="vector" ratio="20">Comfort Maps
 Samuel Clay

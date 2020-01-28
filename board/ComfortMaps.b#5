@@ -172,7 +172,7 @@
 <layer number="255" name="routoute" color="7" fill="1" visible="no" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.cGVyc29uYWw6dWUyOWU3ZjE5" projecturn="a.cGVyc29uYWw6dWUyOWU3ZjE5IzIwMTkxMTEzMjM3NzExOTA2" f3durn="urn:adsk.wipprod:dm.lineage:RZ2mMRiFRdChzNC1zMwHtw" pcbguid="77f222ba-65ef-4889-b7d3-d71ba8ceccf3" lastpulledtime="2019-11-22T15:30:33Z" lastsyncedchangeguid="dfb35966-0ea9-baf0-c497-c893b56981a0"/>
+<fusionsync huburn="a.cGVyc29uYWw6dWUyOWU3ZjE5" projecturn="a.cGVyc29uYWw6dWUyOWU3ZjE5IzIwMTkxMTEzMjM3NzExOTA2" f3durn="urn:adsk.wipprod:dm.lineage:RZ2mMRiFRdChzNC1zMwHtw" pcbguid="77f222ba-65ef-4889-b7d3-d71ba8ceccf3" lastpulledtime="2019-11-22T15:30:33Z" lastsyncedchangeguid="e70446ce-074b-0792-aa06-0c3d726f87b8"/>
 <plain>
 <text x="5.842" y="35.56" size="1.524" layer="25" font="vector" ratio="20">Comfort Maps
 Samuel Clay
@@ -196,8 +196,8 @@ V2 2019-12-26</text>
 <wire x1="92.964" y1="7.874" x2="99.314" y2="13.208" width="0.254" layer="20" curve="-90"/>
 <wire x1="99.314" y1="13.208" x2="99.568" y2="13.208" width="0.254" layer="20"/>
 <wire x1="99.568" y1="13.208" x2="100.584" y2="14.224" width="0.254" layer="20" curve="90"/>
-<hole x="6.604" y="40.259" drill="2.54"/>
-<hole x="6.35" y="-3.556" drill="2.54"/>
+<hole x="6.35" y="40.259" drill="2.54"/>
+<hole x="6.35" y="-3.81" drill="2.54"/>
 <hole x="89.535" y="3.81" drill="2.54"/>
 <hole x="89.535" y="34.163" drill="2.54"/>
 </plain>
@@ -3088,6 +3088,16 @@ design rules under a new name.</description>
 <attribute name="MPN" value="SS14-LTP" x="27.686" y="28.448" size="1.778" layer="27" display="off"/>
 <attribute name="NAME" x="23.03" y="27.924" size="0.762" layer="25" ratio="20"/>
 </element>
+<element name="D1" library="SparkFun-LED" package="LED-0603" value="RED" x="5.588" y="-8.128" smashed="yes">
+<attribute name="NAME" x="5.588" y="-7.493" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center"/>
+<attribute name="PROD_ID" value="DIO-00819" x="5.588" y="-8.128" size="1.778" layer="27" display="off"/>
+<attribute name="VALUE" x="5.588" y="-8.763" size="0.6096" layer="27" font="vector" ratio="20" align="top-center"/>
+</element>
+<element name="R17" library="SparkFun-Resistors" package="0603" value="1.5k" x="5.588" y="-11.43" smashed="yes">
+<attribute name="NAME" x="5.588" y="-10.668" size="0.6096" layer="25" font="vector" ratio="20" align="bottom-center"/>
+<attribute name="PROD_ID" value="RES-08306" x="5.588" y="-11.43" size="1.778" layer="27" display="off"/>
+<attribute name="VALUE" x="5.588" y="-12.192" size="0.6096" layer="27" font="vector" ratio="20" align="top-center"/>
+</element>
 </elements>
 <signals>
 <signal name="V_BATT">
@@ -3213,6 +3223,8 @@ design rules under a new name.</description>
 <wire x1="61.1438625" y1="-0.9398" x2="62.8866625" y2="0.803" width="0.4064" layer="1"/>
 <wire x1="49.7078" y1="-0.9398" x2="61.1438625" y2="-0.9398" width="0.4064" layer="1"/>
 <wire x1="46.99" y1="1.778" x2="49.7078" y2="-0.9398" width="0.4064" layer="1"/>
+<contactref element="D1" pad="A"/>
+<wire x1="4.711" y1="-8.128" x2="46.99" y2="1.778" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="GND">
 <contactref element="Q1" pad="1"/>
@@ -3429,6 +3441,8 @@ design rules under a new name.</description>
 <wire x1="69.596" y1="33.92386875" x2="69.596" y2="35.052" width="0.4064" layer="1"/>
 <wire x1="29.972" y1="32.766" x2="34.9485" y2="27.7895" width="0.1524" layer="1"/>
 <wire x1="34.9485" y1="27.7895" x2="35.9175" y2="27.7895" width="0.1524" layer="1"/>
+<contactref element="R17" pad="2"/>
+<wire x1="6.438" y1="-11.43" x2="11.922" y2="1.5664" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="OVERRIDE">
 <contactref element="JP3" pad="1"/>
@@ -3967,6 +3981,11 @@ design rules under a new name.</description>
 </signal>
 <signal name="TX0">
 <contactref element="X1" pad="10"/>
+</signal>
+<signal name="N$14">
+<contactref element="D1" pad="C"/>
+<contactref element="R17" pad="1"/>
+<wire x1="6.465" y1="-8.128" x2="4.738" y2="-11.43" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>

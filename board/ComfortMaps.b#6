@@ -196,10 +196,10 @@ V2 2019-12-26</text>
 <wire x1="92.964" y1="7.874" x2="99.314" y2="13.208" width="0.254" layer="20" curve="-90"/>
 <wire x1="99.314" y1="13.208" x2="99.568" y2="13.208" width="0.254" layer="20"/>
 <wire x1="99.568" y1="13.208" x2="100.584" y2="14.224" width="0.254" layer="20" curve="90"/>
-<hole x="10.668" y="30.353" drill="1.9812"/>
-<hole x="10.668" y="7.366" drill="1.9812"/>
-<hole x="68.707" y="7.366" drill="1.9812"/>
-<hole x="68.707" y="30.353" drill="1.9812"/>
+<hole x="6.604" y="40.259" drill="2.54"/>
+<hole x="6.35" y="-3.556" drill="2.54"/>
+<hole x="89.535" y="3.81" drill="2.54"/>
+<hole x="89.535" y="34.163" drill="2.54"/>
 </plain>
 <libraries>
 <library name="SparkFun-DiscreteSemi">
@@ -1561,61 +1561,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="0.15875" y1="0" x2="0.15875" y2="-0.47625" width="0.127" layer="51"/>
 <wire x1="0.15875" y1="0" x2="-0.15875" y2="0.3175" width="0.127" layer="51"/>
 <wire x1="0.15875" y1="0" x2="-0.15875" y2="-0.3175" width="0.127" layer="51"/>
-</package>
-</packages>
-</library>
-<library name="0545482271">
-<description>&lt;CONN FFC BOTTOM 22POS 0.50MM R/A&lt;/b&gt;&lt;p&gt;
-&lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
-<packages>
-<package name="0545482271">
-<description>&lt;b&gt;0545482271&lt;/b&gt;&lt;br&gt;
-</description>
-<smd name="1" x="-5.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="2" x="-4.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="3" x="-4.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="4" x="-3.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="5" x="-3.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="6" x="-2.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="7" x="-2.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="8" x="-1.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="9" x="-1.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="10" x="-0.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="11" x="-0.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="12" x="0.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="13" x="0.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="14" x="1.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="15" x="1.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="16" x="2.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="17" x="2.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="18" x="3.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="19" x="3.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="20" x="4.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="21" x="4.75" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="22" x="5.25" y="2.05" dx="1" dy="0.3" layer="1" rot="R90"/>
-<smd name="23" x="-7.525" y="0.15" dx="1.65" dy="1.3" layer="1"/>
-<smd name="24" x="7.525" y="0.15" dx="1.65" dy="1.3" layer="1"/>
-<text x="0" y="0" size="1.27" layer="25" align="center">&gt;NAME</text>
-<text x="0" y="0" size="1.27" layer="27" align="center">&gt;VALUE</text>
-<wire x1="-7.5" y1="1.8" x2="7.5" y2="1.8" width="0.2" layer="51"/>
-<wire x1="7.5" y1="1.8" x2="7.5" y2="-2.75" width="0.2" layer="51"/>
-<wire x1="7.5" y1="-2.75" x2="-7.5" y2="-2.75" width="0.2" layer="51"/>
-<wire x1="-7.5" y1="-2.75" x2="-7.5" y2="1.8" width="0.2" layer="51"/>
-<wire x1="-9.35" y1="3.75" x2="9.35" y2="3.75" width="0.1" layer="51"/>
-<wire x1="9.35" y1="3.75" x2="9.35" y2="-3.75" width="0.1" layer="51"/>
-<wire x1="9.35" y1="-3.75" x2="-9.35" y2="-3.75" width="0.1" layer="51"/>
-<wire x1="-9.35" y1="-3.75" x2="-9.35" y2="3.75" width="0.1" layer="51"/>
-<wire x1="-7.5" y1="1.05" x2="-7.5" y2="1.8" width="0.1" layer="21"/>
-<wire x1="-7.5" y1="1.8" x2="-6" y2="1.8" width="0.1" layer="21"/>
-<wire x1="7.525" y1="1.05" x2="7.5" y2="1.8" width="0.1" layer="21"/>
-<wire x1="7.5" y1="1.8" x2="6" y2="1.8" width="0.1" layer="21"/>
-<wire x1="-7.5" y1="-0.7" x2="-7.5" y2="-2.75" width="0.1" layer="21"/>
-<wire x1="-7.5" y1="-2.75" x2="7.5" y2="-2.75" width="0.1" layer="21"/>
-<wire x1="7.5" y1="-2.75" x2="7.5" y2="-0.7" width="0.1" layer="21"/>
-<wire x1="-5.3" y1="2.7" x2="-5.3" y2="2.7" width="0.1" layer="21"/>
-<wire x1="-5.3" y1="2.7" x2="-5.2" y2="2.7" width="0.1" layer="21" curve="-180"/>
-<wire x1="-5.2" y1="2.7" x2="-5.2" y2="2.7" width="0.1" layer="21"/>
-<wire x1="-5.2" y1="2.7" x2="-5.3" y2="2.7" width="0.1" layer="21" curve="-180"/>
 </package>
 </packages>
 </library>
@@ -3106,30 +3051,6 @@ design rules under a new name.</description>
 <attribute name="NAME" x="10.414" y="5.969" size="0.6096" layer="25" font="vector" ratio="20"/>
 <attribute name="VALUE" x="8.382" y="3.048" size="0.6096" layer="27" font="vector" ratio="20"/>
 </element>
-<element name="J5" library="0545482271" package="0545482271" value="0545482271" x="99.06" y="1.778" smashed="yes" rot="R90">
-<attribute name="DESCRIPTION" value="CONN FFC BOTTOM 22POS 0.50MM R/A" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="HEIGHT" value="1mm" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MANUFACTURER_NAME" value="Molex" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MANUFACTURER_PART_NUMBER" value="0545482271" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MOUSER_PART_NUMBER" value="N/A" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MOUSER_PRICE-STOCK" value="https://www.mouser.com/Search/Refine.aspx?Keyword=N%2FA" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="101.6" y="1.778" size="1.27" layer="25" rot="R90" align="center"/>
-<attribute name="RS_PART_NUMBER" value="" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="RS_PRICE-STOCK" value="" x="99.06" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="VALUE" x="100.33" y="1.778" size="1.27" layer="27" rot="R90" align="center"/>
-</element>
-<element name="J6" library="0545482271" package="0545482271" value="0545482271" x="106.68" y="1.778" smashed="yes" rot="R90">
-<attribute name="DESCRIPTION" value="CONN FFC BOTTOM 22POS 0.50MM R/A" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="HEIGHT" value="1mm" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MANUFACTURER_NAME" value="Molex" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MANUFACTURER_PART_NUMBER" value="0545482271" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MOUSER_PART_NUMBER" value="N/A" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="MOUSER_PRICE-STOCK" value="https://www.mouser.com/Search/Refine.aspx?Keyword=N%2FA" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="106.934" y="1.778" size="1.27" layer="25" rot="R90" align="center"/>
-<attribute name="RS_PART_NUMBER" value="" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="RS_PRICE-STOCK" value="" x="106.68" y="1.778" size="1.778" layer="27" rot="R90" display="off"/>
-<attribute name="VALUE" x="106.68" y="0.508" size="1.27" layer="27" rot="R90" align="center"/>
-</element>
 <element name="R9" library="SparkFun-Resistors" package="0603-RES" value="10k" x="55.88" y="22.606" smashed="yes">
 <attribute name="NAME" x="57.531" y="22.352" size="0.762" layer="25" font="vector" ratio="20"/>
 <attribute name="PROD_ID" value="RES-00824" x="55.88" y="22.606" size="1.778" layer="27" display="off"/>
@@ -4040,126 +3961,6 @@ design rules under a new name.</description>
 <wire x1="93.0557125" y1="20.32" x2="93.1603125" y2="20.4246" width="0.1524" layer="1"/>
 <wire x1="93.1603125" y1="20.4246" x2="93.8586" y2="20.4246" width="0.1524" layer="1"/>
 <wire x1="93.8586" y1="20.4246" x2="93.98" y2="20.546" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI1">
-<contactref element="J5" pad="1"/>
-<contactref element="J6" pad="1"/>
-<wire x1="97.01" y1="-3.472" x2="104.63" y2="-3.472" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI3">
-<contactref element="J5" pad="3"/>
-<contactref element="J6" pad="3"/>
-<wire x1="97.01" y1="-2.472" x2="104.63" y2="-2.472" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI5">
-<contactref element="J5" pad="5"/>
-<contactref element="J6" pad="5"/>
-<wire x1="97.01" y1="-1.472" x2="104.63" y2="-1.472" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI7">
-<contactref element="J5" pad="7"/>
-<contactref element="J6" pad="7"/>
-<wire x1="97.01" y1="-0.472" x2="104.63" y2="-0.472" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI9">
-<contactref element="J5" pad="9"/>
-<contactref element="J6" pad="9"/>
-<wire x1="97.01" y1="0.528" x2="104.63" y2="0.528" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI11">
-<contactref element="J5" pad="11"/>
-<contactref element="J6" pad="11"/>
-<wire x1="97.01" y1="1.528" x2="104.63" y2="1.528" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI13">
-<contactref element="J5" pad="13"/>
-<contactref element="J6" pad="13"/>
-<wire x1="97.01" y1="2.528" x2="104.63" y2="2.528" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI15">
-<contactref element="J5" pad="15"/>
-<contactref element="J6" pad="15"/>
-<wire x1="97.01" y1="3.528" x2="104.63" y2="3.528" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI19">
-<contactref element="J5" pad="19"/>
-<contactref element="J6" pad="19"/>
-<wire x1="97.01" y1="5.528" x2="104.63" y2="5.528" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI23">
-<contactref element="J5" pad="23"/>
-<contactref element="J6" pad="23"/>
-<wire x1="98.91" y1="-5.747" x2="106.53" y2="-5.747" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI21">
-<contactref element="J5" pad="21"/>
-<contactref element="J6" pad="21"/>
-<wire x1="97.01" y1="6.528" x2="104.63" y2="6.528" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI2">
-<contactref element="J5" pad="2"/>
-<contactref element="J6" pad="2"/>
-<wire x1="97.01" y1="-2.972" x2="104.63" y2="-2.972" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI4">
-<contactref element="J5" pad="4"/>
-<contactref element="J6" pad="4"/>
-<wire x1="97.01" y1="-1.972" x2="104.63" y2="-1.972" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI6">
-<contactref element="J5" pad="6"/>
-<contactref element="J6" pad="6"/>
-<wire x1="97.01" y1="-0.972" x2="104.63" y2="-0.972" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI8">
-<contactref element="J5" pad="8"/>
-<contactref element="J6" pad="8"/>
-<wire x1="97.01" y1="0.028" x2="104.63" y2="0.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI10">
-<contactref element="J5" pad="10"/>
-<contactref element="J6" pad="10"/>
-<wire x1="97.01" y1="1.028" x2="104.63" y2="1.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI12">
-<contactref element="J5" pad="12"/>
-<contactref element="J6" pad="12"/>
-<wire x1="97.01" y1="2.028" x2="104.63" y2="2.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI14">
-<contactref element="J5" pad="14"/>
-<contactref element="J6" pad="14"/>
-<wire x1="97.01" y1="3.028" x2="104.63" y2="3.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI16">
-<contactref element="J5" pad="16"/>
-<contactref element="J6" pad="16"/>
-<wire x1="97.01" y1="4.028" x2="104.63" y2="4.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI18">
-<contactref element="J5" pad="18"/>
-<contactref element="J6" pad="18"/>
-<wire x1="97.01" y1="5.028" x2="104.63" y2="5.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI20">
-<contactref element="J5" pad="20"/>
-<contactref element="J6" pad="20"/>
-<wire x1="97.01" y1="6.028" x2="104.63" y2="6.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI22">
-<contactref element="J5" pad="22"/>
-<contactref element="J6" pad="22"/>
-<wire x1="97.01" y1="7.028" x2="104.63" y2="7.028" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI24">
-<contactref element="J5" pad="24"/>
-<contactref element="J6" pad="24"/>
-<wire x1="98.91" y1="9.303" x2="106.53" y2="9.303" width="0.1524" layer="1"/>
-</signal>
-<signal name="CSI17">
-<contactref element="J5" pad="17"/>
-<contactref element="J6" pad="17"/>
-<wire x1="97.01" y1="4.528" x2="104.63" y2="4.528" width="0.1524" layer="1"/>
 </signal>
 <signal name="3V3A">
 <contactref element="X1" pad="1"/>
