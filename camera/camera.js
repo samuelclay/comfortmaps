@@ -1,5 +1,6 @@
 const gpio = require('rpi-gpio');
 const Raspistill = require('node-raspistill').Raspistill;
+const BluetoothManager = require('bluetooth-manager').BluetoothManager;
 const camera = new Raspistill({
     verticalFlip: true,
     quality: 10,
@@ -30,6 +31,7 @@ class ButtonWatch {
                 console.log(" ---> Pressed " + channel);
                 camera.takePhoto().then((photo) => {
                     console.log(['Photo', photo]);
+                    bluetoothManager.sendPhoto(channel, photo);
                 });
             }
         } else if (value == 1) {
@@ -42,3 +44,4 @@ class ButtonWatch {
 }
 
 var buttonWatch = new ButtonWatch();
+var bluetoothManager = new BluetoothManager();
