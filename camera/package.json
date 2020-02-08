@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/samuelclay/comfortmaps#readme",
   "dependencies": {
-      "bluetooth-hci-socket": "abandonware/node-bluetooth-hci-socket",
-      "bleno": "^0.5.0",
-      "rpi-gpio": "^2.1.5",
-      "node-raspistill": "^1.0.0
+    "bleno": "^0.5.0",
+    "bluetooth-hci-socket": "abandonware/node-bluetooth-hci-socket",
+    "node-raspistill": "^1.0.0",
+    "rpi-gpio": "^2.1.5"
+  }
+}

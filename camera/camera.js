@@ -4,6 +4,8 @@ const BluetoothManager = require('./bluetooth-manager').BluetoothManager;
 const camera = new Raspistill({
     verticalFlip: true,
     quality: 10,
+    width: 640,
+    height: 480
 });
 
 class ButtonWatch {    

@@ -3,8 +3,10 @@ var util = require('util');
 
 var serviceUuids = ["ec20"]
 
-class BluetoothManager {
+class BluetoothManager {    
     constructor() {
+        this.photoDataCharacteristic = new CameraCharacteristic()
+        
         bleno.on('stateChange', (state) => {
             console.log(" ---> Bluetooth: ", state);
             
@@ -20,12 +22,12 @@ class BluetoothManager {
             
             if (!error) {
                 bleno.setServices([
-                    new bleno.PrimaryService({
-                        uuid: 'ec20',
-                        characteristics: [
-                            new CameraCharacteristic()
-                        ]
-                    })
+                new bleno.PrimaryService({
+                    uuid: 'ec20',
+                    characteristics: [
+                    this.photoDataCharacteristic
+                    ]
+                })
                 ]);
             }
         });
@@ -33,6 +35,7 @@ class BluetoothManager {
     
     sendPhoto(channel, photo) {
         console.log(['Sending photo', channel, photo, bleno]);
+        this.photoDataCharacteristic.beginPhotoDataTransfer(channel, photo);
     }
 
 }
@@ -49,10 +52,34 @@ class CameraCharacteristic {
         this._updateValueCallback = null;
     }
     
+    beginPhotoDataTransfer(channel, photo) {
+        this.photo = photo;
+        this.channel = channel;
+        this.bytesRead = 0;
+        this.chunkSize = 20;
+        this.photoSize = photo.length;
+        
+        if (this._updateValueCallback) {
+            const message = "BEG:" + channel + ":" + this.photoSize;
+            this._value = Buffer.from(message, 'utf8');
+            console.log(' ---> Notifying for photo transfer: ', message);
+            this._updateValueCallback(this._value);
+        }
+    }
+    
     onReadRequest(offset, callback) {
-        console.log('EchoCharacteristic - onReadRequest: value = ' + this._value.toString('hex'));
-
+        // console.log(' ---> Reading', this.bytesRead, this.photoSize, this._value.toString('hex'));
+        this._value = this.photo.slice(this.bytesRead, this.bytesRead + this.chunkSize);
+        this.bytesRead += this.chunkSize;
         callback(this.RESULT_SUCCESS, this._value);
+        if (this.bytesRead >= this.photoSize) {
+            if (this._updateValueCallback) {
+                const message = "END:" + this.photoSize;
+                this._value = Buffer.from(message, 'utf8');
+                console.log(' ---> Ending photo transfer: ', message);
+                this._updateValueCallback(this._value);
+            }
+        }
     }
     
     onWriteRequest(data, offset, withoutResponse, callback) {
@@ -61,9 +88,9 @@ class CameraCharacteristic {
         console.log('EchoCharacteristic - onWriteRequest: value = ' + this._value.toString('hex'));
 
         if (this._updateValueCallback) {
-          console.log('EchoCharacteristic - onWriteRequest: notifying');
+            console.log('EchoCharacteristic - onWriteRequest: notifying');
 
-          this._updateValueCallback(this._value);
+            this._updateValueCallback(this._value);
         }
 
         callback(this.RESULT_SUCCESS);
