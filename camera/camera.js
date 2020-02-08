@@ -1,6 +1,6 @@
 const gpio = require('rpi-gpio');
 const Raspistill = require('node-raspistill').Raspistill;
-const BluetoothManager = require('bluetooth-manager').BluetoothManager;
+const BluetoothManager = require('./bluetooth-manager').BluetoothManager;
 const camera = new Raspistill({
     verticalFlip: true,
     quality: 10,
