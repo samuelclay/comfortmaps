@@ -46,11 +46,35 @@ class CameraCharacteristic {
     }
     
     onReadRequest(offset, callback) {
-    
+        console.log('EchoCharacteristic - onReadRequest: value = ' + this._value.toString('hex'));
+
+        callback(this.RESULT_SUCCESS, this._value);
     }
     
     onWriteRequest(data, offset, withoutResponse, callback) {
+        this._value = data;
+
+        console.log('EchoCharacteristic - onWriteRequest: value = ' + this._value.toString('hex'));
+
+        if (this._updateValueCallback) {
+          console.log('EchoCharacteristic - onWriteRequest: notifying');
+
+          this._updateValueCallback(this._value);
+        }
+
+        callback(this.RESULT_SUCCESS);
+    }
     
+    onSubscribe(maxValueSize, updateValueCallback) {
+        console.log('EchoCharacteristic - onSubscribe');
+
+        this._updateValueCallback = updateValueCallback;
+    }
+    
+    onUnsubscribe() {
+        console.log('EchoCharacteristic - onUnsubscribe');
+
+        this._updateValueCallback = null;
     }
 }
 
