@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  Comfort Maps
 //
-//  Created by Samuel Clay on 1/22/20.
-//  Copyright © 2020 Comfort Maps. All rights reserved.
+//  Created by Samuel Clay on 2/8/20.
+//  Copyright © 2020 hackersmacker. All rights reserved.
 //
 
 import UIKit
@@ -12,10 +12,15 @@ import CoreData
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    public var bluetoothManager: BluetoothManager!
+    public var photoManager: PhotoManager!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        self.bluetoothManager = BluetoothManager()
+        self.photoManager = PhotoManager()
+        self.bluetoothManager.photoDelegate = self.photoManager
+        
         return true
     }
 

@@ -3,33 +3,37 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FFB6232323D91E7100C133D5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB6232223D91E7100C133D5 /* AppDelegate.swift */; };
-		FFB6232523D91E7100C133D5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB6232423D91E7100C133D5 /* SceneDelegate.swift */; };
-		FFB6232823D91E7100C133D5 /* Comfort_Maps.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FFB6232623D91E7100C133D5 /* Comfort_Maps.xcdatamodeld */; };
-		FFB6232A23D91E7100C133D5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFB6232923D91E7100C133D5 /* ContentView.swift */; };
-		FFB6232C23D91E7400C133D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFB6232B23D91E7400C133D5 /* Assets.xcassets */; };
-		FFB6232F23D91E7400C133D5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFB6232E23D91E7400C133D5 /* Preview Assets.xcassets */; };
-		FFB6233223D91E7400C133D5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFB6233023D91E7400C133D5 /* LaunchScreen.storyboard */; };
+		FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734D823EF45FA007221A5 /* AppDelegate.swift */; };
+		FFC734DB23EF45FA007221A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */; };
+		FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */; };
+		FFC734E023EF45FA007221A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DF23EF45FA007221A5 /* ContentView.swift */; };
+		FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E123EF45FF007221A5 /* Assets.xcassets */; };
+		FFC734E523EF45FF007221A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E423EF45FF007221A5 /* Preview Assets.xcassets */; };
+		FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */; };
+		FFC734F023EF4744007221A5 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734EF23EF4744007221A5 /* BluetoothManager.swift */; };
+		FFC734F223EF502D007221A5 /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734F123EF502D007221A5 /* PhotoManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		FFB6231F23D91E7100C133D5 /* Comfort Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Comfort Maps.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FFB6232223D91E7100C133D5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FFB6232423D91E7100C133D5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		FFB6232723D91E7100C133D5 /* Comfort_Maps.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Comfort_Maps.xcdatamodel; sourceTree = "<group>"; };
-		FFB6232923D91E7100C133D5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		FFB6232B23D91E7400C133D5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FFB6232E23D91E7400C133D5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		FFB6233123D91E7400C133D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		FFB6233323D91E7400C133D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FFC734D523EF45FA007221A5 /* Comfort Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Comfort Maps.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFC734D823EF45FA007221A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		FFC734DD23EF45FA007221A5 /* Comfort_Maps.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Comfort_Maps.xcdatamodel; sourceTree = "<group>"; };
+		FFC734DF23EF45FA007221A5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FFC734E123EF45FF007221A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FFC734E423EF45FF007221A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FFC734E723EF45FF007221A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FFC734E923EF45FF007221A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FFC734EF23EF4744007221A5 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
+		FFC734F123EF502D007221A5 /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		FFB6231C23D91E7100C133D5 /* Frameworks */ = {
+		FFC734D223EF45FA007221A5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -39,41 +43,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		FFB6231623D91E7100C133D5 = {
+		FFC734CC23EF45FA007221A5 = {
 			isa = PBXGroup;
 			children = (
-				FFB6232123D91E7100C133D5 /* Comfort Maps */,
-				FFB6232023D91E7100C133D5 /* Products */,
+				FFC734D723EF45FA007221A5 /* Comfort Maps */,
+				FFC734D623EF45FA007221A5 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		FFB6232023D91E7100C133D5 /* Products */ = {
+		FFC734D623EF45FA007221A5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FFB6231F23D91E7100C133D5 /* Comfort Maps.app */,
+				FFC734D523EF45FA007221A5 /* Comfort Maps.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FFB6232123D91E7100C133D5 /* Comfort Maps */ = {
+		FFC734D723EF45FA007221A5 /* Comfort Maps */ = {
 			isa = PBXGroup;
 			children = (
-				FFB6232223D91E7100C133D5 /* AppDelegate.swift */,
-				FFB6232423D91E7100C133D5 /* SceneDelegate.swift */,
-				FFB6232923D91E7100C133D5 /* ContentView.swift */,
-				FFB6232B23D91E7400C133D5 /* Assets.xcassets */,
-				FFB6233023D91E7400C133D5 /* LaunchScreen.storyboard */,
-				FFB6233323D91E7400C133D5 /* Info.plist */,
-				FFB6232623D91E7100C133D5 /* Comfort_Maps.xcdatamodeld */,
-				FFB6232D23D91E7400C133D5 /* Preview Content */,
+				FFC734D823EF45FA007221A5 /* AppDelegate.swift */,
+				FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */,
+				FFC734DF23EF45FA007221A5 /* ContentView.swift */,
+				FFC734EF23EF4744007221A5 /* BluetoothManager.swift */,
+				FFC734F123EF502D007221A5 /* PhotoManager.swift */,
+				FFC734E123EF45FF007221A5 /* Assets.xcassets */,
+				FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */,
+				FFC734E923EF45FF007221A5 /* Info.plist */,
+				FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */,
+				FFC734E323EF45FF007221A5 /* Preview Content */,
 			);
 			path = "Comfort Maps";
 			sourceTree = "<group>";
 		};
-		FFB6232D23D91E7400C133D5 /* Preview Content */ = {
+		FFC734E323EF45FF007221A5 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				FFB6232E23D91E7400C133D5 /* Preview Assets.xcassets */,
+				FFC734E423EF45FF007221A5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -81,14 +87,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FFB6231E23D91E7100C133D5 /* Comfort Maps */ = {
+		FFC734D423EF45FA007221A5 /* Comfort Maps */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FFB6233623D91E7400C133D5 /* Build configuration list for PBXNativeTarget "Comfort Maps" */;
+			buildConfigurationList = FFC734EC23EF45FF007221A5 /* Build configuration list for PBXNativeTarget "Comfort Maps" */;
 			buildPhases = (
-				FFB6231B23D91E7100C133D5 /* Sources */,
-				FFB6231C23D91E7100C133D5 /* Frameworks */,
-				FFB6231D23D91E7100C133D5 /* Resources */,
-				FFB6233923D9210B00C133D5 /* ShellScript */,
+				FFC734D123EF45FA007221A5 /* Sources */,
+				FFC734D223EF45FA007221A5 /* Frameworks */,
+				FFC734D323EF45FA007221A5 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -96,25 +101,25 @@
 			);
 			name = "Comfort Maps";
 			productName = "Comfort Maps";
-			productReference = FFB6231F23D91E7100C133D5 /* Comfort Maps.app */;
+			productReference = FFC734D523EF45FA007221A5 /* Comfort Maps.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		FFB6231723D91E7100C133D5 /* Project object */ = {
+		FFC734CD23EF45FA007221A5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1130;
-				ORGANIZATIONNAME = "Comfort Maps";
+				ORGANIZATIONNAME = hackersmacker;
 				TargetAttributes = {
-					FFB6231E23D91E7100C133D5 = {
+					FFC734D423EF45FA007221A5 = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
 				};
 			};
-			buildConfigurationList = FFB6231A23D91E7100C133D5 /* Build configuration list for PBXProject "Comfort Maps" */;
+			buildConfigurationList = FFC734D023EF45FA007221A5 /* Build configuration list for PBXProject "Comfort Maps" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -122,69 +127,50 @@
 				en,
 				Base,
 			);
-			mainGroup = FFB6231623D91E7100C133D5;
-			productRefGroup = FFB6232023D91E7100C133D5 /* Products */;
+			mainGroup = FFC734CC23EF45FA007221A5;
+			productRefGroup = FFC734D623EF45FA007221A5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FFB6231E23D91E7100C133D5 /* Comfort Maps */,
+				FFC734D423EF45FA007221A5 /* Comfort Maps */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		FFB6231D23D91E7100C133D5 /* Resources */ = {
+		FFC734D323EF45FA007221A5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFB6233223D91E7400C133D5 /* LaunchScreen.storyboard in Resources */,
-				FFB6232F23D91E7400C133D5 /* Preview Assets.xcassets in Resources */,
-				FFB6232C23D91E7400C133D5 /* Assets.xcassets in Resources */,
+				FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */,
+				FFC734E523EF45FF007221A5 /* Preview Assets.xcassets in Resources */,
+				FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		FFB6233923D9210B00C133D5 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"$(SRCROOT)/newInputFile.xcfilelist",
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		FFB6231B23D91E7100C133D5 /* Sources */ = {
+		FFC734D123EF45FA007221A5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FFB6232323D91E7100C133D5 /* AppDelegate.swift in Sources */,
-				FFB6232523D91E7100C133D5 /* SceneDelegate.swift in Sources */,
-				FFB6232A23D91E7100C133D5 /* ContentView.swift in Sources */,
-				FFB6232823D91E7100C133D5 /* Comfort_Maps.xcdatamodeld in Sources */,
+				FFC734F223EF502D007221A5 /* PhotoManager.swift in Sources */,
+				FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */,
+				FFC734DB23EF45FA007221A5 /* SceneDelegate.swift in Sources */,
+				FFC734E023EF45FA007221A5 /* ContentView.swift in Sources */,
+				FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */,
+				FFC734F023EF4744007221A5 /* BluetoothManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		FFB6233023D91E7400C133D5 /* LaunchScreen.storyboard */ = {
+		FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				FFB6233123D91E7400C133D5 /* Base */,
+				FFC734E723EF45FF007221A5 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -192,7 +178,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		FFB6233423D91E7400C133D5 /* Debug */ = {
+		FFC734EA23EF45FF007221A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -252,7 +238,7 @@
 			};
 			name = Debug;
 		};
-		FFB6233523D91E7400C133D5 /* Release */ = {
+		FFC734EB23EF45FF007221A5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -306,7 +292,7 @@
 			};
 			name = Release;
 		};
-		FFB6233723D91E7400C133D5 /* Debug */ = {
+		FFC734ED23EF45FF007221A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -319,14 +305,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.comfortmaps.Comfort-Maps";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hackersmacker.Comfort-Maps";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		FFB6233823D91E7400C133D5 /* Release */ = {
+		FFC734EE23EF45FF007221A5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -339,7 +325,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.comfortmaps.Comfort-Maps";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hackersmacker.Comfort-Maps";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -349,20 +335,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FFB6231A23D91E7100C133D5 /* Build configuration list for PBXProject "Comfort Maps" */ = {
+		FFC734D023EF45FA007221A5 /* Build configuration list for PBXProject "Comfort Maps" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FFB6233423D91E7400C133D5 /* Debug */,
-				FFB6233523D91E7400C133D5 /* Release */,
+				FFC734EA23EF45FF007221A5 /* Debug */,
+				FFC734EB23EF45FF007221A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FFB6233623D91E7400C133D5 /* Build configuration list for PBXNativeTarget "Comfort Maps" */ = {
+		FFC734EC23EF45FF007221A5 /* Build configuration list for PBXNativeTarget "Comfort Maps" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FFB6233723D91E7400C133D5 /* Debug */,
-				FFB6233823D91E7400C133D5 /* Release */,
+				FFC734ED23EF45FF007221A5 /* Debug */,
+				FFC734EE23EF45FF007221A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -370,17 +356,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		FFB6232623D91E7100C133D5 /* Comfort_Maps.xcdatamodeld */ = {
+		FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				FFB6232723D91E7100C133D5 /* Comfort_Maps.xcdatamodel */,
+				FFC734DD23EF45FA007221A5 /* Comfort_Maps.xcdatamodel */,
 			);
-			currentVersion = FFB6232723D91E7100C133D5 /* Comfort_Maps.xcdatamodel */;
+			currentVersion = FFC734DD23EF45FA007221A5 /* Comfort_Maps.xcdatamodel */;
 			path = Comfort_Maps.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
 	};
-	rootObject = FFB6231723D91E7100C133D5 /* Project object */;
+	rootObject = FFC734CD23EF45FA007221A5 /* Project object */;
 }

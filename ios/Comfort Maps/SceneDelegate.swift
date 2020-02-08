@@ -2,8 +2,8 @@
 //  SceneDelegate.swift
 //  Comfort Maps
 //
-//  Created by Samuel Clay on 1/22/20.
-//  Copyright © 2020 Comfort Maps. All rights reserved.
+//  Created by Samuel Clay on 2/8/20.
+//  Copyright © 2020 hackersmacker. All rights reserved.
 //
 
 import UIKit
