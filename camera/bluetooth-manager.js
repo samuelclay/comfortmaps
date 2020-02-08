@@ -9,7 +9,7 @@ class BluetoothManager {
             console.log(" ---> Bluetooth: ", state);
             
             if (state == "poweredOn") {
-                bleno.startAdvertising("Comfort Maps Camera", serviceUuid)
+                bleno.startAdvertising("Comfort Maps Camera", serviceUuids)
             } else {
                 bleno.stopAdvertising();
             }
@@ -20,7 +20,7 @@ class BluetoothManager {
             
             if (!error) {
                 bleno.setServices([
-                    new BlenoPrimaryService({
+                    new bleno.PrimaryService({
                         uuid: 'ec20',
                         characteristics: [
                             new CameraCharacteristic()
@@ -29,6 +29,10 @@ class BluetoothManager {
                 ]);
             }
         });
+    }
+    
+    sendPhoto(channel, photo) {
+        console.log(['Sending photo', channel, photo, bleno]);
     }
 
 }
