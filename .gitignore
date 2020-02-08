@@ -110,3 +110,4 @@ venv.bak/
 
 # Camera
 photos/*.jpg
+node_modules
