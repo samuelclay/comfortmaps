@@ -82,17 +82,17 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
     func updatePhotoData(_ peripheral: CBPeripheral, _ characteristic: CBCharacteristic) {
         if characteristic.uuid == ComfortmapsCamera.CharacteristicPhotoDataUUID {
             if let data = characteristic.value {
-                if let dataString = String(bytes: data, encoding: .utf8) {
 //                    print(" ---> Received data:", data.map { String(format: "%02x", $0) }.joined(), data, dataString)
-                    if dataString.starts(with: "BEG:") {
+                let subdata = data.subdata(in: 0..<4)
+                if subdata == "BEG:".data(using: .utf8) {
+                    if let dataString = String(bytes: data, encoding: .utf8) {
                         self.photoDelegate?.beginPhotoTransfer(header: dataString)
-                        peripheral.readValue(for: characteristic)
-                    } else if dataString.starts(with: "END:") {
-                        self.photoDelegate?.endPhotoTransfer()
-                    } else {
-                        self.photoDelegate?.receivePhotoData(data: data)
-                        peripheral.readValue(for: characteristic)
                     }
+                    peripheral.readValue(for: characteristic)
+                } else if subdata.count == 0 || subdata == "END:".data(using: .utf8) {
+                    self.photoDelegate?.endPhotoTransfer()
+//                } else if data == Data.init(count: 20) {
+//                    self.photoDelegate?.endPhotoTransfer()
                 } else {
                     self.photoDelegate?.receivePhotoData(data: data)
                     peripheral.readValue(for: characteristic)
