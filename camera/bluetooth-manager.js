@@ -34,7 +34,6 @@ class BluetoothManager {
     }
     
     sendPhoto(channel, photo) {
-        console.log(['Sending photo', channel, photo, bleno]);
         this.photoDataCharacteristic.beginPhotoDataTransfer(channel, photo);
     }
 

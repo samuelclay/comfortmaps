@@ -1,4 +1,7 @@
 const gpio = require('rpi-gpio');
+const sharp = require('sharp');
+const fs = require('fs');
+const uuidv1 = require('uuid/v1');
 const { spawn } = require('child_process');
 const Raspistill = require('node-raspistill').Raspistill;
 const BluetoothManager = require('./bluetooth-manager').BluetoothManager;
@@ -37,22 +40,31 @@ class ButtonWatch {
                     '-q',   '10', 
                     '-t',   '1', 
                     '-rot', '180', 
-                    '-w',   '488',
-                    '-h',   '366',
+                    // '-w',   '488',
+                    // '-h',   '366',
                     '-o',   '-'
                 ]);
 
                 process.stdin.pipe(child.stdin);
                 this.photoData = [];
                 child.stdout.on('data', (data) => {
-                    console.log(['Photo', data.length]);
+                    console.log(['Photo data', data.length]);
                     this.photoData.push(data);
                 });
                 child.on('close', (code) => {
-                    var photo = Buffer.concat(this.photoData);
-                    console.log(['Finished taking photo', code, photo.length]);
-                    bluetoothManager.sendPhoto(channel, photo);
-                    wifiManager.sendPhoto(channel, photo);                    
+                    let photoRaw = Buffer.concat(this.photoData);
+                    let photoUuid = uuidv1();
+                    fs.writeFile("photos/"+photoUuid+".jpg", photoRaw, (err) => {
+                        if (err) {
+                            console.log(" ---> Error saving file", uuid, err);
+                            return;
+                        }
+                        sharp(photoRaw).resize(488).toBuffer().then((photoThumb) => {
+                            console.log(['Finished taking photo', code, photoRaw.length, photoThumb.length]);
+                            bluetoothManager.sendPhoto(channel, photoThumb);
+                            wifiManager.sendPhoto(channel, photoThumb);                        
+                        });
+                    });
                 });
                 
                 // camera.takePhoto().then((photo) => {
