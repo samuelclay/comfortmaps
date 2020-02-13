@@ -3,15 +3,8 @@ const sharp = require('sharp');
 const fs = require('fs');
 const uuidv1 = require('uuid/v1');
 const { spawn } = require('child_process');
-const Raspistill = require('node-raspistill').Raspistill;
 const BluetoothManager = require('./bluetooth-manager').BluetoothManager;
 const WifiManager = require('./wifi-manager').WifiManager;
-const camera = new Raspistill({
-    verticalFlip: true,
-    quality: 10,
-    width: 320,
-    height: 240
-});
 
 class ButtonWatch {    
     constructor() {
@@ -66,12 +59,6 @@ class ButtonWatch {
                         });
                     });
                 });
-                
-                // camera.takePhoto().then((photo) => {
-                //     console.log(['Photo', photo]);
-                //     bluetoothManager.sendPhoto(channel, photo);
-                //     wifiManager.sendPhoto(channel, photo);
-                // });
             }
         } else if (value == 1) {
             if (channelPressed) {
