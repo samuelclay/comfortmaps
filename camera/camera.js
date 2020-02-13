@@ -1,4 +1,5 @@
 const gpio = require('rpi-gpio');
+const { spawn } = require('child_process');
 const Raspistill = require('node-raspistill').Raspistill;
 const BluetoothManager = require('./bluetooth-manager').BluetoothManager;
 const WifiManager = require('./wifi-manager').WifiManager;
@@ -32,11 +33,33 @@ class ButtonWatch {
             if (!channelPressed) {
                 this.pressed.add(channel);
                 console.log(" ---> Pressed " + channel);
-                camera.takePhoto().then((photo) => {
-                    console.log(['Photo', photo]);
-                    bluetoothManager.sendPhoto(channel, photo);
-                    wifiManager.sendPhoto(channel, photo);
+                const child = spawn('raspistill', [
+                    '-q',   '10', 
+                    '-t',   '1', 
+                    '-rot', '180', 
+                    '-w',   '488',
+                    '-h',   '366',
+                    '-o',   '-'
+                ]);
+
+                process.stdin.pipe(child.stdin);
+                this.photoData = [];
+                child.stdout.on('data', (data) => {
+                    console.log(['Photo', data.length]);
+                    this.photoData.push(data);
                 });
+                child.on('close', (code) => {
+                    var photo = Buffer.concat(this.photoData);
+                    console.log(['Finished taking photo', code, photo.length]);
+                    bluetoothManager.sendPhoto(channel, photo);
+                    wifiManager.sendPhoto(channel, photo);                    
+                });
+                
+                // camera.takePhoto().then((photo) => {
+                //     console.log(['Photo', photo]);
+                //     bluetoothManager.sendPhoto(channel, photo);
+                //     wifiManager.sendPhoto(channel, photo);
+                // });
             }
         } else if (value == 1) {
             if (channelPressed) {
