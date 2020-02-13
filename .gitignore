@@ -111,3 +111,4 @@ venv.bak/
 # Camera
 camera/photos
 node_modules
+camera/snapshots.db
