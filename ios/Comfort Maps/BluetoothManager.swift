@@ -86,7 +86,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
                 let subdata = data.subdata(in: 0..<4)
                 if subdata == "BEG:".data(using: .utf8) {
                     if let dataString = String(bytes: data, encoding: .utf8) {
-                        self.photoDelegate?.beginPhotoTransfer(header: dataString)
+                        self.photoDelegate?.beginBluetoothPhotoTransfer(header: dataString)
                     }
                     peripheral.readValue(for: characteristic)
                 } else if subdata.count == 0 || subdata == "END:".data(using: .utf8) {

@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 
 protocol PhotoDelegate {
-    func beginPhotoTransfer(header: String)
+    func beginBluetoothPhotoTransfer(header: String)
+    func beginWifiPhotoTransfer(header: String)
     func receivePhotoData(data: Data)
     func endPhotoTransfer()
 }
@@ -24,7 +25,7 @@ class PhotoManager: PhotoDelegate {
     private var streamStartTime         : TimeInterval = 0
     private var transferRate            : Double       = 0
     
-    func beginPhotoTransfer(header: String) {
+    func beginBluetoothPhotoTransfer(header: String) {
         print(" ---> Beginning photo transfer: \(header)")
         uploadingData = Data()
         imageStartTime = Date().timeIntervalSince1970
@@ -40,6 +41,10 @@ class PhotoManager: PhotoDelegate {
         currentChannel = headers[1]
     }
     
+    func beginWifiPhotoTransfer(header: String) {
+        
+    }
+    
     func receivePhotoData(data: Data) {
         uploadingData.append(data)
         imageElapsedTime = Date().timeIntervalSince1970 - imageStartTime
@@ -47,7 +52,7 @@ class PhotoManager: PhotoDelegate {
         
         if uploadingData.count == currentImageSize {
             let image = UIImage.init(data: uploadingData)
-            print(" ---> Done!")
+            print(" ---> Done!", image)
             self.endPhotoTransfer()
         } else {
             print(" ---> Progress:", uploadingData.count, currentImageSize)

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */; };
+		FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */; };
+		FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */; };
 		FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734D823EF45FA007221A5 /* AppDelegate.swift */; };
 		FFC734DB23EF45FA007221A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */; };
 		FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */; };
@@ -19,6 +22,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManager.swift; sourceTree = "<group>"; };
+		FF9D2EA423F4B4320094F34C /* Comfort Maps.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Comfort Maps.entitlements"; sourceTree = "<group>"; };
+		FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		FFC734D523EF45FA007221A5 /* Comfort Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Comfort Maps.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFC734D823EF45FA007221A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,17 +44,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */,
+				FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FF9D2EA523F4B4320094F34C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */,
+				FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FFC734CC23EF45FA007221A5 = {
 			isa = PBXGroup;
 			children = (
 				FFC734D723EF45FA007221A5 /* Comfort Maps */,
 				FFC734D623EF45FA007221A5 /* Products */,
+				FF9D2EA523F4B4320094F34C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,10 +81,12 @@
 		FFC734D723EF45FA007221A5 /* Comfort Maps */ = {
 			isa = PBXGroup;
 			children = (
+				FF9D2EA423F4B4320094F34C /* Comfort Maps.entitlements */,
 				FFC734D823EF45FA007221A5 /* AppDelegate.swift */,
 				FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */,
 				FFC734DF23EF45FA007221A5 /* ContentView.swift */,
 				FFC734EF23EF4744007221A5 /* BluetoothManager.swift */,
+				FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */,
 				FFC734F123EF502D007221A5 /* PhotoManager.swift */,
 				FFC734E123EF45FF007221A5 /* Assets.xcassets */,
 				FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */,
@@ -159,6 +180,7 @@
 				FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */,
 				FFC734DB23EF45FA007221A5 /* SceneDelegate.swift in Sources */,
 				FFC734E023EF45FA007221A5 /* ContentView.swift in Sources */,
+				FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */,
 				FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */,
 				FFC734F023EF4744007221A5 /* BluetoothManager.swift in Sources */,
 			);
@@ -296,17 +318,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = "Comfort Maps/Comfort Maps.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_ASSET_PATHS = "\"Comfort Maps/Preview Content\"";
-				DEVELOPMENT_TEAM = J6XUY3VWWD;
+				DEVELOPMENT_TEAM = HR7P97SD72;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Comfort Maps/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hackersmacker.Comfort-Maps";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackersmacker.ComfortMaps;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "Comfort Maps";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -316,17 +341,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Comfort Maps/Comfort Maps.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Comfort Maps/Preview Content\"";
-				DEVELOPMENT_TEAM = J6XUY3VWWD;
+				DEVELOPMENT_TEAM = HR7P97SD72;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Comfort Maps/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hackersmacker.Comfort-Maps";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hackersmacker.ComfortMaps;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

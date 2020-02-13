@@ -13,13 +13,16 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     public var bluetoothManager: BluetoothManager!
+    public var wifiManager: WifiManager!
     public var photoManager: PhotoManager!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         self.bluetoothManager = BluetoothManager()
+        self.wifiManager = WifiManager()
         self.photoManager = PhotoManager()
         self.bluetoothManager.photoDelegate = self.photoManager
+        self.wifiManager.photoDelegate = self.photoManager
         
         return true
     }
