@@ -109,5 +109,5 @@ venv.bak/
 *.o
 
 # Camera
-photos/*.jpg
+camera/photos
 node_modules
