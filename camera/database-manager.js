@@ -43,14 +43,14 @@ Snapshot.init({
 
 class DatabaseManager {
     constructor() {
-        sequelize.sync();
+        sequelize.sync({force: true});
     }
     
     recordSnapshot(snapshot) {
-        Snapshot.create({
+        snapshotDb = Snapshot.create({
             photoId: snapshot.photoId,
             rating: snapshot.rating
-        })
+        });
     }
     
     generateId() {

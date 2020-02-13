@@ -7,7 +7,7 @@ const { spawn } = require('child_process');
 class ButtonManager {    
     constructor(camera) {
         this.camera = camera;
-        this.buttons = [18, 23, 22, 17, 27];
+        this.buttons = [27, 17, 22, 23, 18];
         this.ratings = [1, 2, 3, 4, 5];
         this.pressed = new Set();
         
@@ -24,6 +24,7 @@ class ButtonManager {
         let buttonIndex = this.buttons.indexOf(channel);
         let rating = this.ratings[buttonIndex];
         
+        console.log(['Button to rating', channel, buttonIndex, rating]);
         return rating;
     }
     
@@ -60,10 +61,11 @@ class ButtonManager {
                         }
                         sharp(photoRaw).resize(488).toBuffer().then((photoThumb) => {
                             console.log(['Finished taking photo', code, photoRaw.length, photoThumb.length]);
-                            let snapshot = this.camera.databaseManager.recordSnapshot({
+                            let snapshot = {
                                 photoId: photoId,
                                 rating: this.buttonToRating(channel)
-                            });
+                            };
+                            this.camera.databaseManager.recordSnapshot(snapshot);
                             this.camera.bluetoothManager.sendPhoto(snapshot, photoThumb);
                             this.camera.wifiManager.sendPhoto(snapshot, photoRaw);                        
                         });

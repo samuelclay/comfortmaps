@@ -6,7 +6,8 @@ var serviceUuids = ["ec20"]
 class BluetoothManager {    
     constructor(camera) {
         this.camera = camera;
-        this.photoDataCharacteristic = new CameraCharacteristic()
+        this.snapshotCharacteristic = new SnapshotCharacteristic()
+        this.photoDataCharacteristic = new PhotoDataCharacteristic()
         
         bleno.on('stateChange', (state) => {
             
@@ -26,6 +27,7 @@ class BluetoothManager {
                     new bleno.PrimaryService({
                         uuid: 'ec20',
                         characteristics: [
+                            this.snapshotCharacteristic,
                             this.photoDataCharacteristic
                         ]
                     })
@@ -40,9 +42,15 @@ class BluetoothManager {
 
 }
 
-class CameraCharacteristic {
+class SnapshotCharacteristic {
     constructor() {
-        CameraCharacteristic.super_.call(this, {
+    
+    }
+}
+
+class PhotoDataCharacteristic {
+    constructor() {
+        PhotoDataCharacteristic.super_.call(this, {
             uuid: 'ec2e',
             properties: ['read', 'write', 'notify'],
             value: null
@@ -60,7 +68,7 @@ class CameraCharacteristic {
         this.photoSize = photo.length;
         
         if (this._updateValueCallback) {
-            const message = "BEG:" + snapshot.rating + ":" + this.photoSize;
+            const message = "B:" + snapshot.rating + ":" + this.photoSize + ":" + snapshot.photoId;
             this._value = Buffer.from(message, 'utf8');
             console.log(' ---> Notifying for photo transfer: ', message);
             this._updateValueCallback(this._value);
@@ -109,6 +117,7 @@ class CameraCharacteristic {
     }
 }
 
-util.inherits(CameraCharacteristic, bleno.Characteristic);
+util.inherits(SnapshotCharacteristic, bleno.Characteristic);
+util.inherits(PhotoDataCharacteristic, bleno.Characteristic);
 
 exports.BluetoothManager = BluetoothManager;
