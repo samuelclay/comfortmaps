@@ -4,7 +4,8 @@ var util = require('util');
 var serviceUuids = ["ec20"]
 
 class BluetoothManager {    
-    constructor() {
+    constructor(camera) {
+        this.camera = camera;
         this.photoDataCharacteristic = new CameraCharacteristic()
         
         bleno.on('stateChange', (state) => {
@@ -33,8 +34,8 @@ class BluetoothManager {
         });
     }
     
-    sendPhoto(channel, photo) {
-        this.photoDataCharacteristic.beginPhotoDataTransfer(channel, photo);
+    sendPhoto(snapshot, photo) {
+        this.photoDataCharacteristic.beginPhotoDataTransfer(snapshot, photo);
     }
 
 }
@@ -51,15 +52,15 @@ class CameraCharacteristic {
         this._updateValueCallback = null;
     }
     
-    beginPhotoDataTransfer(channel, photo) {
+    beginPhotoDataTransfer(snapshot, photo) {
         this.photo = photo;
-        this.channel = channel;
+        this.snapshot = snapshot;
         this.bytesRead = 0;
         this.chunkSize = 20;
         this.photoSize = photo.length;
         
         if (this._updateValueCallback) {
-            const message = "BEG:" + channel + ":" + this.photoSize;
+            const message = "BEG:" + snapshot.rating + ":" + this.photoSize;
             this._value = Buffer.from(message, 'utf8');
             console.log(' ---> Notifying for photo transfer: ', message);
             this._updateValueCallback(this._value);

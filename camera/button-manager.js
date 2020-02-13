@@ -1,13 +1,14 @@
 const gpio = require('rpi-gpio');
 const sharp = require('sharp');
 const fs = require('fs');
-const uuidv1 = require('uuid/v1');
 const { spawn } = require('child_process');
 
 
 class ButtonManager {    
-    constructor() {
+    constructor(camera) {
+        this.camera = camera;
         this.buttons = [18, 23, 22, 17, 27];
+        this.ratings = [1, 2, 3, 4, 5];
         this.pressed = new Set();
         
         gpio.setMode(gpio.MODE_BCM);
@@ -17,6 +18,13 @@ class ButtonManager {
             gpio.setup(button, gpio.DIR_IN, gpio.EDGE_BOTH);
         });        
 
+    }
+    
+    buttonToRating(channel) {
+        let buttonIndex = this.buttons.indexOf(channel);
+        let rating = this.ratings[buttonIndex];
+        
+        return rating;
     }
     
     buttonChange(channel, value) {
@@ -44,16 +52,20 @@ class ButtonManager {
                 });
                 child.on('close', (code) => {
                     let photoRaw = Buffer.concat(this.photoData);
-                    let photoUuid = uuidv1();
-                    fs.writeFile("photos/"+photoUuid+".jpg", photoRaw, (err) => {
+                    let photoId = this.camera.databaseManager.generateId();
+                    fs.writeFile("photos/"+photoId+".jpg", photoRaw, (err) => {
                         if (err) {
-                            console.log(" ---> Error saving file", uuid, err);
+                            console.log(" ---> Error saving file", photoId, err);
                             return;
                         }
                         sharp(photoRaw).resize(488).toBuffer().then((photoThumb) => {
                             console.log(['Finished taking photo', code, photoRaw.length, photoThumb.length]);
-                            bluetoothManager.sendPhoto(channel, photoThumb);
-                            wifiManager.sendPhoto(channel, photoThumb);                        
+                            let snapshot = this.camera.databaseManager.recordSnapshot({
+                                photoId: photoId,
+                                rating: this.buttonToRating(channel)
+                            });
+                            this.camera.bluetoothManager.sendPhoto(snapshot, photoThumb);
+                            this.camera.wifiManager.sendPhoto(snapshot, photoRaw);                        
                         });
                     });
                 });

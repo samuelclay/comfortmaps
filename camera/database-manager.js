@@ -1,11 +1,12 @@
 const Sequelize = require('sequelize');
 
+const shortid = require('shortid');
 const sequelize = new Sequelize('sqlite:snapshots.db')
 
 class Snapshot extends Sequelize.Model {}
 Snapshot.init({
-    uuid: {
-        type: Sequelize.UUID,
+    photoId: {
+        type: Sequelize.STRING,
         allowNull: false
     },
     rating: {
@@ -29,6 +30,9 @@ Snapshot.init({
     modelName: 'snapshot',
     indexes: [
         {
+            fields: ['photoId']
+        },
+        {
             fields: ['is_thumbnail_uploaded']
         },
         {
@@ -41,6 +45,18 @@ class DatabaseManager {
     constructor() {
         sequelize.sync();
     }
+    
+    recordSnapshot(snapshot) {
+        Snapshot.create({
+            photoId: snapshot.photoId,
+            rating: snapshot.rating
+        })
+    }
+    
+    generateId() {
+        return shortid.generate();
+    }
+    
 }
 
 exports.DatabaseManager = DatabaseManager;
