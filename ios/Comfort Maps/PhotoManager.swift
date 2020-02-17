@@ -52,7 +52,7 @@ class PhotoManager: PhotoDelegate {
         
         if uploadingData.count == currentImageSize {
             let image = UIImage.init(data: uploadingData)
-            print(" ---> Done!", image)
+            print(" ---> Done!", image ?? "???")
             self.endPhotoTransfer()
         } else {
             print(" ---> Progress:", uploadingData.count, currentImageSize)

@@ -83,7 +83,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         if characteristic.uuid == ComfortmapsCamera.CharacteristicPhotoDataUUID {
             if let data = characteristic.value {
 //                    print(" ---> Received data:", data.map { String(format: "%02x", $0) }.joined(), data, dataString)
-                let subdata = data.subdata(in: 0..<4)
+                let subdata = data.subdata(in: 0..<min(data.count, 4))
                 if subdata == "BEG:".data(using: .utf8) {
                     if let dataString = String(bytes: data, encoding: .utf8) {
                         self.photoDelegate?.beginBluetoothPhotoTransfer(header: dataString)
