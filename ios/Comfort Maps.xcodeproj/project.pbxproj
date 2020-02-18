@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF5B7DF823FB4CEA00439D93 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */; };
+		FF5B7DFA23FB5A1700439D93 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = FF5B7DF923FB5A1700439D93 /* Podfile */; };
 		FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */; };
 		FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */; };
 		FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		FF5B7DF923FB5A1700439D93 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManager.swift; sourceTree = "<group>"; };
 		FF9D2EA423F4B4320094F34C /* Comfort Maps.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Comfort Maps.entitlements"; sourceTree = "<group>"; };
 		FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
@@ -83,6 +87,7 @@
 			children = (
 				FF9D2EA423F4B4320094F34C /* Comfort Maps.entitlements */,
 				FFC734D823EF45FA007221A5 /* AppDelegate.swift */,
+				FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */,
 				FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */,
 				FFC734DF23EF45FA007221A5 /* ContentView.swift */,
 				FFC734EF23EF4744007221A5 /* BluetoothManager.swift */,
@@ -92,6 +97,7 @@
 				FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */,
 				FFC734E923EF45FF007221A5 /* Info.plist */,
 				FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */,
+				FF5B7DF923FB5A1700439D93 /* Podfile */,
 				FFC734E323EF45FF007221A5 /* Preview Content */,
 			);
 			path = "Comfort Maps";
@@ -165,6 +171,7 @@
 			files = (
 				FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */,
 				FFC734E523EF45FF007221A5 /* Preview Assets.xcassets in Resources */,
+				FF5B7DFA23FB5A1700439D93 /* Podfile in Resources */,
 				FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -180,6 +187,7 @@
 				FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */,
 				FFC734DB23EF45FA007221A5 /* SceneDelegate.swift in Sources */,
 				FFC734E023EF45FA007221A5 /* ContentView.swift in Sources */,
+				FF5B7DF823FB4CEA00439D93 /* LocationManager.swift in Sources */,
 				FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */,
 				FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */,
 				FFC734F023EF4744007221A5 /* BluetoothManager.swift in Sources */,

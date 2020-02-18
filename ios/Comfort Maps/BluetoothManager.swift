@@ -12,12 +12,14 @@ import CoreBluetooth
 struct ComfortmapsCamera {
     public static let ServiceUUID = CBUUID.init(string: "ec20")
     public static let CharacteristicPhotoDataUUID = CBUUID.init(string: "ec2e")
+    public static let CharacteristicSnapshotUUID = CBUUID.init(string: "ec2d")
 }
 
 class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate {
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral!
     public var photoDelegate: PhotoDelegate?
+    fileprivate let snapshotData = NSMutableData()
     
     override init() {
         super.init()
@@ -44,6 +46,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         if peripheral == self.peripheral {
+            self.snapshotData.length = 0
             peripheral.discoverServices([ComfortmapsCamera.ServiceUUID])
         }
     }
@@ -53,20 +56,40 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        if let services = peripheral.services {
-            for service in services {
-                if service.uuid == ComfortmapsCamera.ServiceUUID {
-                    peripheral.discoverCharacteristics([ComfortmapsCamera.CharacteristicPhotoDataUUID], for: service)
-                }
+        guard error == nil else {
+            print(" ---> Error discovering services: \(error!.localizedDescription)")
+            cleanup()
+            return
+        }
+        
+        guard let services = peripheral.services else {
+            return
+        }
+
+        for service in services {
+            if service.uuid == ComfortmapsCamera.ServiceUUID {
+                peripheral.discoverCharacteristics([ComfortmapsCamera.CharacteristicPhotoDataUUID,
+                                                    ComfortmapsCamera.CharacteristicSnapshotUUID], for: service)
             }
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard error == nil else {
+            print(" ---> Error discovering characteristics: \(error!.localizedDescription)")
+            cleanup()
+            return
+        }
+        
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
-                if characteristic.uuid == ComfortmapsCamera.CharacteristicPhotoDataUUID {
+                switch characteristic.uuid {
+                case ComfortmapsCamera.CharacteristicPhotoDataUUID:
                     peripheral.setNotifyValue(true, for: characteristic)
+                case ComfortmapsCamera.CharacteristicSnapshotUUID:
+                    peripheral.setNotifyValue(true, for: characteristic)
+                default:
+                    break
                 }
             }
         }
@@ -76,31 +99,103 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         if let error = error {
             print(" ***> Error in characteristic:", error)
         }
-        self.updatePhotoData(peripheral, characteristic)
+        
+        if characteristic.uuid == ComfortmapsCamera.CharacteristicPhotoDataUUID {
+            self.updatePhotoData(peripheral, characteristic)
+        }
+        
+        if characteristic.uuid == ComfortmapsCamera.CharacteristicSnapshotUUID {
+            self.updateSnapshotData(peripheral, characteristic)
+        }
+    }
+    
+    func updateSnapshotData(_ peripheral: CBPeripheral, _ characteristic: CBCharacteristic) {
+        guard let data = characteristic.value else {
+            print(" ---> Invalid data")
+            self.photoDelegate?.endSnapshotTransfer()
+            return
+        }
+        
+        let subdata = data[data.startIndex..<data.index(data.startIndex, offsetBy: min(data.count, 2))]
+        if subdata == "S:".data(using: .utf8) {
+            if let dataString = String(bytes: data, encoding: .utf8) {
+                self.photoDelegate?.beginSnapshotTransfer(header: dataString)
+            }
+            peripheral.readValue(for: characteristic)
+        } else if subdata.count == 0 {
+            self.photoDelegate?.endSnapshotTransfer()
+        } else {
+            self.photoDelegate?.receiveSnapshotData(data: data)
+            peripheral.readValue(for: characteristic)
+        }
     }
     
     func updatePhotoData(_ peripheral: CBPeripheral, _ characteristic: CBCharacteristic) {
-        if characteristic.uuid == ComfortmapsCamera.CharacteristicPhotoDataUUID {
-            if let data = characteristic.value {
-//                    print(" ---> Received data:", data.map { String(format: "%02x", $0) }.joined(), data, dataString)
-                let subdata = data.subdata(in: 0..<min(data.count, 4))
-                if subdata == "BEG:".data(using: .utf8) {
-                    if let dataString = String(bytes: data, encoding: .utf8) {
-                        self.photoDelegate?.beginBluetoothPhotoTransfer(header: dataString)
-                    }
-                    peripheral.readValue(for: characteristic)
-                } else if subdata.count == 0 || subdata == "END:".data(using: .utf8) {
-                    self.photoDelegate?.endPhotoTransfer()
-//                } else if data == Data.init(count: 20) {
-//                    self.photoDelegate?.endPhotoTransfer()
-                } else {
-                    self.photoDelegate?.receivePhotoData(data: data)
-                    peripheral.readValue(for: characteristic)
-                }
-            } else {
-                self.photoDelegate?.endPhotoTransfer()
+        guard let data = characteristic.value else {
+            print(" ---> Invalid data")
+            self.photoDelegate?.endPhotoTransfer()
+            return
+        }
+        
+//        print(" ---> Received data:", data.map { String(format: "%02x", $0) }.joined(), data, dataString)
+        let subdata = data.subdata(in: 0..<min(data.count, 2))
+        if subdata == "B:".data(using: .utf8) {
+            if let dataString = String(bytes: data, encoding: .utf8) {
+                self.photoDelegate?.beginBluetoothPhotoTransfer(header: dataString)
             }
+            peripheral.readValue(for: characteristic)
+        } else if subdata.count == 0 {
+            self.photoDelegate?.endPhotoTransfer()
+        } else {
+            self.photoDelegate?.receivePhotoData(data: data)
+            peripheral.readValue(for: characteristic)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        if characteristic.isNotifying {
+            print(" ---> Notification begin on", characteristic)
+        } else {
+            print(" ---> Notification ended on", characteristic)
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        print(" ---> Failed to connect to", peripheral, error!.localizedDescription)
+
+        cleanup()
+    }
+    
+    /** Call this when things either go wrong, or you're done with the connection.
+    *  This cancels any subscriptions if there are any, or straight disconnects if not.
+    *  (didUpdateNotificationStateForCharacteristic will cancel the connection if a subscription is involved)
+    */
+    fileprivate func cleanup() {
+        // Don't do anything if we're not connected
+        // self.discoveredPeripheral.isConnected is deprecated
+        guard peripheral?.state == .connected else {
+            return
+        }
+        
+        // See if we are subscribed to a characteristic on the peripheral
+        guard let services = peripheral?.services else {
+            centralManager.cancelPeripheralConnection(peripheral)
+            return
         }
 
+        for service in services {
+            guard let characteristics = service.characteristics else {
+                continue
+            }
+
+            for characteristic in characteristics {
+                if characteristic.uuid.isEqual(ComfortmapsCamera.CharacteristicPhotoDataUUID) && characteristic.isNotifying {
+                    peripheral?.setNotifyValue(false, for: characteristic)
+                }
+                if characteristic.uuid.isEqual(ComfortmapsCamera.CharacteristicSnapshotUUID) && characteristic.isNotifying {
+                    peripheral?.setNotifyValue(false, for: characteristic)
+                }
+            }
+        }
     }
 }

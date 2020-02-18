@@ -15,15 +15,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     public var bluetoothManager: BluetoothManager!
     public var wifiManager: WifiManager!
     public var photoManager: PhotoManager!
+    public var locationManager: LocationManager!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        self.locationManager = LocationManager()
         self.bluetoothManager = BluetoothManager()
         self.wifiManager = WifiManager()
         self.photoManager = PhotoManager()
         self.bluetoothManager.photoDelegate = self.photoManager
         self.wifiManager.photoDelegate = self.photoManager
-        
+
         return true
     }
 
@@ -88,3 +90,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+func appDelegate() -> AppDelegate {
+    return UIApplication.shared.delegate as! AppDelegate
+}
