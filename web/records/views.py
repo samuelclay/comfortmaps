@@ -30,7 +30,11 @@ def record_snapshot(request):
     snapshot.save()
     return HttpResponse("OK")
     
-
+@login_required()
+def record_photo(request, photo_id):
+    photo = request.POST
+    print(photo_id, photo)
+    
 @login_required()
 def map(request):
     return render(request, "records/map.html", {        
