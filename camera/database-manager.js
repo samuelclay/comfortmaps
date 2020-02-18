@@ -47,10 +47,12 @@ class DatabaseManager {
     }
     
     recordSnapshot(snapshot) {
-        snapshotDb = Snapshot.create({
+        let snapshotDb = Snapshot.create({
             photoId: snapshot.photoId,
             rating: snapshot.rating
         });
+        
+        return snapshotDb;
     }
     
     generateId() {

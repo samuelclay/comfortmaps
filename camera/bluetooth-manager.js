@@ -37,6 +37,7 @@ class BluetoothManager {
     }
     
     sendPhoto(snapshot, photo) {
+        this.snapshotCharacteristic.beginSnapshotTransfer(snapshot, photo);
         this.photoDataCharacteristic.beginPhotoDataTransfer(snapshot, photo);
     }
 
@@ -44,7 +45,79 @@ class BluetoothManager {
 
 class SnapshotCharacteristic {
     constructor() {
+        SnapshotCharacteristic.super_.call(this, {
+            uuid: 'ec2d',
+            properties: ['read', 'write', 'notify'],
+            value: null
+        });
+        
+        this._value = new Buffer(0);
+        this._updateValueCallback = null;
+    }
     
+    beginSnapshotTransfer(snapshot, photo) {
+        this.photo = photo;
+        this.snapshot = snapshot;
+        this.bytesRead = 0;
+        this.chunkSize = 20;
+        this.dataString = Buffer.from(JSON.stringify({
+            id: snapshot.photoId,
+            rating: snapshot.rating,
+            acceleration: {
+                x: 2,
+                y: 3,
+                z: 4
+            }
+        }, 'utf8'));
+        this.dataSize = this.dataString.length;
+        
+        if (this._updateValueCallback) {
+            const message = "S:" + snapshot.rating + ":" + this.dataSize + ":" + snapshot.photoId;
+            this._value = Buffer.from(message, 'utf8');
+            console.log(' ---> Notifying for snapshot transfer: ', message);
+            this._updateValueCallback(this._value);
+        }
+    }
+    
+    onReadRequest(offset, callback) {
+        this._value = this.dataString.slice(this.bytesRead, this.bytesRead + this.chunkSize);
+        console.log(' ---> Snapshot reading:', this._value);
+        this.bytesRead += this.chunkSize;
+        callback(this.RESULT_SUCCESS, this._value);
+        
+        if (this.bytesRead >= this.dataSize) {
+            if (this._updateValueCallback) {
+                this._value = Buffer.from("", 'utf8');
+                console.log(' ---> Ending snapshot transfer: ', this._value);
+                this._updateValueCallback(this._value);
+            }
+        }
+    }
+    
+    onWriteRequest(data, offset, withoutResponse, callback) {
+        this._value = data;
+
+        console.log(' ---> Snapshot write: ' + this._value.toString('hex'));
+
+        if (this._updateValueCallback) {
+            console.log(' ---> Snapshot write notifying');
+
+            this._updateValueCallback(this._value);
+        }
+
+        callback(this.RESULT_SUCCESS);
+    }
+    
+    onSubscribe(maxValueSize, updateValueCallback) {
+        console.log(' ---> Snapshot subscribe: Hello');
+
+        this._updateValueCallback = updateValueCallback;
+    }
+    
+    onUnsubscribe() {
+        console.log(' ---> Snapshot unsubscribe: Good-bye');
+
+        this._updateValueCallback = null;
     }
 }
 
@@ -82,9 +155,8 @@ class PhotoDataCharacteristic {
         callback(this.RESULT_SUCCESS, this._value);
         if (this.bytesRead >= this.photoSize) {
             if (this._updateValueCallback) {
-                const message = "END:" + this.photoSize;
-                this._value = Buffer.from(message, 'utf8');
-                console.log(' ---> Ending photo transfer: ', message);
+                this._value = Buffer.from("", 'utf8');
+                console.log(' ---> Ending photo transfer: ', this._value);
                 this._updateValueCallback(this._value);
             }
         }
@@ -93,10 +165,10 @@ class PhotoDataCharacteristic {
     onWriteRequest(data, offset, withoutResponse, callback) {
         this._value = data;
 
-        console.log('EchoCharacteristic - onWriteRequest: value = ' + this._value.toString('hex'));
+        console.log(' ---> PhotoData onWriteRequest: value = ' + this._value.toString('hex'));
 
         if (this._updateValueCallback) {
-            console.log('EchoCharacteristic - onWriteRequest: notifying');
+            console.log(' ---> PhotoData onWriteRequest: notifying');
 
             this._updateValueCallback(this._value);
         }
@@ -105,13 +177,13 @@ class PhotoDataCharacteristic {
     }
     
     onSubscribe(maxValueSize, updateValueCallback) {
-        console.log('EchoCharacteristic - onSubscribe');
+        console.log(' ---> PhotoData subscribe: Hello');
 
         this._updateValueCallback = updateValueCallback;
     }
     
     onUnsubscribe() {
-        console.log('EchoCharacteristic - onUnsubscribe');
+        console.log(' ---> PhotoData unsubscribe: Good-bye');
 
         this._updateValueCallback = null;
     }
