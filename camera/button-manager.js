@@ -54,20 +54,25 @@ class ButtonManager {
                 child.on('close', (code) => {
                     let photoRaw = Buffer.concat(this.photoData);
                     let photoId = this.camera.databaseManager.generateId();
-                    fs.writeFile("photos/"+photoId+".jpg", photoRaw, (err) => {
+                    fs.mkdir('photos', { recursive: true }, (err) => {
                         if (err) {
-                            console.log(" ---> Error saving file", photoId, err);
-                            return;
+                            if (err.code !== "EEXIST") throw err;
                         }
-                        sharp(photoRaw).resize(488).toBuffer().then((photoThumb) => {
-                            console.log(['Finished taking photo', code, photoRaw.length, photoThumb.length]);
-                            let snapshot = {
-                                photoId: photoId,
-                                rating: this.buttonToRating(channel)
-                            };
-                            this.camera.databaseManager.recordSnapshot(snapshot);
-                            this.camera.bluetoothManager.sendPhoto(snapshot, photoThumb);
-                            this.camera.wifiManager.sendPhoto(snapshot, photoRaw);                        
+                        fs.writeFile("photos/"+photoId+".jpg", photoRaw, (err) => {
+                            if (err) {
+                                console.log(" ---> Error saving file", photoId, err);
+                                return;
+                            }
+                            sharp(photoRaw).resize(488).toBuffer().then((photoThumb) => {
+                                console.log(['Finished taking photo', code, photoRaw.length, photoThumb.length]);
+                                let snapshot = {
+                                    photoId: photoId,
+                                    rating: this.buttonToRating(channel)
+                                };
+                                this.camera.databaseManager.recordSnapshot(snapshot);
+                                this.camera.bluetoothManager.sendPhoto(snapshot, photoThumb);
+                                this.camera.wifiManager.sendPhoto(snapshot, photoRaw);                        
+                            });
                         });
                     });
                 });
