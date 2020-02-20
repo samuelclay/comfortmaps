@@ -37,6 +37,10 @@ struct Snapshot: Codable {
         self.rating = dictionary["rating"] as! Int
         self.acceleration = dictionary["acceleration"] as? [String: Int] ?? Dictionary()
     }
+    
+    private enum CodingKeys: String, CodingKey {
+        case photoId = "photo_id", rating, acceleration, coords = "gps"
+    }
 }
 class PhotoManager: PhotoDelegate {
     private var uploadingData           : Data         = Data()
@@ -90,7 +94,7 @@ class PhotoManager: PhotoDelegate {
         if uploadingSnapshot.count == currentSnapshotSize {
             self.endSnapshotTransfer()
         } else {
-            print(" ---> Snapshot progress:", uploadingSnapshot.count, currentSnapshotSize)
+//            print(" ---> Snapshot progress:", uploadingSnapshot.count, currentSnapshotSize)
         }
     }
         
@@ -112,13 +116,11 @@ class PhotoManager: PhotoDelegate {
             print(" ---> Error, could not retrieve GPS coordinates!")
         }
         
-        AF.request("https://comfortmaps.com/record/snapshot", method: .post, parameters: snapshot, encoder: JSONParameterEncoder.default).responseJSON { response in
+        AF.request("https://comfortmaps.com/record/snapshot/", method: .post, parameters: snapshot, encoder: URLEncodedFormParameterEncoder.default).response { response in
             print(" ---> Snapshot response:", response)
         }
         print("Done uploading snapshot", uploadingSnapshot, snapshot)
 
-        
-        
         uploadingSnapshot = Data()
     }
     
@@ -134,13 +136,41 @@ class PhotoManager: PhotoDelegate {
         if uploadingData.count >= currentImageSize {
             self.endPhotoTransfer()
         } else {
-            print(" ---> Photo progress:", uploadingData.count, currentImageSize)
+//            print(" ---> Photo progress:", uploadingData.count, currentImageSize)
         }
     }
 
     func endPhotoTransfer() {
         let image = UIImage.init(data: uploadingData)
         print(" ---> Photo Done!", uploadingData.count, currentImageSize, image ?? "???")
+        AF.upload(multipartFormData: { (multipartFormData) in
+            multipartFormData.append(image?.jpegData(compressionQuality: 1), withName: "photo", fileName: "photo.jpg", mimeType: "image/jpg")
+        }, to: "https://comfortmaps.com/record/snapshot/photo/") { (result) in
+            switch result {
+            case .success(let upload, _, _):
+
+                upload.uploadProgress(closure: { (Progress) in
+                    print("Upload Progress: \(Progress.fractionCompleted)")
+                })
+
+                upload.responseJSON { response in
+                    //self.delegate?.showSuccessAlert()
+                    print(response.request)  // original URL request
+                    print(response.response) // URL response
+                    print(response.data)     // server data
+                    print(response.result)   // result of response serialization
+                    //                        self.showSuccesAlert()
+                    //self.removeImage("frame", fileExtension: "txt")
+                    if let JSON = response.result.value {
+                        print("JSON: \(JSON)")
+                    }
+                }
+
+            case .failure(let encodingError):
+                //self.delegate?.showFailAlert()
+                print(encodingError)
+            }
+        }
         uploadingData = Data()
     }
 }

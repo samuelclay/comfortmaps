@@ -3,13 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3B7ABE4739FE5B5574938323 /* Pods_Comfort_Maps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */; };
 		FF5B7DF823FB4CEA00439D93 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */; };
-		FF5B7DFA23FB5A1700439D93 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = FF5B7DF923FB5A1700439D93 /* Podfile */; };
 		FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */; };
 		FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */; };
 		FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */; };
@@ -29,7 +28,6 @@
 		49C661D1DAF3D2A01414223B /* Pods-Comfort Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Comfort Maps.release.xcconfig"; path = "Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps.release.xcconfig"; sourceTree = "<group>"; };
 		BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Comfort_Maps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		FF5B7DF923FB5A1700439D93 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManager.swift; sourceTree = "<group>"; };
 		FF9D2EA423F4B4320094F34C /* Comfort Maps.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Comfort Maps.entitlements"; sourceTree = "<group>"; };
 		FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
@@ -67,7 +65,6 @@
 				18755FB1AE2DBCA9F4F92E0A /* Pods-Comfort Maps.debug.xcconfig */,
 				49C661D1DAF3D2A01414223B /* Pods-Comfort Maps.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -114,7 +111,6 @@
 				FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */,
 				FFC734E923EF45FF007221A5 /* Info.plist */,
 				FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */,
-				FF5B7DF923FB5A1700439D93 /* Podfile */,
 				FFC734E323EF45FF007221A5 /* Preview Content */,
 			);
 			path = "Comfort Maps";
@@ -190,7 +186,6 @@
 			files = (
 				FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */,
 				FFC734E523EF45FF007221A5 /* Preview Assets.xcassets in Resources */,
-				FF5B7DFA23FB5A1700439D93 /* Podfile in Resources */,
 				FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
