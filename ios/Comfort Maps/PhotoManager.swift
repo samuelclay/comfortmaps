@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreLocation
+import Alamofire
 
 protocol PhotoDelegate {
     func beginSnapshotTransfer(header: String)
@@ -20,10 +21,16 @@ protocol PhotoDelegate {
     func endSnapshotTransfer()
 }
 
-struct Snapshot {
+struct Coordinate: Codable {
+    var latitude: Double
+    var longitude: Double
+}
+
+struct Snapshot: Codable {
     var photoId: String
     var rating: Int
     var acceleration: [String: Int]
+    var coords: Coordinate?
     
     init(_ dictionary: [String: Any]) {
         self.photoId = dictionary["id"] as! String
@@ -41,12 +48,13 @@ class PhotoManager: PhotoDelegate {
     private var imageElapsedTime        : TimeInterval = 0
     private var streamStartTime         : TimeInterval = 0
     private var transferRate            : Double       = 0
-    private var currentCoords           : CLLocationCoordinate2D = CLLocationCoordinate2D()
+    private var currentCoords           : CLLocationCoordinate2D?
     private var currentPhotoId          : String       = String()
+    
     func beginSnapshotTransfer(header: String) {
         print(" ---> Beginning snapshot transfer:", header)
 
-        let coords = appDelegate().locationManager.latestLocation
+        currentCoords = appDelegate().locationManager.latestLocation
         
         uploadingSnapshot = Data()
         imageStartTime = Date().timeIntervalSince1970
@@ -96,8 +104,17 @@ class PhotoManager: PhotoDelegate {
             return
         }
         var snapshot = Snapshot(json)
+        if let coords = currentCoords {
+            snapshot.coords = Coordinate(latitude: coords.latitude, longitude: coords.longitude)
+        } else if let coords = appDelegate().locationManager.latestLocation {
+            snapshot.coords = Coordinate(latitude: coords.latitude, longitude: coords.longitude)
+        } else {
+            print(" ---> Error, could not retrieve GPS coordinates!")
+        }
         
-        
+        AF.request("https://comfortmaps.com/record/snapshot", method: .post, parameters: snapshot, encoder: JSONParameterEncoder.default).responseJSON { response in
+            print(" ---> Snapshot response:", response)
+        }
         print("Done uploading snapshot", uploadingSnapshot, snapshot)
 
         

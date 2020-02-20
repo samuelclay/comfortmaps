@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B7ABE4739FE5B5574938323 /* Pods_Comfort_Maps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */; };
 		FF5B7DF823FB4CEA00439D93 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */; };
 		FF5B7DFA23FB5A1700439D93 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = FF5B7DF923FB5A1700439D93 /* Podfile */; };
 		FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */; };
@@ -24,6 +25,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18755FB1AE2DBCA9F4F92E0A /* Pods-Comfort Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Comfort Maps.debug.xcconfig"; path = "Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps.debug.xcconfig"; sourceTree = "<group>"; };
+		49C661D1DAF3D2A01414223B /* Pods-Comfort Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Comfort Maps.release.xcconfig"; path = "Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps.release.xcconfig"; sourceTree = "<group>"; };
+		BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Comfort_Maps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		FF5B7DF923FB5A1700439D93 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManager.swift; sourceTree = "<group>"; };
@@ -50,17 +54,29 @@
 			files = (
 				FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */,
 				FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */,
+				3B7ABE4739FE5B5574938323 /* Pods_Comfort_Maps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		29DFD5BA1ACA22A7B313909C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				18755FB1AE2DBCA9F4F92E0A /* Pods-Comfort Maps.debug.xcconfig */,
+				49C661D1DAF3D2A01414223B /* Pods-Comfort Maps.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		FF9D2EA523F4B4320094F34C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */,
 				FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */,
+				BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -71,6 +87,7 @@
 				FFC734D723EF45FA007221A5 /* Comfort Maps */,
 				FFC734D623EF45FA007221A5 /* Products */,
 				FF9D2EA523F4B4320094F34C /* Frameworks */,
+				29DFD5BA1ACA22A7B313909C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,9 +135,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = FFC734EC23EF45FF007221A5 /* Build configuration list for PBXNativeTarget "Comfort Maps" */;
 			buildPhases = (
+				C90F36345BF331BAB1E73CD7 /* [CP] Check Pods Manifest.lock */,
 				FFC734D123EF45FA007221A5 /* Sources */,
 				FFC734D223EF45FA007221A5 /* Frameworks */,
 				FFC734D323EF45FA007221A5 /* Resources */,
+				3ED817AA8AE231C823397312 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -177,6 +196,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3ED817AA8AE231C823397312 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C90F36345BF331BAB1E73CD7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Comfort Maps-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FFC734D123EF45FA007221A5 /* Sources */ = {
@@ -324,6 +385,7 @@
 		};
 		FFC734ED23EF45FF007221A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 18755FB1AE2DBCA9F4F92E0A /* Pods-Comfort Maps.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Comfort Maps/Comfort Maps.entitlements";
@@ -347,6 +409,7 @@
 		};
 		FFC734EE23EF45FF007221A5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49C661D1DAF3D2A01414223B /* Pods-Comfort Maps.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Comfort Maps/Comfort Maps.entitlements";

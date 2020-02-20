@@ -1,0 +1,6 @@
+framework module Pods_Comfort_Maps {
+  umbrella header "Pods-Comfort Maps-umbrella.h"
+
+  export *
+  module * { export * }
+}
