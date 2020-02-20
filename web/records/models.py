@@ -14,8 +14,12 @@ class SnapshotRatingScale(models.Model):
         return f"<SnapshotRatingScale {self.pk}: {', '.join(names)}>"
 
 class Snapshot(models.Model):
+    photo_id = models.TextField(max_length=32)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField()
     rating_scale = models.ForeignKey(SnapshotRatingScale, on_delete=models.CASCADE)
     location = models.PointField()
     date = models.DateTimeField('date snapshot taken', default=timezone.now)
+    
+    def __str__(self):
+        return f"<Snapshot: {self.photo_id} {self.rating}/5 {self.location} {self.date}"

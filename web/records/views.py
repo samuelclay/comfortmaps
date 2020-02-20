@@ -32,11 +32,12 @@ def record_snapshot(request):
     heading_x = request.POST['acceleration[x]']
 
     snapshot = Snapshot(user=request.user, 
+                        photo_id=photo_id,
                         rating=rating, 
                         rating_scale=snapshot_rating_scale,
                         location=Point(gps_lat, gps_long))
     snapshot.save()
-    
+    logging.info(" ---> Snapshot: %s / %s" % (snapshot, request.POST))
     return HttpResponse("OK")
     
 @login_required()
