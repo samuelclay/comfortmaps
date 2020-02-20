@@ -36,7 +36,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        print("location = \(locValue.latitude) \(locValue.longitude)")
+//        print("location = \(locValue.latitude) \(locValue.longitude)")
         self.latestLocation = locValue
     }
     

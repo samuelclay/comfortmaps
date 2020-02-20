@@ -9,13 +9,15 @@
 /* Begin PBXBuildFile section */
 		3B7ABE4739FE5B5574938323 /* Pods_Comfort_Maps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */; };
 		FF5B7DF823FB4CEA00439D93 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */; };
+		FF88D61A23FF274C00E113BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF88D61923FF274C00E113BE /* Main.storyboard */; };
+		FF88D61C23FF2C4D00E113BE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88D61B23FF2C4D00E113BE /* LoginViewController.swift */; };
+		FF88D61E23FF3FC200E113BE /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88D61D23FF3FC200E113BE /* MainTabBarController.swift */; };
+		FF88D62023FF400900E113BE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88D61F23FF400900E113BE /* MapViewController.swift */; };
 		FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */; };
 		FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */; };
 		FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */; };
 		FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734D823EF45FA007221A5 /* AppDelegate.swift */; };
-		FFC734DB23EF45FA007221A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */; };
 		FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */; };
-		FFC734E023EF45FA007221A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DF23EF45FA007221A5 /* ContentView.swift */; };
 		FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E123EF45FF007221A5 /* Assets.xcassets */; };
 		FFC734E523EF45FF007221A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E423EF45FF007221A5 /* Preview Assets.xcassets */; };
 		FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */; };
@@ -28,15 +30,17 @@
 		49C661D1DAF3D2A01414223B /* Pods-Comfort Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Comfort Maps.release.xcconfig"; path = "Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps.release.xcconfig"; sourceTree = "<group>"; };
 		BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Comfort_Maps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		FF88D61923FF274C00E113BE /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		FF88D61B23FF2C4D00E113BE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		FF88D61D23FF3FC200E113BE /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		FF88D61F23FF400900E113BE /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WifiManager.swift; sourceTree = "<group>"; };
 		FF9D2EA423F4B4320094F34C /* Comfort Maps.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Comfort Maps.entitlements"; sourceTree = "<group>"; };
 		FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 		FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		FFC734D523EF45FA007221A5 /* Comfort Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Comfort Maps.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFC734D823EF45FA007221A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FFC734DD23EF45FA007221A5 /* Comfort_Maps.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Comfort_Maps.xcdatamodel; sourceTree = "<group>"; };
-		FFC734DF23EF45FA007221A5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FFC734E123EF45FF007221A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FFC734E423EF45FF007221A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FFC734E723EF45FF007221A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -102,8 +106,10 @@
 				FF9D2EA423F4B4320094F34C /* Comfort Maps.entitlements */,
 				FFC734D823EF45FA007221A5 /* AppDelegate.swift */,
 				FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */,
-				FFC734DA23EF45FA007221A5 /* SceneDelegate.swift */,
-				FFC734DF23EF45FA007221A5 /* ContentView.swift */,
+				FF88D61923FF274C00E113BE /* Main.storyboard */,
+				FF88D61F23FF400900E113BE /* MapViewController.swift */,
+				FF88D61D23FF3FC200E113BE /* MainTabBarController.swift */,
+				FF88D61B23FF2C4D00E113BE /* LoginViewController.swift */,
 				FFC734EF23EF4744007221A5 /* BluetoothManager.swift */,
 				FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */,
 				FFC734F123EF502D007221A5 /* PhotoManager.swift */,
@@ -187,6 +193,7 @@
 				FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */,
 				FFC734E523EF45FF007221A5 /* Preview Assets.xcassets in Resources */,
 				FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */,
+				FF88D61A23FF274C00E113BE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,11 +246,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF88D61E23FF3FC200E113BE /* MainTabBarController.swift in Sources */,
 				FFC734F223EF502D007221A5 /* PhotoManager.swift in Sources */,
 				FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */,
-				FFC734DB23EF45FA007221A5 /* SceneDelegate.swift in Sources */,
-				FFC734E023EF45FA007221A5 /* ContentView.swift in Sources */,
 				FF5B7DF823FB4CEA00439D93 /* LocationManager.swift in Sources */,
+				FF88D62023FF400900E113BE /* MapViewController.swift in Sources */,
+				FF88D61C23FF2C4D00E113BE /* LoginViewController.swift in Sources */,
 				FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */,
 				FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */,
 				FFC734F023EF4744007221A5 /* BluetoothManager.swift in Sources */,

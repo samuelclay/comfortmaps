@@ -99,12 +99,13 @@ class PhotoManager: PhotoDelegate {
     }
         
     func endSnapshotTransfer() {
-        guard let jsonResponse = try? JSONSerialization.jsonObject(with: uploadingSnapshot, options: []) else {
-            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
+        guard let jsonResponse = try? JSONSerialization.jsonObject(with: uploadingSnapshot,
+                                                                   options: []) else {
+//            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
             return
         }
         guard let json = jsonResponse as? [String: Any] else {
-            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
+//            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
             return
         }
         var snapshot = Snapshot(json)
@@ -116,10 +117,11 @@ class PhotoManager: PhotoDelegate {
             print(" ---> Error, could not retrieve GPS coordinates!")
         }
         
-        AF.request("https://comfortmaps.com/record/snapshot/", method: .post, parameters: snapshot, encoder: URLEncodedFormParameterEncoder.default).response { response in
-            print(" ---> Snapshot response:", response)
+        AF.request("https://comfortmaps.com/record/snapshot/", method: .post, parameters: snapshot,
+                   encoder: URLEncodedFormParameterEncoder.default).response { response in
+            print(" ---> Snapshot response:", snapshot, response)
         }
-        print("Done uploading snapshot", uploadingSnapshot, snapshot)
+//        print("Done uploading snapshot", uploadingSnapshot, snapshot)
 
         uploadingSnapshot = Data()
     }
@@ -141,36 +143,22 @@ class PhotoManager: PhotoDelegate {
     }
 
     func endPhotoTransfer() {
-        let image = UIImage.init(data: uploadingData)
-        print(" ---> Photo Done!", uploadingData.count, currentImageSize, image ?? "???")
-        AF.upload(multipartFormData: { (multipartFormData) in
-            multipartFormData.append(image?.jpegData(compressionQuality: 1), withName: "photo", fileName: "photo.jpg", mimeType: "image/jpg")
-        }, to: "https://comfortmaps.com/record/snapshot/photo/") { (result) in
-            switch result {
-            case .success(let upload, _, _):
-
-                upload.uploadProgress(closure: { (Progress) in
-                    print("Upload Progress: \(Progress.fractionCompleted)")
-                })
-
-                upload.responseJSON { response in
-                    //self.delegate?.showSuccessAlert()
-                    print(response.request)  // original URL request
-                    print(response.response) // URL response
-                    print(response.data)     // server data
-                    print(response.result)   // result of response serialization
-                    //                        self.showSuccesAlert()
-                    //self.removeImage("frame", fileExtension: "txt")
-                    if let JSON = response.result.value {
-                        print("JSON: \(JSON)")
-                    }
-                }
-
-            case .failure(let encodingError):
-                //self.delegate?.showFailAlert()
-                print(encodingError)
-            }
+        guard let image = UIImage.init(data: uploadingData) else {
+            print(" ---> Error in photo", uploadingData)
+            return
         }
+        guard let imageData = image.jpegData(compressionQuality: 1) else {
+            print(" ---> Error in photo data", image)
+            return
+        }
+        print(" ---> Photo Done!", uploadingData.count, currentImageSize, image)
+        AF.upload(imageData, to: "https://comfortmaps.com/record/snapshot/photo/")
+            .uploadProgress { progress in
+                print("Upload Progress: \(progress.fractionCompleted)")
+            }
+            .responseJSON { response in
+                debugPrint(response)
+            }
         uploadingData = Data()
     }
 }
