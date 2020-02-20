@@ -1,4 +1,4 @@
-.PHONY: all provision provision-dev local_install test
+.PHONY: all provision provision-dev local_install test ssh
 
 local_install:
 	sudo apt-add-repository -y ppa:ansible/ansible
@@ -14,3 +14,6 @@ deploy:
 
 test:
 	bash ./provision/scripts/test.sh
+
+ssh:
+	ssh -i /srv/comfortmaps-secrets/keys/comfortmaps-web.pem sclay@comfortmaps.com
