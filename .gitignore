@@ -112,3 +112,6 @@ venv.bak/
 camera/photos
 node_modules
 camera/snapshots.db
+
+# Web
+logs
