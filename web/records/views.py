@@ -7,6 +7,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance  
 from django.http import JsonResponse
 import logging
+from django.views.decorators.csrf import csrf_exempt
 
 logger = logging.getLogger(__name__)
 
@@ -19,17 +20,17 @@ def rating_scale(request):
         'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY
     })
 
-@login_required()
+# @login_required()
+@csrf_exempt
 def record_snapshot(request):
-    logger.debug(request.POST)
     snapshot_rating_scale = SnapshotRatingScale.objects.all()[0] # TODO: Rewrite for multiple scales
     
     photo_id = request.POST['photo_id']
     rating = int(request.POST['rating'])
-    gps_lat = float(request.POST['latitude'])
-    gps_long = float(request.POST['longitude'])
-    heading = request.POST['acceleration']
-    
+    gps_lat = float(request.POST['gps[latitude]'])
+    gps_long = float(request.POST['gps[longitude]'])
+    heading_x = request.POST['acceleration[x]']
+
     snapshot = Snapshot(user=request.user, 
                         rating=rating, 
                         rating_scale=snapshot_rating_scale,

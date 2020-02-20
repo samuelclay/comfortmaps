@@ -9,8 +9,7 @@ User=sclay
 Group=www-data
 WorkingDirectory=/srv/comfortmaps/web
 RuntimeDirectory=gunicorn
-ExecStart=/home/sclay/.virtualenvs/comfortmaps/bin/gunicorn --pid /srv/comfortmaps/logs/gunicorn.pid   \
-          --bind unix:/srv/comfortmaps/web/config/gunicorn.sock comfortmaps.wsgi
+ExecStart=/home/sclay/.virtualenvs/comfortmaps/bin/gunicorn --conf /srv/comfortmaps/web/config/gunicorn.conf comfortmaps.wsgi
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
