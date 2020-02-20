@@ -2,7 +2,7 @@
 Description=gunicorn socket
 
 [Socket]
-ListenStream=/run/gunicorn/socket
+ListenStream=/srv/comfortmaps/web/config/gunicorn.sock
 
 [Install]
 WantedBy=sockets.target
