@@ -6,6 +6,9 @@ from django.conf import settings
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance  
 from django.http import JsonResponse
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @login_required()
@@ -18,16 +21,21 @@ def rating_scale(request):
 
 @login_required()
 def record_snapshot(request):
-    print(request.POST)
+    logger.debug(request.POST)
     snapshot_rating_scale = SnapshotRatingScale.objects.all()[0] # TODO: Rewrite for multiple scales
+    
+    photo_id = request.POST['photo_id']
     rating = int(request.POST['rating'])
-    gps_lat = float(request.POST['gps[coords][latitude]'])
-    gps_long = float(request.POST['gps[coords][longitude]'])
+    gps_lat = float(request.POST['latitude'])
+    gps_long = float(request.POST['longitude'])
+    heading = request.POST['acceleration']
+    
     snapshot = Snapshot(user=request.user, 
                         rating=rating, 
                         rating_scale=snapshot_rating_scale,
                         location=Point(gps_lat, gps_long))
     snapshot.save()
+    
     return HttpResponse("OK")
     
 @login_required()
