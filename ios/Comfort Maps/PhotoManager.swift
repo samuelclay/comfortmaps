@@ -37,6 +37,10 @@ struct Snapshot: Codable {
         self.rating = dictionary["rating"] as! Int
         self.acceleration = dictionary["acceleration"] as? [String: Int] ?? Dictionary()
     }
+    
+    private enum CodingKeys: String, CodingKey {
+        case photoId = "photo_id", rating, acceleration, coords = "gps"
+    }
 }
 class PhotoManager: PhotoDelegate {
     private var uploadingData           : Data         = Data()
@@ -90,17 +94,18 @@ class PhotoManager: PhotoDelegate {
         if uploadingSnapshot.count == currentSnapshotSize {
             self.endSnapshotTransfer()
         } else {
-            print(" ---> Snapshot progress:", uploadingSnapshot.count, currentSnapshotSize)
+//            print(" ---> Snapshot progress:", uploadingSnapshot.count, currentSnapshotSize)
         }
     }
         
     func endSnapshotTransfer() {
-        guard let jsonResponse = try? JSONSerialization.jsonObject(with: uploadingSnapshot, options: []) else {
-            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
+        guard let jsonResponse = try? JSONSerialization.jsonObject(with: uploadingSnapshot,
+                                                                   options: []) else {
+//            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
             return
         }
         guard let json = jsonResponse as? [String: Any] else {
-            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
+//            print(" ---> Bad uploaded snapshot", uploadingSnapshot)
             return
         }
         var snapshot = Snapshot(json)
@@ -112,13 +117,12 @@ class PhotoManager: PhotoDelegate {
             print(" ---> Error, could not retrieve GPS coordinates!")
         }
         
-        AF.request("https://comfortmaps.com/record/snapshot", method: .post, parameters: snapshot, encoder: JSONParameterEncoder.default).responseJSON { response in
-            print(" ---> Snapshot response:", response)
+        AF.request("https://comfortmaps.com/record/snapshot/", method: .post, parameters: snapshot,
+                   encoder: URLEncodedFormParameterEncoder.default).response { response in
+            print(" ---> Snapshot response:", snapshot, response)
         }
-        print("Done uploading snapshot", uploadingSnapshot, snapshot)
+//        print("Done uploading snapshot", uploadingSnapshot, snapshot)
 
-        
-        
         uploadingSnapshot = Data()
     }
     
@@ -134,13 +138,27 @@ class PhotoManager: PhotoDelegate {
         if uploadingData.count >= currentImageSize {
             self.endPhotoTransfer()
         } else {
-            print(" ---> Photo progress:", uploadingData.count, currentImageSize)
+//            print(" ---> Photo progress:", uploadingData.count, currentImageSize)
         }
     }
 
     func endPhotoTransfer() {
-        let image = UIImage.init(data: uploadingData)
-        print(" ---> Photo Done!", uploadingData.count, currentImageSize, image ?? "???")
+        guard let image = UIImage.init(data: uploadingData) else {
+            print(" ---> Error in photo", uploadingData)
+            return
+        }
+        guard let imageData = image.jpegData(compressionQuality: 1) else {
+            print(" ---> Error in photo data", image)
+            return
+        }
+        print(" ---> Photo Done!", uploadingData.count, currentImageSize, image)
+        AF.upload(imageData, to: "https://comfortmaps.com/record/snapshot/photo/")
+            .uploadProgress { progress in
+                print("Upload Progress: \(progress.fractionCompleted)")
+            }
+            .responseJSON { response in
+                debugPrint(response)
+            }
         uploadingData = Data()
     }
 }

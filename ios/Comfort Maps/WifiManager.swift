@@ -15,7 +15,7 @@ class WifiManager: NSObject {
     override init() {
         super.init()
         
-        self.connect()
+//        self.connect()
     }
     
     func connect() {
