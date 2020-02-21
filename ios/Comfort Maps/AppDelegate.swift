@@ -27,8 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.bluetoothManager.photoDelegate = self.photoManager
         self.wifiManager.photoDelegate = self.photoManager
         
-        // Uncommnet below to reset login
-        UserDefaults.standard.removeObject(forKey: "CM:login-cookie")
+        // Uncomment below to reset login
+//        UserDefaults.standard.removeObject(forKey: "CM:login-cookie")
 
         return true
     }
