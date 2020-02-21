@@ -8,6 +8,9 @@ from django.contrib.gis.measure import Distance
 from django.http import JsonResponse
 import logging
 from django.views.decorators.csrf import csrf_exempt
+import boto3
+from PIL import Image
+from io import BytesIO
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +44,20 @@ def record_snapshot(request):
     return HttpResponse("OK")
     
 @login_required()
+@csrf_exempt
 def record_photo(request, photo_id):
-    photo = request.POST
-    print(photo_id, photo)
+    image_file = request.FILES.get('photo')
+    image = Image.open(image_file)
+    (width, height) = image.size
+    s3 = boto3.client('s3',
+                      aws_access_key_id=settings.AWS_ACCESS_KEY,
+                      aws_secret_access_key=settings.AWS_SECRET_KEY)
+    bucket = 'camera.comfortmaps.com'
+    key_name = '%sx/%s.jpg' % (width, photo_id)
+    image_file.seek(0)
+    s3.upload_fileobj(image_file, bucket, key_name)
+    print(" ---> Uploaded %s: %s" % (photo_id, image))
+    return JsonResponse({"code": 1, "image_size": len(image_file)})
     
 @login_required()
 def map(request):

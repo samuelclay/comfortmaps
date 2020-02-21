@@ -150,4 +150,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-GOOGLE_MAPS_API_KEY = "AIzaSyB62aO9PEjM8z1_oud53KoItd5rQ65TO_Q"
+try:
+    from comfortmaps.local_settings import *
+except ImportError:
+    pass
