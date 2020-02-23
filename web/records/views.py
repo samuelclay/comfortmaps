@@ -55,7 +55,9 @@ def record_photo(request, photo_id):
     bucket = 'camera.comfortmaps.com'
     key_name = '%sx/%s.jpg' % (width, photo_id)
     image_file.seek(0)
-    s3.upload_fileobj(image_file, bucket, key_name)
+    s3.upload_fileobj(image_file, bucket, key_name, 
+                      ExtraArgs={'ACL':'public-read'},
+                      ContentType="image/jpeg")
     print(" ---> Uploaded %s: %s" % (photo_id, image))
     return JsonResponse({"code": 1, "image_size": len(image_file)})
     
