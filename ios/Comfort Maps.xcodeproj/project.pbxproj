@@ -14,8 +14,6 @@
 		FF88D61E23FF3FC200E113BE /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88D61D23FF3FC200E113BE /* MainTabBarController.swift */; };
 		FF88D62023FF400900E113BE /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88D61F23FF400900E113BE /* MapViewController.swift */; };
 		FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */; };
-		FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA623F4B4320094F34C /* ExternalAccessory.framework */; };
-		FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9D2EA823F4BF4A0094F34C /* NetworkExtension.framework */; };
 		FFC734D923EF45FA007221A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734D823EF45FA007221A5 /* AppDelegate.swift */; };
 		FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */; };
 		FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E123EF45FF007221A5 /* Assets.xcassets */; };
@@ -54,8 +52,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF9D2EA723F4B4320094F34C /* ExternalAccessory.framework in Frameworks */,
-				FF9D2EA923F4BF4A0094F34C /* NetworkExtension.framework in Frameworks */,
 				3B7ABE4739FE5B5574938323 /* Pods_Comfort_Maps.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

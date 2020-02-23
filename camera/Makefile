@@ -1,7 +1,7 @@
 .PHONY: all sshfs ssh
 
 ssh:
-	ssh pi@camfortmaps01.local
+	ssh pi@comfortmaps01.local
 
 sshfs:
 	diskutil unmount force /Users/sclay/projects/cm01

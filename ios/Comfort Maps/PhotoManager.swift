@@ -152,7 +152,10 @@ class PhotoManager: PhotoDelegate {
             return
         }
         print(" ---> Photo Done!", uploadingData.count, currentImageSize, image)
-        AF.upload(imageData, to: "https://comfortmaps.com/record/snapshot/photo/")
+        let url = "https://comfortmaps.com/record/snapshot/photo/\(currentPhotoId)/"
+        AF.upload(multipartFormData: { (mfd) in
+            mfd.append(self.uploadingData, withName: "photo", fileName: "photo.jpg", mimeType: "image/jpeg")
+        }, to: url)
             .uploadProgress { progress in
                 print("Upload Progress: \(progress.fractionCompleted)")
             }
