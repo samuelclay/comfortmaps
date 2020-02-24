@@ -1,5 +1,4 @@
 const gpio = require('rpi-gpio');
-const sharp = require('sharp');
 const fs = require('fs');
 const { spawn } = require('child_process');
 
@@ -36,52 +35,54 @@ class ButtonManager {
             if (!channelPressed) {
                 this.pressed.add(channel);
                 console.log(" ---> Pressed " + channel);
-                const child = spawn('raspistill', [
-                    '-q',   '10', 
-                    '-t',   '1', 
-                    '-rot', '180', 
-                    // '-w',   '488',
-                    // '-h',   '366',
-                    '-o',   '-'
-                ]);
-
-                process.stdin.pipe(child.stdin);
-                this.photoData = [];
-                child.stdout.on('data', (data) => {
-                    console.log(['Photo data', data.length]);
-                    this.photoData.push(data);
-                });
-                child.on('close', (code) => {
-                    let photoRaw = Buffer.concat(this.photoData);
-                    let photoId = this.camera.databaseManager.generateId();
-                    fs.mkdir('photos', { recursive: true }, (err) => {
-                        if (err) {
-                            if (err.code !== "EEXIST") throw err;
-                        }
-                        fs.writeFile("photos/"+photoId+".jpg", photoRaw, (err) => {
-                            if (err) {
-                                console.log(" ---> Error saving file", photoId, err);
-                                return;
-                            }
-                            sharp(photoRaw).resize(488).toBuffer().then((photoThumb) => {
-                                console.log(['Finished taking photo', code, photoRaw.length, photoThumb.length]);
-                                let snapshot = {
-                                    photoId: photoId,
-                                    rating: this.buttonToRating(channel)
-                                };
-                                this.camera.databaseManager.recordSnapshot(snapshot);
-                                this.camera.bluetoothManager.sendPhoto(snapshot, photoThumb);
-                                this.camera.wifiManager.sendPhoto(snapshot, photoRaw);                        
-                            });
-                        });
-                    });
-                });
+                this.takePhoto(channel);
             }
         } else if (value == 1) {
             if (channelPressed) {
                 this.pressed.delete(channel);
             }
         }
+    }
+    
+    async takePhoto(channel) {
+        const child = spawn('raspistill', [
+            '-q',   '10', 
+            '-t',   '1', 
+            '-rot', '180', 
+            // '-w',   '488',
+            // '-h',   '366',
+            '-o',   '-'
+        ]);
+
+        process.stdin.pipe(child.stdin);
+        this.photoData = [];
+        child.stdout.on('data', (data) => {
+            console.log(['Photo data', data.length]);
+            this.photoData.push(data);
+        });
+        child.on('close', (code) => {
+            let photoRaw = Buffer.concat(this.photoData);
+            let photoId = this.camera.databaseManager.generateId();
+            fs.mkdir('photos', { recursive: true }, (err) => {
+                if (err) {
+                    if (err.code !== "EEXIST") throw err;
+                }
+                fs.writeFile("photos/"+photoId+".jpg", photoRaw, async (err) => {
+                    if (err) {
+                        console.log(" ---> Error saving file", photoId, err);
+                        return;
+                    }
+                    let snapshot = {
+                        photoId: photoId,
+                        rating: this.buttonToRating(channel)
+                    };
+
+                    await this.camera.databaseManager.recordSnapshot(snapshot);
+                    this.camera.bluetoothManager.sendPhoto(snapshot);
+                    this.camera.wifiManager.sendPhoto(snapshot);
+                });
+            });
+        });
     }
     
 }

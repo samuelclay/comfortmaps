@@ -1,13 +1,17 @@
 var bleno = require('bleno');
 var util = require('util');
+const fs = require('fs');
+const sharp = require('sharp');
 
 var serviceUuids = ["ec20"]
 
 class BluetoothManager {    
     constructor(camera) {
         this.camera = camera;
-        this.snapshotCharacteristic = new SnapshotCharacteristic()
-        this.photoDataCharacteristic = new PhotoDataCharacteristic()
+        this.snapshotCharacteristic = new SnapshotCharacteristic();
+        this.photoDataCharacteristic = new PhotoDataCharacteristic();
+        this.snapshotCharacteristic.camera = this.camera;
+        this.photoDataCharacteristic.camera = this.camera;
         
         bleno.on('stateChange', (state) => {
             
@@ -36,9 +40,13 @@ class BluetoothManager {
         });
     }
     
-    sendPhoto(snapshot, photo) {
-        this.snapshotCharacteristic.beginSnapshotTransfer(snapshot, photo);
-        this.photoDataCharacteristic.beginPhotoDataTransfer(snapshot, photo);
+    async sendPhoto(snapshot) {
+        this.snapshotCharacteristic.beginSnapshotTransfer(snapshot);
+        
+        let photoRaw = await util.promisify(fs.readFile)("photos/"+snapshot.photoId+".jpg");
+        let photoThumb = await sharp(photoRaw).resize(488).toBuffer();
+        console.log(' ---> Uploading photo thumb: ', photoRaw.length, " -> ", photoThumb.length);
+        this.photoDataCharacteristic.beginPhotoDataTransfer(snapshot, photoThumb);
     }
 
 }
@@ -55,8 +63,7 @@ class SnapshotCharacteristic {
         this._updateValueCallback = null;
     }
     
-    beginSnapshotTransfer(snapshot, photo) {
-        this.photo = photo;
+    beginSnapshotTransfer(snapshot) {
         this.snapshot = snapshot;
         this.bytesRead = 0;
         this.chunkSize = 20;
@@ -74,6 +81,7 @@ class SnapshotCharacteristic {
         if (this._updateValueCallback) {
             const message = "S:" + snapshot.rating + ":" + this.dataSize + ":" + snapshot.photoId;
             this._value = Buffer.from(message, 'utf8');
+
             console.log(' ---> Notifying for snapshot transfer: ', message);
             this._updateValueCallback(this._value);
         }
@@ -81,8 +89,9 @@ class SnapshotCharacteristic {
     
     onReadRequest(offset, callback) {
         this._value = this.dataString.slice(this.bytesRead, this.bytesRead + this.chunkSize);
-        console.log(' ---> Snapshot reading:', this._value);
         this.bytesRead += this.chunkSize;
+
+        console.log(' ---> Snapshot reading:', this._value);
         callback(this.RESULT_SUCCESS, this._value);
         
         if (this.bytesRead >= this.dataSize) {
@@ -91,6 +100,8 @@ class SnapshotCharacteristic {
                 console.log(' ---> Ending snapshot transfer: ', this._value);
                 this._updateValueCallback(this._value);
             }
+            
+            this.camera.databaseManager.setSnapshotNotified(this.snapshot);
         }
     }
     
@@ -109,13 +120,13 @@ class SnapshotCharacteristic {
     }
     
     onSubscribe(maxValueSize, updateValueCallback) {
-        console.log(' ---> Snapshot subscribe: Hello');
+        console.log(' ---> Snapshot subscribe: Hello', maxValueSize);
 
         this._updateValueCallback = updateValueCallback;
     }
     
     onUnsubscribe() {
-        console.log(' ---> Snapshot unsubscribe: Good-bye');
+        console.log(' ---> Snapshot unsubscribe: Good-bye', this._updateValueCallback);
 
         this._updateValueCallback = null;
     }
@@ -143,6 +154,7 @@ class PhotoDataCharacteristic {
         if (this._updateValueCallback) {
             const message = "B:" + snapshot.rating + ":" + this.photoSize + ":" + snapshot.photoId;
             this._value = Buffer.from(message, 'utf8');
+
             console.log(' ---> Notifying for photo transfer: ', message);
             this._updateValueCallback(this._value);
         }
@@ -152,13 +164,18 @@ class PhotoDataCharacteristic {
         // console.log(' ---> Reading', this.bytesRead, this.photoSize, this._value.toString('hex'));
         this._value = this.photo.slice(this.bytesRead, this.bytesRead + this.chunkSize);
         this.bytesRead += this.chunkSize;
+
         callback(this.RESULT_SUCCESS, this._value);
+
         if (this.bytesRead >= this.photoSize) {
             if (this._updateValueCallback) {
                 this._value = Buffer.from("", 'utf8');
+
                 console.log(' ---> Ending photo transfer: ', this._value);
                 this._updateValueCallback(this._value);
             }
+
+            this.camera.databaseManager.setSnapshotThumbnailUploaded(this.snapshot);
         }
     }
     
