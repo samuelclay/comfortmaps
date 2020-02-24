@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CoreLocation
 import Alamofire
+import AudioToolbox
 
 protocol PhotoDelegate {
     func beginSnapshotTransfer(header: String)
@@ -122,7 +123,8 @@ class PhotoManager: PhotoDelegate {
             print(" ---> Snapshot response:", snapshot, response)
         }
 //        print("Done uploading snapshot", uploadingSnapshot, snapshot)
-
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+        
         uploadingSnapshot = Data()
     }
     
@@ -147,10 +149,6 @@ class PhotoManager: PhotoDelegate {
             print(" ---> Error in photo", uploadingData)
             return
         }
-        guard let imageData = image.jpegData(compressionQuality: 1) else {
-            print(" ---> Error in photo data", image)
-            return
-        }
         print(" ---> Photo Done!", uploadingData.count, currentImageSize, image)
         let url = "https://comfortmaps.com/record/snapshot/photo/\(currentPhotoId)/"
         AF.upload(multipartFormData: { (mfd) in
@@ -161,7 +159,8 @@ class PhotoManager: PhotoDelegate {
             }
             .responseJSON { response in
                 debugPrint(response)
-            }
+                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+        }
         uploadingData = Data()
     }
 }
