@@ -58,6 +58,7 @@ class PhotoManager: PhotoDelegate {
     
     func beginSnapshotTransfer(header: String) {
         print(" ---> Beginning snapshot transfer:", header)
+        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
 
         currentCoords = appDelegate().locationManager.latestLocation
         
@@ -123,7 +124,6 @@ class PhotoManager: PhotoDelegate {
             print(" ---> Snapshot response:", snapshot, response)
         }
 //        print("Done uploading snapshot", uploadingSnapshot, snapshot)
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
         
         uploadingSnapshot = Data()
     }
@@ -160,7 +160,7 @@ class PhotoManager: PhotoDelegate {
             .responseJSON { response in
                 debugPrint(response)
                 AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
-        }
+            }
         uploadingData = Data()
     }
 }
