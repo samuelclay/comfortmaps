@@ -25,7 +25,7 @@ Counter.init({
 
 class Snapshot extends Sequelize.Model {}
 Snapshot.init({
-    photoId: {
+    photo_id: {
         type: Sequelize.STRING,
         allowNull: false
     },
@@ -54,7 +54,7 @@ Snapshot.init({
     modelName: 'snapshots',
     indexes: [
         {
-            fields: ['photoId']
+            fields: ['photo_id']
         },
         {
             fields: ['order']
@@ -70,7 +70,10 @@ Snapshot.init({
 
 class DatabaseManager {
     constructor() {
-        sequelize.sync({force: true});
+        // Uncomment below to recreate databases
+        // sequelize.sync({force: true});
+        
+        sequelize.sync();
     }
     
     async recordSnapshot(snapshot) {
@@ -79,9 +82,12 @@ class DatabaseManager {
             defaults: {value: 0}
         });
         let snapshotDb = await Snapshot.create({
-            photoId: snapshot.photoId,
+            photo_id: snapshot.photoId,
             rating: snapshot.rating,
-            order: counter.value
+            order: counter.value,
+            is_notified: false,
+            is_thumbnail_uploaded: false,
+            is_raw_uploaded: false
         });
         
         console.log(' ---> Counter:', counter.value);
@@ -93,32 +99,40 @@ class DatabaseManager {
     
     async setSnapshotNotified(snapshot) {
         let snapshotDb = await Snapshot.findOne({
-            where: {photoId: snapshot.photoId}
+            where: {photo_id: snapshot.photoId}
         });
 
         snapshotDb.is_notified = true;
         snapshotDb.save();
         
-        console.log(' ---> Set snapshot notified:', snapshot);
+        console.log(' ---> Set snapshot notified:', snapshot.photoId);
     }
     
     async setSnapshotThumbnailUploaded(snapshot) {
         let snapshotDb = await Snapshot.findOne({
-            where: {photoId: snapshot.photoId}
+            where: {photo_id: snapshot.photoId}
         });
 
         snapshotDb.is_thumbnail_uploaded = true;
         snapshotDb.save();
         
-        console.log(' ---> Set snapshot thumbnail uploaded:', snapshot);
+        console.log(' ---> Set snapshot thumbnail uploaded:', snapshot.photoId);
     }
     
     async nextSnapshotThumbnailToSend() {
-        let snapshot = await Snapshot.findOne({
-            where: [['is_thumbnail_uploaded', false], ['is_notified', true]],
+        let snapshotDb = await Snapshot.findOne({
+            where: {
+                'is_thumbnail_uploaded': false,
+                'is_notified': true
+            },
             order: [['order', 'DESC']]
         });
-        return snapshot
+        if (snapshotDb) {
+            return {
+                photoId: snapshotDb.photo_id,
+                rating: snapshotDb.rating
+            };
+        }
     }
     
     generateId() {

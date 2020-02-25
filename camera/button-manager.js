@@ -23,7 +23,7 @@ class ButtonManager {
         let buttonIndex = this.buttons.indexOf(channel);
         let rating = this.ratings[buttonIndex];
         
-        console.log(['Button to rating', channel, buttonIndex, rating]);
+        // console.log(['Button to rating', channel, buttonIndex, rating]);
         return rating;
     }
     
@@ -34,7 +34,7 @@ class ButtonManager {
         if (value == 0) {
             if (!channelPressed) {
                 this.pressed.add(channel);
-                console.log(" ---> Pressed " + channel);
+                console.log(" ---> Pressed ", this.buttonToRating(channel));
                 this.takePhoto(channel);
             }
         } else if (value == 1) {
@@ -57,7 +57,7 @@ class ButtonManager {
         process.stdin.pipe(child.stdin);
         this.photoData = [];
         child.stdout.on('data', (data) => {
-            console.log(['Photo data', data.length]);
+            // console.log(['Photo data', data.length]);
             this.photoData.push(data);
         });
         child.on('close', (code) => {
