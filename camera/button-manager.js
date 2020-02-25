@@ -7,12 +7,18 @@ class ButtonManager {
     constructor(camera) {
         this.camera = camera;
         this.buttons = [27, 17, 22, 23, 18];
+        this.override = 4;
         this.ratings = [1, 2, 3, 4, 5];
         this.pressed = new Set();
         
         gpio.setMode(gpio.MODE_BCM);
         gpio.on('change', this.buttonChange.bind(this));
-
+        gpio.setup(this.override, gpio.DIR_OUT, gpio.EDGE_NONE, (err) => {
+            if (err) {
+                console.log(" ---> GPIO error", err);
+            }
+            gpio.write(this.override, false);
+        });
         this.buttons.forEach((button) => {
             gpio.setup(button, gpio.DIR_IN, gpio.EDGE_BOTH);
         });        
