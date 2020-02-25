@@ -150,7 +150,17 @@ class PhotoDataCharacteristic {
         }
         
         let photoRaw = await util.promisify(fs.readFile)("photos/"+snapshot.photoId+".jpg");
-        let photoThumb = await sharp(photoRaw).resize(488).toBuffer();
+        let photoThumb;
+        try {
+            photoThumb = await sharp(photoRaw).resize(488).toBuffer();
+        } catch (e) {
+            console.log(" ---> Error in photo:", snapshot.photoId, e);
+            this.camera.databaseManager.deleteSnapshot(snapshot);
+            this.snapshot = null;
+            this.sendNextPhoto();
+            return;
+        }
+        
         console.log(' ---> Uploading photo thumb: ', photoRaw.length, " -> ", photoThumb.length);
         
         this.photo = photoThumb;
@@ -190,10 +200,11 @@ class PhotoDataCharacteristic {
     
     async sendNextPhoto() {
         let snapshot = await this.camera.databaseManager.nextSnapshotThumbnailToSend();
-        console.log(" ---> Send next photo?", snapshot);
         if (snapshot) {
             console.log(" ---> Sending next unsent photo:", snapshot, snapshot.photoId);
             this.beginPhotoDataTransfer(snapshot);
+        } else {
+            console.log(" ---> Done sending unsent photos");
         }
     }
     

@@ -119,6 +119,12 @@ class DatabaseManager {
         console.log(' ---> Set snapshot thumbnail uploaded:', snapshot.photoId);
     }
     
+    async deleteSnapshot(snapshot) {
+        await Snapshot.destroy({
+            where: {photo_id: snapshot.photoId}
+        });
+    }
+    
     async nextSnapshotThumbnailToSend() {
         let snapshotDb = await Snapshot.findOne({
             where: {
