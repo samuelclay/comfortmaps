@@ -45,7 +45,7 @@ window.processGpsPosition = function(position) {
   CM.googleMap.setCenter(pos);
   CM.googleMap.setZoom(14);
   
-  jQuery.post("/record/snapshots_from_point/", {
+  jQuery.get("/record/snapshots_from_point.json", {
     lat: position.coords.latitude,
     lng: position.coords.longitude
   }, function(data) {

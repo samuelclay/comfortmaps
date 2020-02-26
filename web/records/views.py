@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 import boto3
 from PIL import Image
 from io import BytesIO
+import geojson
 
 logger = logging.getLogger(__name__)
 
@@ -55,10 +56,11 @@ def record_photo(request, photo_id):
     bucket = 'camera.comfortmaps.com'
     key_name = '%sx/%s.jpg' % (width, photo_id)
     image_file.seek(0)
-    s3.upload_fileobj(image_file, bucket, key_name, 
-                      ExtraArgs={'ACL':'public-read'},
-                      ContentType="image/jpeg")
-    print(" ---> Uploaded %s: %s" % (photo_id, image))
+    s3.upload_fileobj(image_file, bucket, key_name, ExtraArgs={
+        'ACL':'public-read', 
+        'ContentType': "image/jpeg",
+    })
+    logging.info(" ---> Uploaded %s: %s" % (photo_id, image))
     return JsonResponse({"code": 1, "image_size": len(image_file)})
     
 @login_required()
@@ -68,10 +70,18 @@ def map(request):
     })
 
 @login_required()
-def snapshots_from_point(request):
-    lat = float(request.POST['lat'])
-    lng = float(request.POST['lng'])
+def snapshots_from_point(request, format="json"):
+    lat = float(request.POST.get('lat') or request.GET.get('lat'))
+    lng = float(request.POST.get('lng') or request.GET.get('lng'))
     locations = Snapshot.objects.filter(location__distance_lt=(Point(lat, lng), Distance(km=2)))
-    print(f" ---> Snapshots near {lat},{lng}: {locations.count()}")
-    points = [dict(lat=l.location.x, lng=l.location.y, rating=l.rating, user=l.user.pk) for l in locations]
-    return JsonResponse({'points': points})
+    logging.info(f" ---> Snapshots near {lat},{lng}: {locations.count()}")
+    
+    if format == "json":
+        points = [dict(lat=l.location.x, lng=l.location.y, rating=l.rating, user=l.user.pk) for l in locations]
+        return JsonResponse({'points': points})
+    elif format == "geojson":
+        features = [geojson.Feature(properties={
+            "rating": l.rating
+        }, geometry=geojson.Point((l.location.y, l.location.x))) for l in locations]
+        feature_collection = geojson.FeatureCollection(features)
+        return JsonResponse(feature_collection)

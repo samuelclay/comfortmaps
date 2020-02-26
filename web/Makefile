@@ -22,3 +22,10 @@ sshfs:
 	-diskutil unmount force /Users/sclay/projects/cmweb
 	sshfs -o allow_other,defer_permissions,IdentityFile=/srv/comfortmaps-secrets/keys/comfortmaps-web.pem sclay@comfortmaps.com:/srv/comfortmaps /Users/sclay/projects/cmweb
 	cd ~/projects/cmweb
+
+rlog:
+	sudo service gunicorn restart
+	tail -f /srv/comfortmaps/logs/errors.log
+
+log:
+	tail -f /srv/comfortmaps/logs/errors.log
