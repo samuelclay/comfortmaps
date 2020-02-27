@@ -9,10 +9,15 @@
 import Foundation
 import CoreLocation
 
+protocol LocationManagerDelegate {
+    func didUpdateLocation()
+}
+
 class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private let locationManager: CLLocationManager
     public var latestLocation: CLLocationCoordinate2D?
+    private var delegates: [LocationManagerDelegate] = []
     
     override init() {
         
@@ -34,10 +39,17 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         
     }
     
+    func addDelegate(delegate: LocationManagerDelegate) {
+        self.delegates.append(delegate)
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
 //        print("location = \(locValue.latitude) \(locValue.longitude)")
         self.latestLocation = locValue
+        for delegate in delegates {
+            delegate.didUpdateLocation()
+        }
     }
     
 }

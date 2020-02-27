@@ -116,3 +116,7 @@ camera/snapshots.db
 # Web
 logs
 local_settings.py
+
+# iOS
+Pods
+UserInterfaceState.xcuserstate
