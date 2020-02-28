@@ -21,6 +21,7 @@
 		FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */; };
 		FFC734F023EF4744007221A5 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734EF23EF4744007221A5 /* BluetoothManager.swift */; };
 		FFC734F223EF502D007221A5 /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC734F123EF502D007221A5 /* PhotoManager.swift */; };
+		FFF9716B24097A26004DD86A /* icons in Resources */ = {isa = PBXBuildFile; fileRef = FFF9716A24097A25004DD86A /* icons */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		FFC734E923EF45FF007221A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FFC734EF23EF4744007221A5 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		FFC734F123EF502D007221A5 /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
+		FFF9716A24097A25004DD86A /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				FF9D2EA223F4B3AE0094F34C /* WifiManager.swift */,
 				FFC734F123EF502D007221A5 /* PhotoManager.swift */,
 				FFC734E123EF45FF007221A5 /* Assets.xcassets */,
+				FFF9716A24097A25004DD86A /* icons */,
 				FFC734E623EF45FF007221A5 /* LaunchScreen.storyboard */,
 				FFC734E923EF45FF007221A5 /* Info.plist */,
 				FFC734DC23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld */,
@@ -189,6 +192,7 @@
 				FFC734E823EF45FF007221A5 /* LaunchScreen.storyboard in Resources */,
 				FFC734E523EF45FF007221A5 /* Preview Assets.xcassets in Resources */,
 				FFC734E223EF45FF007221A5 /* Assets.xcassets in Resources */,
+				FFF9716B24097A26004DD86A /* icons in Resources */,
 				FF88D61A23FF274C00E113BE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
