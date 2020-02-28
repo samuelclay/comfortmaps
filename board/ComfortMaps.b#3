@@ -176,7 +176,7 @@
 <plain>
 <text x="8.382" y="35.56" size="1.524" layer="25" font="vector" ratio="20">Comfort Maps
 Samuel Clay
-V2 2019-12-26</text>
+V3 2020-01-27</text>
 <text x="51.689" y="0.127" size="1.016" layer="21" font="vector" ratio="15" rot="R180">WAKE</text>
 <text x="49.022" y="4.191" size="1.016" layer="21" font="vector" ratio="15" rot="R180">VOUT</text>
 <text x="45.72" y="0.127" size="1.016" layer="21" font="vector" ratio="15" rot="R180">GND</text>
