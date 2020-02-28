@@ -77,7 +77,7 @@ def snapshots_from_point(request, format="json"):
     logging.info(f" ---> Snapshots near {lat},{lng}: {locations.count()}")
     
     if format == "json":
-        points = [dict(lat=l.location.x, lng=l.location.y, rating=l.rating, user=l.user.pk) for l in locations]
+        points = [dict(lat=l.location.x, lng=l.location.y, rating=l.rating, user=l.user.pk, photo_id=l.photo_id) for l in locations]
         return JsonResponse({'points': points})
     elif format == "geojson":
         features = [geojson.Feature(properties={
