@@ -17,8 +17,8 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        appDelegate().locationManager.addDelegate(delegate: self)
         self.mapView.delegate = self
+        appDelegate().locationManager.addDelegate(delegate: self)
         self.center(animated: false)
     }
     
