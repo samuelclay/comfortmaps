@@ -73,37 +73,37 @@
             </objects>
             <point key="canvasLocation" x="1761" y="331"/>
         </scene>
-        <!--Map-->
+        <!--Delegate-->
         <scene sceneID="cSD-9o-7qp">
             <objects>
                 <viewController id="QbM-m9-LgO" customClass="MapViewController" customModule="Comfort_Maps" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="WHq-T0-4GT">
+                    <view key="view" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WHq-T0-4GT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xoy-ft-AkB" customClass="MGLMapView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ry-r5-TxB" customClass="MGLMapView">
                                 <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsHeading" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsScale" value="YES"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="QbM-m9-LgO" id="COw-po-8Hn"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="Zvu-Xk-cjx" firstAttribute="trailing" secondItem="xoy-ft-AkB" secondAttribute="trailing" id="4ea-nN-9gQ"/>
-                            <constraint firstItem="xoy-ft-AkB" firstAttribute="top" secondItem="Zvu-Xk-cjx" secondAttribute="top" id="5IZ-ab-yBu"/>
-                            <constraint firstItem="xoy-ft-AkB" firstAttribute="leading" secondItem="Zvu-Xk-cjx" secondAttribute="leading" id="Auk-no-IpJ"/>
-                            <constraint firstItem="Zvu-Xk-cjx" firstAttribute="bottom" secondItem="xoy-ft-AkB" secondAttribute="bottom" id="PWh-rG-r6U"/>
+                            <constraint firstItem="Zvu-Xk-cjx" firstAttribute="bottom" secondItem="5Ry-r5-TxB" secondAttribute="bottom" id="7Du-yz-QoH"/>
+                            <constraint firstItem="Zvu-Xk-cjx" firstAttribute="trailing" secondItem="5Ry-r5-TxB" secondAttribute="trailing" id="hNe-Ni-8RF"/>
+                            <constraint firstItem="5Ry-r5-TxB" firstAttribute="leading" secondItem="Zvu-Xk-cjx" secondAttribute="leading" id="stE-8G-9a1"/>
+                            <constraint firstItem="5Ry-r5-TxB" firstAttribute="top" secondItem="Zvu-Xk-cjx" secondAttribute="top" id="ztN-5r-koa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Zvu-Xk-cjx"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" catalog="system" id="aFG-tK-wOb"/>
                     <connections>
-                        <outlet property="mapView" destination="xoy-ft-AkB" id="7DL-sr-ryn"/>
+                        <outlet property="mapView" destination="5Ry-r5-TxB" id="SN2-dS-e4f"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9fj-9w-EKh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

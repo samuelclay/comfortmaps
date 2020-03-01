@@ -2,7 +2,7 @@ platform :ios, '13.0'
 use_frameworks!
 
 target 'Comfort Maps' do
-    pod 'SQLite.swift', '~> 0.12.0'
+#    pod 'SQLite.swift', '~> 0.12.0'
     pod 'Alamofire', '~> 5.0'
-    pod 'Mapbox-iOS-SDK', '~> 5.7'
+    pod 'Mapbox-iOS-SDK', '~> 5.7.0'
 end

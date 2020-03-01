@@ -38,7 +38,7 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
             print(" ---> Moved \(distance) meters, recentering...")
             self.center()
         } else {
-            print(" ---> Only moved \(distance) meters")
+//            print(" ---> Only moved \(distance) meters")
         }
     }
     
@@ -47,6 +47,14 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
             self.lastLocation = location
             self.mapView.setCenter(location, zoomLevel: 13, animated: animated)
         }
+    }
+    
+    func mapViewWillStartLoadingMap(_ mapView: MGLMapView) {
+        print(" ---> Loading map...")
+    }
+    
+    func mapViewDidFailLoadingMap(_ mapView: MGLMapView, withError error: Error) {
+        print(" ---> Failed to load map:", error)
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
