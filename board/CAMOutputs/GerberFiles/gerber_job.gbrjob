@@ -1,0 +1,24 @@
+{
+    "Header": {
+        "Comment": "All values are metric (mm)",
+        "CreationDate": "2020-03-02T23:54:35Z",
+        "GenerationSoftware": {
+            "Application": "EAGLE",
+            "Vendor": "Autodesk",
+            "Version": "9.5.1"
+        },
+        "Part": "Single"
+    },
+    "Overall": {
+        "BoardThickness": 0.283359,
+        "LayerNumber": 2,
+        "Name": {
+            "ProjectId": "ComfortMaps"
+        },
+        "Owner": "  <>",
+        "Size": {
+            "X": 96.774,
+            "Y": 49.311878
+        }
+    }
+}
