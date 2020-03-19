@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.5.1">
+<eagle version="9.5.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -6119,7 +6119,7 @@ Datasheet</description>
 <part name="U$1" library="SparkFun-Aesthetics" deviceset="V_BATT" device=""/>
 <part name="J1" library="SparkFun-Connectors" deviceset="AVR_SPI_PRG_6" device="PTH" value="PROG_HDR"/>
 <part name="GND1" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
-<part name="U2" library="SparkFun-DigitalIC" deviceset="ATTINY2313A" device="">
+<part name="U2" library="SparkFun-DigitalIC" deviceset="ATTINY2313A" device="" value="ATTINY2313">
 <attribute name="DIST" value="DIGIKEY"/>
 <attribute name="DIST_ID" value="ATTINY2313A-SU-ND"/>
 </part>
@@ -6188,7 +6188,9 @@ Datasheet</description>
 <part name="D7" library="DIODE SCHOTTKY 1A 40V SMA" deviceset="SS14-LTP_SCHOTTKY_DIODE_SMT_DO-214AC" device=""/>
 <part name="D1" library="SparkFun-LED" deviceset="LED-RED" device="0603" value="RED"/>
 <part name="R17" library="SparkFun-Resistors" deviceset="1.5KOHM" device="-0603-1/10W-1%" value="1.5k"/>
-<part name="S6" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="SWITCH-SPDT" device="-SMD-RIGHT-ANGLE" package3d_urn="urn:adsk.eagle:package:40179/1"/>
+<part name="S6" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="SWITCH-SPDT" device="-SMD-RIGHT-ANGLE" package3d_urn="urn:adsk.eagle:package:40179/1" value="MA12RTR">
+<attribute name="DIGIKEY" value="679-1847-1-ND"/>
+</part>
 <part name="R18" library="SparkFun-Resistors" deviceset="10K-1%" device="RES-00824" value="10k"/>
 <part name="D2" library="SparkFun-LED" deviceset="LED-RED" device="0603" value="RED"/>
 <part name="R19" library="SparkFun-Resistors" deviceset="1.5KOHM" device="-0603-1/10W-1%" value="1.5k"/>
@@ -6428,6 +6430,7 @@ revised by:Patrick Alberts</text>
 <instance part="S6" gate="1" x="226.06" y="193.04" smashed="yes">
 <attribute name="NAME" x="227.33" y="196.088" size="1.778" layer="95" font="vector" align="bottom-center"/>
 <attribute name="VALUE" x="227.076" y="189.738" size="1.778" layer="96" font="vector" align="top-center"/>
+<attribute name="DIGIKEY" x="226.06" y="193.04" size="1.778" layer="96" display="off"/>
 </instance>
 <instance part="R18" gate="G$1" x="284.48" y="55.88" smashed="yes" rot="R270">
 <attribute name="PROD_ID" x="284.48" y="55.88" size="1.778" layer="96" rot="R270" display="off"/>

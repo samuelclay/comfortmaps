@@ -10873,14 +10873,9 @@ revised by:Patrick Alberts</text>
 </segment>
 <segment>
 <pinref part="J2" gate="G$1" pin="-"/>
-<wire x1="241.3" y1="185.42" x2="236.22" y2="185.42" width="0.1524" layer="91"/>
-<wire x1="236.22" y1="185.42" x2="210.82" y2="185.42" width="0.1524" layer="91"/>
+<wire x1="241.3" y1="185.42" x2="210.82" y2="185.42" width="0.1524" layer="91"/>
 <wire x1="210.82" y1="185.42" x2="210.82" y2="157.48" width="0.1524" layer="91"/>
 <pinref part="GND15" gate="1" pin="GND"/>
-<pinref part="S6" gate="1" pin="S"/>
-<wire x1="231.14" y1="190.5" x2="236.22" y2="190.5" width="0.1524" layer="91"/>
-<wire x1="236.22" y1="190.5" x2="236.22" y2="185.42" width="0.1524" layer="91"/>
-<junction x="236.22" y="185.42"/>
 </segment>
 <segment>
 <pinref part="J3" gate="J1" pin="GND"/>

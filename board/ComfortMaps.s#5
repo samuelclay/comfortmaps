@@ -10366,6 +10366,7 @@ Datasheet</description>
 <part name="D1" library="SparkFun-LED" deviceset="LED-RED" device="0603" value="RED"/>
 <part name="R17" library="SparkFun-Resistors" deviceset="1.5KOHM" device="-0603-1/10W-1%" value="1.5k"/>
 <part name="S6" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" deviceset="SWITCH-SPDT" device="-SMD-RIGHT-ANGLE" package3d_urn="urn:adsk.eagle:package:40179/1"/>
+<part name="R18" library="SparkFun-Resistors" deviceset="10K-1%" device="RES-00824" value="10k"/>
 </parts>
 <sheets>
 <sheet>
@@ -10679,6 +10680,11 @@ revised by:Patrick Alberts</text>
 <attribute name="NAME" x="227.33" y="196.088" size="1.778" layer="95" font="vector" align="bottom-center"/>
 <attribute name="VALUE" x="227.076" y="189.738" size="1.778" layer="96" font="vector" align="top-center"/>
 </instance>
+<instance part="R18" gate="G$1" x="284.48" y="55.88" smashed="yes" rot="R270">
+<attribute name="PROD_ID" x="284.48" y="55.88" size="1.778" layer="96" rot="R270" display="off"/>
+<attribute name="NAME" x="285.9786" y="59.69" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="281.178" y="59.69" size="1.778" layer="96" rot="R270"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -10915,7 +10921,8 @@ revised by:Patrick Alberts</text>
 <wire x1="330.2" y1="48.26" x2="330.2" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="330.2" y1="45.72" x2="330.2" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="330.2" y1="43.18" x2="330.2" y2="40.64" width="0.1524" layer="91"/>
-<wire x1="330.2" y1="40.64" x2="330.2" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="330.2" y1="40.64" x2="330.2" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="330.2" y1="25.4" x2="330.2" y2="22.86" width="0.1524" layer="91"/>
 <wire x1="320.04" y1="55.88" x2="330.2" y2="55.88" width="0.1524" layer="91"/>
 <junction x="330.2" y="55.88"/>
 <pinref part="X1" gate="G$1" pin="GND_C"/>
@@ -10936,6 +10943,10 @@ revised by:Patrick Alberts</text>
 <pinref part="X1" gate="G$1" pin="GND_H"/>
 <wire x1="320.04" y1="40.64" x2="330.2" y2="40.64" width="0.1524" layer="91"/>
 <junction x="330.2" y="40.64"/>
+<pinref part="R18" gate="G$1" pin="2"/>
+<wire x1="284.48" y1="50.8" x2="284.48" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="284.48" y1="25.4" x2="330.2" y2="25.4" width="0.1524" layer="91"/>
+<junction x="330.2" y="25.4"/>
 </segment>
 <segment>
 <pinref part="S1" gate="G$1" pin="1"/>
@@ -10975,8 +10986,12 @@ revised by:Patrick Alberts</text>
 </segment>
 <segment>
 <pinref part="X1" gate="G$1" pin="GPIO04"/>
-<wire x1="289.56" y1="63.5" x2="281.94" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="289.56" y1="63.5" x2="284.48" y2="63.5" width="0.1524" layer="91"/>
 <label x="281.94" y="63.5" size="1.778" layer="95" rot="R180" xref="yes"/>
+<pinref part="R18" gate="G$1" pin="1"/>
+<wire x1="284.48" y1="63.5" x2="281.94" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="284.48" y1="60.96" x2="284.48" y2="63.5" width="0.1524" layer="91"/>
+<junction x="284.48" y="63.5"/>
 </segment>
 </net>
 <net name="INT1" class="0">

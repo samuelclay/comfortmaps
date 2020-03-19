@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.5.1">
+<eagle version="9.5.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="yes"/>
@@ -1686,7 +1686,7 @@ design rules under a new name.</description>
 <attribute name="NAME" x="21.844" y="35.179" size="0.6096" layer="25" ratio="20" rot="R180"/>
 <attribute name="VALUE" x="19.812" y="34.925" size="0.6096" layer="27" ratio="20" rot="R180"/>
 </element>
-<element name="U2" library="SparkFun-DigitalIC" package="SOP20W" value="" x="40.894" y="33.528" smashed="yes" rot="R270">
+<element name="U2" library="SparkFun-DigitalIC" package="SOP20W" value="ATTINY2313" x="40.894" y="33.528" smashed="yes" rot="R270">
 <attribute name="DIST" value="DIGIKEY" x="40.894" y="33.528" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="DIST_ID" value="ATTINY2313A-SU-ND" x="40.894" y="33.528" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="NAME" x="37.973" y="26.289" size="0.6096" layer="25" ratio="20"/>
@@ -1833,7 +1833,8 @@ design rules under a new name.</description>
 <attribute name="PROD_ID" value="RES-08306" x="76.2" y="8.128" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="VALUE" x="76.2" y="8.89" size="0.6096" layer="27" font="vector" ratio="20" rot="R180" align="top-center"/>
 </element>
-<element name="S6" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" package="SWITCH_SPST_SMD_A" package3d_urn="urn:adsk.eagle:package:40179/1" value="" x="5.588" y="32.004" smashed="yes" rot="R90">
+<element name="S6" library="SparkFun-Switches" library_urn="urn:adsk.eagle:library:535" package="SWITCH_SPST_SMD_A" package3d_urn="urn:adsk.eagle:package:40179/1" value="MA12RTR" x="5.588" y="32.004" smashed="yes" rot="R90">
+<attribute name="DIGIKEY" value="679-1847-1-ND" x="5.588" y="32.004" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="NAME" x="6.985" y="32.766" size="0.6096" layer="25" font="vector" ratio="20" rot="R270" align="bottom-center"/>
 <attribute name="PROD_ID" value="SWCH-10651" x="5.588" y="32.004" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="SF_SKU" value="COM-10860" x="5.588" y="32.004" size="1.778" layer="27" rot="R90" display="off"/>
