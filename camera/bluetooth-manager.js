@@ -13,6 +13,8 @@ class BluetoothManager {
         this.snapshotCharacteristic.camera = this.camera;
         this.photoDataCharacteristic.camera = this.camera;
         
+        console.log(" ---> Bluetooth pre-init:", bleno.state);
+        
         bleno.on('stateChange', (state) => {
             
             if (state == "poweredOn") {
