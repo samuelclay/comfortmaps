@@ -101,6 +101,11 @@ class DatabaseManager {
         let snapshotDb = await Snapshot.findOne({
             where: {photo_id: snapshot.photoId}
         });
+        
+        if (!snapshotDb) {
+            console.log(' ---> Error, could not set snapshot notified, snapshot not found', snapshot);
+            return;
+        }
 
         snapshotDb.is_notified = true;
         snapshotDb.save();
