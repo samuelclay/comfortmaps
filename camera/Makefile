@@ -15,3 +15,10 @@ log:
 	sudo journalctl -f -u camera
 
 rlog: restart log
+
+readsd:
+	sudo dd if=/dev/disk6 bs=1m | pv | gzip > ~/projects/comfortmaps/cm01.dmg
+
+writesd:
+	sudo diskutil unmountDisk /dev/disk6
+	sudo gzip -dc ~/projects/comfortmaps/cm01.dmg | sudo dd of=/dev/disk6 bs=5m | pv
