@@ -11,7 +11,7 @@ interrupts.o: interrupts.c \
  /usr/local/Cellar/avr-gcc/9.2.0/avr/include/avr/fuse.h \
  /usr/local/Cellar/avr-gcc/9.2.0/avr/include/avr/lock.h \
  /usr/local/Cellar/avr-gcc/9.2.0/avr/include/avr/interrupt.h interrupts.h \
- wake-on-shake.h serial.h eeprom.h
+ wake-on-shake.h serial.h eeprom.h xl362.h ADXL362.h
 
 /usr/local/Cellar/avr-gcc/9.2.0/avr/include/avr/io.h:
 
@@ -44,3 +44,7 @@ wake-on-shake.h:
 serial.h:
 
 eeprom.h:
+
+xl362.h:
+
+ADXL362.h:

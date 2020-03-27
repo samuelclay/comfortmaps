@@ -30,251 +30,360 @@
   18:interrupts.c  **** #include "wake-on-shake.h"
   19:interrupts.c  **** #include "serial.h"
   20:interrupts.c  **** #include "eeprom.h"
-  21:interrupts.c  **** 
-  22:interrupts.c  **** extern uint16_t				t1Offset;		// See Wake-on-Shake.cpp
-  23:interrupts.c  **** extern volatile uint8_t		sleepyTime;		// See Wake-on-Shake.cpp
-  24:interrupts.c  **** extern volatile uint8_t     serialRxData;	// See Wake-on-Shake.cpp
-  25:interrupts.c  **** 
-  26:interrupts.c  **** // Timer1 overflow ISR- this is the means by which the device goes to sleep
-  27:interrupts.c  **** //   after it's been on for a certain time. Timer1 has been set up to tick
-  28:interrupts.c  **** //   on clock/1024, which is ~1ms ticks; it's a 16-bit overflow, so left to
-  29:interrupts.c  **** //   it's own devices, it will overflow every 65536 ticks, or after a bit
-  30:interrupts.c  **** //   more than a minute. To shorten that time, we prime TCNT1
-  31:interrupts.c  **** ISR(TIMER1_OVF_vect)
-  32:interrupts.c  **** {
-  14               		.loc 1 32 1 view -0
+  21:interrupts.c  **** #include "xl362.h"
+  22:interrupts.c  **** #include "ADXL362.h"
+  23:interrupts.c  **** 
+  24:interrupts.c  **** extern uint16_t				t1Offset;		// See Wake-on-Shake.cpp
+  25:interrupts.c  **** extern volatile uint8_t		sleepyTime;		// See Wake-on-Shake.cpp
+  26:interrupts.c  **** extern volatile uint8_t     serialRxData;	// See Wake-on-Shake.cpp
+  27:interrupts.c  **** // volatile uint8_t    timerUp = FALSE;
+  28:interrupts.c  **** 
+  29:interrupts.c  **** // Timer1 overflow ISR- this is the means by which the device goes to sleep
+  30:interrupts.c  **** //   after it's been on for a certain time. Timer1 has been set up to tick
+  31:interrupts.c  **** //   on clock/1024, which is ~1ms ticks; it's a 16-bit overflow, so left to
+  32:interrupts.c  **** //   it's own devices, it will overflow every 65536 ticks, or after a bit
+  33:interrupts.c  **** //   more than a minute. To shorten that time, we prime TCNT1
+  34:interrupts.c  **** ISR(TIMER1_OVF_vect)
+  35:interrupts.c  **** {
+  14               		.loc 1 35 1 view -0
   15               		.cfi_startproc
-  16 0000 8F93      		__gcc_isr 1
-  17               	/* prologue: Signal */
-  18               	/* frame size = 0 */
-  19               	/* stack size = 0...4 */
-  20               	.L__stack_usage = 0 + __gcc_isr.n_pushed
-  33:interrupts.c  **** 	sleepyTime = TRUE;
-  21               		.loc 1 33 2 view .LVU1
-  22               		.loc 1 33 13 is_stmt 0 view .LVU2
-  23 0002 81E0      		ldi r24,lo8(1)
-  24 0004 8093 0000 		sts sleepyTime,r24
-  25               	/* epilogue start */
-  34:interrupts.c  **** }
-  26               		.loc 1 34 1 view .LVU3
-  27 0008 8F91      		__gcc_isr 2
-  28 000a 1895      		reti
-  29               		__gcc_isr 0,r24
-  30               		.cfi_endproc
-  31               	.LFE0:
-  33               	.global	__vector_1
-  35               	__vector_1:
-  36               	.LFB1:
-  35:interrupts.c  **** 
-  36:interrupts.c  **** // INT0 ISR- This is one way the processor can wake from sleep. INT0 is tied
-  37:interrupts.c  **** //   externally to the RX pin, so traffic on the serial receive line will
-  38:interrupts.c  **** //   wake up the part when it is asleep. Note that the receive interrupt
-  39:interrupts.c  **** //   can't wake the processor from sleep- don't try!
-  40:interrupts.c  **** ISR(INT0_vect)
-  41:interrupts.c  **** {
-  37               		.loc 1 41 1 is_stmt 1 view -0
-  38               		.cfi_startproc
-  39 000c 1F92 1FB6 		__gcc_isr 1
-  39      1F92 1124 
-  39      8F93 
-  40 0016 9F93      		push r25
-  41               	.LCFI0:
-  42               		.cfi_def_cfa_offset 3
-  43               		.cfi_offset 25, -2
-  44               	/* prologue: Signal */
-  45               	/* frame size = 0 */
-  46               	/* stack size = 1...5 */
-  47               	.L__stack_usage = 1 + __gcc_isr.n_pushed
-  42:interrupts.c  **** 	TCNT1 = t1Offset;				// Reset our counter for on-time.
-  48               		.loc 1 42 2 view .LVU5
-  49               		.loc 1 42 8 is_stmt 0 view .LVU6
-  50 0018 8091 0000 		lds r24,t1Offset
-  51 001c 9091 0000 		lds r25,t1Offset+1
-  52 0020 9DBD      		out 0x2c+1,r25
-  53 0022 8CBD      		out 0x2c,r24
-  43:interrupts.c  **** 	sleepyTime = FALSE;				// Indicate wakefulness to main loop.
-  54               		.loc 1 43 2 is_stmt 1 view .LVU7
-  55               		.loc 1 43 13 is_stmt 0 view .LVU8
-  56 0024 1092 0000 		sts sleepyTime,__zero_reg__
-  44:interrupts.c  **** 	GIMSK = (0<<INT0)|(0<<INT1);	// Disable INT pins while we're awake.
-  57               		.loc 1 44 2 is_stmt 1 view .LVU9
-  58               		.loc 1 44 8 is_stmt 0 view .LVU10
-  59 0028 1BBE      		out 0x3b,__zero_reg__
-  60               	/* epilogue start */
-  45:interrupts.c  **** 									//  This is important b/c the INT pins
-  46:interrupts.c  **** 									//  cause an interrupt on LOW rather
-  47:interrupts.c  **** 									//  than on an edge, so the interrupt
-  48:interrupts.c  **** 									//  will continue to fire as long as
-  49:interrupts.c  **** 									//  the pin is low unless it is disabled.
-  50:interrupts.c  **** }
-  61               		.loc 1 50 1 view .LVU11
-  62 002a 9F91      		pop r25
-  63 002c 8F91 1F90 		__gcc_isr 2
-  63      1FBE 1F90 
-  64 0034 1895      		reti
-  65               		__gcc_isr 0,r24
-  66               		.cfi_endproc
-  67               	.LFE1:
-  69               	.global	__vector_2
-  71               	__vector_2:
-  72               	.LFB5:
-  73               		.cfi_startproc
-  74 0036 1F92      		push r1
-  75               	.LCFI1:
-  76               		.cfi_def_cfa_offset 3
-  77               		.cfi_offset 1, -2
-  78 0038 0F92      		push r0
-  79               	.LCFI2:
-  80               		.cfi_def_cfa_offset 4
-  81               		.cfi_offset 0, -3
-  82 003a 0FB6      		in r0,__SREG__
-  83 003c 0F92      		push r0
-  84 003e 1124      		clr __zero_reg__
-  85 0040 2F93      		push r18
-  86               	.LCFI3:
-  87               		.cfi_def_cfa_offset 5
-  88               		.cfi_offset 18, -4
-  89 0042 3F93      		push r19
-  90               	.LCFI4:
-  91               		.cfi_def_cfa_offset 6
-  92               		.cfi_offset 19, -5
-  93 0044 4F93      		push r20
-  94               	.LCFI5:
-  95               		.cfi_def_cfa_offset 7
-  96               		.cfi_offset 20, -6
-  97 0046 5F93      		push r21
-  98               	.LCFI6:
-  99               		.cfi_def_cfa_offset 8
- 100               		.cfi_offset 21, -7
- 101 0048 6F93      		push r22
- 102               	.LCFI7:
- 103               		.cfi_def_cfa_offset 9
- 104               		.cfi_offset 22, -8
- 105 004a 7F93      		push r23
- 106               	.LCFI8:
- 107               		.cfi_def_cfa_offset 10
- 108               		.cfi_offset 23, -9
- 109 004c 8F93      		push r24
- 110               	.LCFI9:
- 111               		.cfi_def_cfa_offset 11
- 112               		.cfi_offset 24, -10
- 113 004e 9F93      		push r25
- 114               	.LCFI10:
- 115               		.cfi_def_cfa_offset 12
- 116               		.cfi_offset 25, -11
- 117 0050 AF93      		push r26
- 118               	.LCFI11:
- 119               		.cfi_def_cfa_offset 13
- 120               		.cfi_offset 26, -12
- 121 0052 BF93      		push r27
- 122               	.LCFI12:
- 123               		.cfi_def_cfa_offset 14
- 124               		.cfi_offset 27, -13
- 125 0054 EF93      		push r30
- 126               	.LCFI13:
- 127               		.cfi_def_cfa_offset 15
- 128               		.cfi_offset 30, -14
- 129 0056 FF93      		push r31
- 130               	.LCFI14:
- 131               		.cfi_def_cfa_offset 16
- 132               		.cfi_offset 31, -15
- 133               	/* prologue: Signal */
- 134               	/* frame size = 0 */
- 135               	/* stack size = 15 */
- 136               	.L__stack_usage = 15
- 137 0058 00D0      		rcall __vector_1
- 138               	/* epilogue start */
- 139 005a FF91      		pop r31
- 140 005c EF91      		pop r30
- 141 005e BF91      		pop r27
- 142 0060 AF91      		pop r26
- 143 0062 9F91      		pop r25
- 144 0064 8F91      		pop r24
- 145 0066 7F91      		pop r23
- 146 0068 6F91      		pop r22
- 147 006a 5F91      		pop r21
- 148 006c 4F91      		pop r20
- 149 006e 3F91      		pop r19
- 150 0070 2F91      		pop r18
- 151 0072 0F90      		pop r0
- 152 0074 0FBE      		out __SREG__,r0
- 153 0076 0F90      		pop r0
- 154 0078 1F90      		pop r1
- 155 007a 1895      		reti
- 156               		.cfi_endproc
- 157               	.LFE5:
- 159               	.global	__vector_7
- 161               	__vector_7:
- 162               	.LFB3:
-  51:interrupts.c  **** 
-  52:interrupts.c  **** // INT1 ISR- this is the primary way the processor wakes from sleep. INT1 is
-  53:interrupts.c  **** //   tied to the interrupt output pin on the ADXL362, which goes low when
-  54:interrupts.c  **** //   motion is detected.
-  55:interrupts.c  **** ISR(INT1_vect)
-  56:interrupts.c  **** {
-  57:interrupts.c  **** 	TCNT1 = t1Offset;				// See INT0 ISR for details.
-  58:interrupts.c  **** 	sleepyTime = FALSE;
-  59:interrupts.c  **** 	GIMSK = (0<<INT0)|(0<<INT1); 
-  60:interrupts.c  **** }
-  61:interrupts.c  **** 
-  62:interrupts.c  **** // USART_RX ISR- gets called when the processor is awake and a complete
-  63:interrupts.c  **** //   byte (including stop bit) has been received by the USART. This
-  64:interrupts.c  **** //   interrupt CANNOT be used to wake the processor, so don't try it.
-  65:interrupts.c  **** ISR(USART_RX_vect)
-  66:interrupts.c  **** {
- 163               		.loc 1 66 1 is_stmt 1 view -0
- 164               		.cfi_startproc
- 165               		.loc 1 66 1 is_stmt 0 view .LVU13
- 166 007c 8F93      		__gcc_isr 1
- 167 007e 9F93      		push r25
- 168               	.LCFI15:
- 169               		.cfi_def_cfa_offset 3
- 170               		.cfi_offset 25, -2
- 171               	/* prologue: Signal */
- 172               	/* frame size = 0 */
- 173               	/* stack size = 1...5 */
- 174               	.L__stack_usage = 1 + __gcc_isr.n_pushed
-  67:interrupts.c  **** 	TCNT1 = t1Offset;	// Reset the wakefulness timer, so the processor
- 175               		.loc 1 67 2 is_stmt 1 view .LVU14
- 176               		.loc 1 67 8 is_stmt 0 view .LVU15
- 177 0080 8091 0000 		lds r24,t1Offset
- 178 0084 9091 0000 		lds r25,t1Offset+1
- 179 0088 9DBD      		out 0x2c+1,r25
- 180 008a 8CBD      		out 0x2c,r24
-  68:interrupts.c  **** 						//   doesn't go to sleep while the user is
-  69:interrupts.c  **** 						//   interacting with it.
-  70:interrupts.c  **** 	serialRxData = UDR; // Pass the data back to the main loop for parsing.
- 181               		.loc 1 70 2 is_stmt 1 view .LVU16
- 182               		.loc 1 70 17 is_stmt 0 view .LVU17
- 183 008c 8CB1      		in r24,0xc
- 184               		.loc 1 70 15 view .LVU18
- 185 008e 8093 0000 		sts serialRxData,r24
- 186               	/* epilogue start */
-  71:interrupts.c  **** }
- 187               		.loc 1 71 1 view .LVU19
- 188 0092 9F91      		pop r25
- 189 0094 8F91      		__gcc_isr 2
- 190 0096 1895      		reti
- 191               		__gcc_isr 0,r24
- 192               		.cfi_endproc
- 193               	.LFE3:
- 195               	.Letext0:
- 196               		.file 2 "/usr/local/Cellar/avr-gcc/9.2.0/avr/include/stdint.h"
+  16 0000 1F92      		push r1
+  17               	.LCFI0:
+  18               		.cfi_def_cfa_offset 3
+  19               		.cfi_offset 1, -2
+  20 0002 0F92      		push r0
+  21               	.LCFI1:
+  22               		.cfi_def_cfa_offset 4
+  23               		.cfi_offset 0, -3
+  24 0004 0FB6      		in r0,__SREG__
+  25 0006 0F92      		push r0
+  26 0008 1124      		clr __zero_reg__
+  27 000a 2F93      		push r18
+  28               	.LCFI2:
+  29               		.cfi_def_cfa_offset 5
+  30               		.cfi_offset 18, -4
+  31 000c 3F93      		push r19
+  32               	.LCFI3:
+  33               		.cfi_def_cfa_offset 6
+  34               		.cfi_offset 19, -5
+  35 000e 4F93      		push r20
+  36               	.LCFI4:
+  37               		.cfi_def_cfa_offset 7
+  38               		.cfi_offset 20, -6
+  39 0010 5F93      		push r21
+  40               	.LCFI5:
+  41               		.cfi_def_cfa_offset 8
+  42               		.cfi_offset 21, -7
+  43 0012 6F93      		push r22
+  44               	.LCFI6:
+  45               		.cfi_def_cfa_offset 9
+  46               		.cfi_offset 22, -8
+  47 0014 7F93      		push r23
+  48               	.LCFI7:
+  49               		.cfi_def_cfa_offset 10
+  50               		.cfi_offset 23, -9
+  51 0016 8F93      		push r24
+  52               	.LCFI8:
+  53               		.cfi_def_cfa_offset 11
+  54               		.cfi_offset 24, -10
+  55 0018 9F93      		push r25
+  56               	.LCFI9:
+  57               		.cfi_def_cfa_offset 12
+  58               		.cfi_offset 25, -11
+  59 001a AF93      		push r26
+  60               	.LCFI10:
+  61               		.cfi_def_cfa_offset 13
+  62               		.cfi_offset 26, -12
+  63 001c BF93      		push r27
+  64               	.LCFI11:
+  65               		.cfi_def_cfa_offset 14
+  66               		.cfi_offset 27, -13
+  67 001e EF93      		push r30
+  68               	.LCFI12:
+  69               		.cfi_def_cfa_offset 15
+  70               		.cfi_offset 30, -14
+  71 0020 FF93      		push r31
+  72               	.LCFI13:
+  73               		.cfi_def_cfa_offset 16
+  74               		.cfi_offset 31, -15
+  75               	/* prologue: Signal */
+  76               	/* frame size = 0 */
+  77               	/* stack size = 15 */
+  78               	.L__stack_usage = 15
+  36:interrupts.c  ****     // Check if accelerometer is still awake
+  37:interrupts.c  ****     uint8_t statusByte = (uint8_t)ADXLReadByte((uint8_t)XL362_STATUS);
+  79               		.loc 1 37 5 view .LVU1
+  80               		.loc 1 37 35 is_stmt 0 view .LVU2
+  81 0022 8BE0      		ldi r24,lo8(11)
+  82 0024 00D0      		rcall ADXLReadByte
+  83               	.LVL0:
+  38:interrupts.c  ****     if ((statusByte & (1 << 6))) {
+  84               		.loc 1 38 5 is_stmt 1 view .LVU3
+  85               		.loc 1 38 8 is_stmt 0 view .LVU4
+  86 0026 86FF      		sbrs r24,6
+  87 0028 00C0      		rjmp .L2
+  39:interrupts.c  ****         TCNT1 = t1Offset; // Reset the timer
+  88               		.loc 1 39 9 is_stmt 1 view .LVU5
+  89               		.loc 1 39 15 is_stmt 0 view .LVU6
+  90 002a 8091 0000 		lds r24,t1Offset
+  91 002e 9091 0000 		lds r25,t1Offset+1
+  92               	.LVL1:
+  93               		.loc 1 39 15 view .LVU7
+  94 0032 9DBD      		out 0x2c+1,r25
+  95 0034 8CBD      		out 0x2c,r24
+  96               	.L1:
+  97               	/* epilogue start */
+  40:interrupts.c  ****     } else {
+  41:interrupts.c  ****         sleepyTime = TRUE;
+  42:interrupts.c  ****     }
+  43:interrupts.c  **** }
+  98               		.loc 1 43 1 view .LVU8
+  99 0036 FF91      		pop r31
+ 100 0038 EF91      		pop r30
+ 101 003a BF91      		pop r27
+ 102 003c AF91      		pop r26
+ 103 003e 9F91      		pop r25
+ 104 0040 8F91      		pop r24
+ 105 0042 7F91      		pop r23
+ 106 0044 6F91      		pop r22
+ 107 0046 5F91      		pop r21
+ 108 0048 4F91      		pop r20
+ 109 004a 3F91      		pop r19
+ 110 004c 2F91      		pop r18
+ 111 004e 0F90      		pop r0
+ 112 0050 0FBE      		out __SREG__,r0
+ 113 0052 0F90      		pop r0
+ 114 0054 1F90      		pop r1
+ 115 0056 1895      		reti
+ 116               	.LVL2:
+ 117               	.L2:
+  41:interrupts.c  ****     }
+ 118               		.loc 1 41 9 is_stmt 1 view .LVU9
+  41:interrupts.c  ****     }
+ 119               		.loc 1 41 20 is_stmt 0 view .LVU10
+ 120 0058 81E0      		ldi r24,lo8(1)
+ 121               	.LVL3:
+  41:interrupts.c  ****     }
+ 122               		.loc 1 41 20 view .LVU11
+ 123 005a 8093 0000 		sts sleepyTime,r24
+ 124               		.loc 1 43 1 view .LVU12
+ 125 005e 00C0      		rjmp .L1
+ 126               		.cfi_endproc
+ 127               	.LFE0:
+ 129               	.global	__vector_1
+ 131               	__vector_1:
+ 132               	.LFB1:
+  44:interrupts.c  **** 
+  45:interrupts.c  **** // INT0 ISR- This is one way the processor can wake from sleep. INT0 is tied
+  46:interrupts.c  **** //   externally to the RX pin, so traffic on the serial receive line will
+  47:interrupts.c  **** //   wake up the part when it is asleep. Note that the receive interrupt
+  48:interrupts.c  **** //   can't wake the processor from sleep- don't try!
+  49:interrupts.c  **** ISR(INT0_vect)
+  50:interrupts.c  **** {
+ 133               		.loc 1 50 1 is_stmt 1 view -0
+ 134               		.cfi_startproc
+ 135 0060 1F92 1FB6 		__gcc_isr 1
+ 135      1F92 1124 
+ 135      8F93 
+ 136 006a 9F93      		push r25
+ 137               	.LCFI14:
+ 138               		.cfi_def_cfa_offset 3
+ 139               		.cfi_offset 25, -2
+ 140               	/* prologue: Signal */
+ 141               	/* frame size = 0 */
+ 142               	/* stack size = 1...5 */
+ 143               	.L__stack_usage = 1 + __gcc_isr.n_pushed
+  51:interrupts.c  **** 	TCNT1 = t1Offset;				// Reset our counter for on-time.
+ 144               		.loc 1 51 2 view .LVU14
+ 145               		.loc 1 51 8 is_stmt 0 view .LVU15
+ 146 006c 8091 0000 		lds r24,t1Offset
+ 147 0070 9091 0000 		lds r25,t1Offset+1
+ 148 0074 9DBD      		out 0x2c+1,r25
+ 149 0076 8CBD      		out 0x2c,r24
+  52:interrupts.c  **** 	sleepyTime = FALSE;				// Indicate wakefulness to main loop.
+ 150               		.loc 1 52 2 is_stmt 1 view .LVU16
+ 151               		.loc 1 52 13 is_stmt 0 view .LVU17
+ 152 0078 1092 0000 		sts sleepyTime,__zero_reg__
+  53:interrupts.c  **** 	GIMSK = (0<<INT0)|(0<<INT1);	// Disable INT pins while we're awake.
+ 153               		.loc 1 53 2 is_stmt 1 view .LVU18
+ 154               		.loc 1 53 8 is_stmt 0 view .LVU19
+ 155 007c 1BBE      		out 0x3b,__zero_reg__
+ 156               	/* epilogue start */
+  54:interrupts.c  **** 									//  This is important b/c the INT pins
+  55:interrupts.c  **** 									//  cause an interrupt on LOW rather
+  56:interrupts.c  **** 									//  than on an edge, so the interrupt
+  57:interrupts.c  **** 									//  will continue to fire as long as
+  58:interrupts.c  **** 									//  the pin is low unless it is disabled.
+  59:interrupts.c  **** }
+ 157               		.loc 1 59 1 view .LVU20
+ 158 007e 9F91      		pop r25
+ 159 0080 8F91 1F90 		__gcc_isr 2
+ 159      1FBE 1F90 
+ 160 0088 1895      		reti
+ 161               		__gcc_isr 0,r24
+ 162               		.cfi_endproc
+ 163               	.LFE1:
+ 165               	.global	__vector_2
+ 167               	__vector_2:
+ 168               	.LFB5:
+ 169               		.cfi_startproc
+ 170 008a 1F92      		push r1
+ 171               	.LCFI15:
+ 172               		.cfi_def_cfa_offset 3
+ 173               		.cfi_offset 1, -2
+ 174 008c 0F92      		push r0
+ 175               	.LCFI16:
+ 176               		.cfi_def_cfa_offset 4
+ 177               		.cfi_offset 0, -3
+ 178 008e 0FB6      		in r0,__SREG__
+ 179 0090 0F92      		push r0
+ 180 0092 1124      		clr __zero_reg__
+ 181 0094 2F93      		push r18
+ 182               	.LCFI17:
+ 183               		.cfi_def_cfa_offset 5
+ 184               		.cfi_offset 18, -4
+ 185 0096 3F93      		push r19
+ 186               	.LCFI18:
+ 187               		.cfi_def_cfa_offset 6
+ 188               		.cfi_offset 19, -5
+ 189 0098 4F93      		push r20
+ 190               	.LCFI19:
+ 191               		.cfi_def_cfa_offset 7
+ 192               		.cfi_offset 20, -6
+ 193 009a 5F93      		push r21
+ 194               	.LCFI20:
+ 195               		.cfi_def_cfa_offset 8
+ 196               		.cfi_offset 21, -7
+ 197 009c 6F93      		push r22
+ 198               	.LCFI21:
+ 199               		.cfi_def_cfa_offset 9
+ 200               		.cfi_offset 22, -8
+ 201 009e 7F93      		push r23
+ 202               	.LCFI22:
+ 203               		.cfi_def_cfa_offset 10
+ 204               		.cfi_offset 23, -9
+ 205 00a0 8F93      		push r24
+ 206               	.LCFI23:
+ 207               		.cfi_def_cfa_offset 11
+ 208               		.cfi_offset 24, -10
+ 209 00a2 9F93      		push r25
+ 210               	.LCFI24:
+ 211               		.cfi_def_cfa_offset 12
+ 212               		.cfi_offset 25, -11
+ 213 00a4 AF93      		push r26
+ 214               	.LCFI25:
+ 215               		.cfi_def_cfa_offset 13
+ 216               		.cfi_offset 26, -12
+ 217 00a6 BF93      		push r27
+ 218               	.LCFI26:
+ 219               		.cfi_def_cfa_offset 14
+ 220               		.cfi_offset 27, -13
+ 221 00a8 EF93      		push r30
+ 222               	.LCFI27:
+ 223               		.cfi_def_cfa_offset 15
+ 224               		.cfi_offset 30, -14
+ 225 00aa FF93      		push r31
+ 226               	.LCFI28:
+ 227               		.cfi_def_cfa_offset 16
+ 228               		.cfi_offset 31, -15
+ 229               	/* prologue: Signal */
+ 230               	/* frame size = 0 */
+ 231               	/* stack size = 15 */
+ 232               	.L__stack_usage = 15
+ 233 00ac 00D0      		rcall __vector_1
+ 234               	/* epilogue start */
+ 235 00ae FF91      		pop r31
+ 236 00b0 EF91      		pop r30
+ 237 00b2 BF91      		pop r27
+ 238 00b4 AF91      		pop r26
+ 239 00b6 9F91      		pop r25
+ 240 00b8 8F91      		pop r24
+ 241 00ba 7F91      		pop r23
+ 242 00bc 6F91      		pop r22
+ 243 00be 5F91      		pop r21
+ 244 00c0 4F91      		pop r20
+ 245 00c2 3F91      		pop r19
+ 246 00c4 2F91      		pop r18
+ 247 00c6 0F90      		pop r0
+ 248 00c8 0FBE      		out __SREG__,r0
+ 249 00ca 0F90      		pop r0
+ 250 00cc 1F90      		pop r1
+ 251 00ce 1895      		reti
+ 252               		.cfi_endproc
+ 253               	.LFE5:
+ 255               	.global	__vector_7
+ 257               	__vector_7:
+ 258               	.LFB3:
+  60:interrupts.c  **** 
+  61:interrupts.c  **** // INT1 ISR- this is the primary way the processor wakes from sleep. INT1 is
+  62:interrupts.c  **** //   tied to the interrupt output pin on the ADXL362, which goes low when
+  63:interrupts.c  **** //   motion is detected.
+  64:interrupts.c  **** ISR(INT1_vect)
+  65:interrupts.c  **** {
+  66:interrupts.c  **** 	TCNT1 = t1Offset;				// See INT0 ISR for details.
+  67:interrupts.c  **** 	sleepyTime = FALSE;
+  68:interrupts.c  **** 	GIMSK = (0<<INT0)|(0<<INT1); 
+  69:interrupts.c  **** }
+  70:interrupts.c  **** 
+  71:interrupts.c  **** // USART_RX ISR- gets called when the processor is awake and a complete
+  72:interrupts.c  **** //   byte (including stop bit) has been received by the USART. This
+  73:interrupts.c  **** //   interrupt CANNOT be used to wake the processor, so don't try it.
+  74:interrupts.c  **** ISR(USART_RX_vect)
+  75:interrupts.c  **** {
+ 259               		.loc 1 75 1 is_stmt 1 view -0
+ 260               		.cfi_startproc
+ 261               		.loc 1 75 1 is_stmt 0 view .LVU22
+ 262 00d0 8F93      		__gcc_isr 1
+ 263 00d2 9F93      		push r25
+ 264               	.LCFI29:
+ 265               		.cfi_def_cfa_offset 3
+ 266               		.cfi_offset 25, -2
+ 267               	/* prologue: Signal */
+ 268               	/* frame size = 0 */
+ 269               	/* stack size = 1...5 */
+ 270               	.L__stack_usage = 1 + __gcc_isr.n_pushed
+  76:interrupts.c  **** 	TCNT1 = t1Offset;	// Reset the wakefulness timer, so the processor
+ 271               		.loc 1 76 2 is_stmt 1 view .LVU23
+ 272               		.loc 1 76 8 is_stmt 0 view .LVU24
+ 273 00d4 8091 0000 		lds r24,t1Offset
+ 274 00d8 9091 0000 		lds r25,t1Offset+1
+ 275 00dc 9DBD      		out 0x2c+1,r25
+ 276 00de 8CBD      		out 0x2c,r24
+  77:interrupts.c  **** 						//   doesn't go to sleep while the user is
+  78:interrupts.c  **** 						//   interacting with it.
+  79:interrupts.c  **** 	serialRxData = UDR; // Pass the data back to the main loop for parsing.
+ 277               		.loc 1 79 2 is_stmt 1 view .LVU25
+ 278               		.loc 1 79 17 is_stmt 0 view .LVU26
+ 279 00e0 8CB1      		in r24,0xc
+ 280               		.loc 1 79 15 view .LVU27
+ 281 00e2 8093 0000 		sts serialRxData,r24
+ 282               	/* epilogue start */
+  80:interrupts.c  **** }
+ 283               		.loc 1 80 1 view .LVU28
+ 284 00e6 9F91      		pop r25
+ 285 00e8 8F91      		__gcc_isr 2
+ 286 00ea 1895      		reti
+ 287               		__gcc_isr 0,r24
+ 288               		.cfi_endproc
+ 289               	.LFE3:
+ 291               	.Letext0:
+ 292               		.file 2 "/usr/local/Cellar/avr-gcc/9.2.0/avr/include/stdint.h"
+ 293               		.file 3 "ADXL362.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 interrupts.c
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:2      *ABS*:000000000000003d __SP_L__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:3      *ABS*:000000000000003f __SREG__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:4      *ABS*:0000000000000000 __tmp_reg__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:5      *ABS*:0000000000000001 __zero_reg__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:11     .text:0000000000000000 __vector_5
-                            *ABS*:0000000000000001 __gcc_isr.n_pushed.001
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:35     .text:000000000000000c __vector_1
-                            *ABS*:0000000000000003 __gcc_isr.n_pushed.002
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:71     .text:0000000000000036 __vector_2
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//cc9J3SmD.s:161    .text:000000000000007c __vector_7
-                            *ABS*:0000000000000001 __gcc_isr.n_pushed.003
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:2      *ABS*:000000000000003d __SP_L__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:3      *ABS*:000000000000003f __SREG__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:4      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:5      *ABS*:0000000000000001 __zero_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:11     .text:0000000000000000 __vector_5
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:131    .text:0000000000000060 __vector_1
+                            *ABS*:0000000000000003 __gcc_isr.n_pushed.001
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:167    .text:000000000000008a __vector_2
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccaYGulZ.s:257    .text:00000000000000d0 __vector_7
+                            *ABS*:0000000000000001 __gcc_isr.n_pushed.002
 
 UNDEFINED SYMBOLS
-sleepyTime
+ADXLReadByte
 t1Offset
+sleepyTime
 serialRxData

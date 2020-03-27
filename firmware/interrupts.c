@@ -18,10 +18,13 @@ we're free to be kind of lax with our response times.
 #include "wake-on-shake.h"
 #include "serial.h"
 #include "eeprom.h"
+#include "xl362.h"
+#include "ADXL362.h"
 
 extern uint16_t				t1Offset;		// See Wake-on-Shake.cpp
 extern volatile uint8_t		sleepyTime;		// See Wake-on-Shake.cpp
 extern volatile uint8_t     serialRxData;	// See Wake-on-Shake.cpp
+// volatile uint8_t    timerUp = FALSE;
 
 // Timer1 overflow ISR- this is the means by which the device goes to sleep
 //   after it's been on for a certain time. Timer1 has been set up to tick
@@ -30,7 +33,13 @@ extern volatile uint8_t     serialRxData;	// See Wake-on-Shake.cpp
 //   more than a minute. To shorten that time, we prime TCNT1
 ISR(TIMER1_OVF_vect)
 {
-	sleepyTime = TRUE;
+    // Check if accelerometer is still awake
+    uint8_t statusByte = (uint8_t)ADXLReadByte((uint8_t)XL362_STATUS);
+    if ((statusByte & (1 << 6))) {
+        TCNT1 = t1Offset; // Reset the timer
+    } else {
+        sleepyTime = TRUE;
+    }
 }
 
 // INT0 ISR- This is one way the processor can wake from sleep. INT0 is tied

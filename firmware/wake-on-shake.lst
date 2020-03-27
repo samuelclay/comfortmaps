@@ -296,10 +296,10 @@
   75               	/* frame size = 0 */
   76               	/* stack size = 0 */
   77               	.L__stack_usage = 0
- 224:wake-on-shake.c ****     // t1Offset  = 60535;        // Corresponds to ~5s delay before going to sleep
- 225:wake-on-shake.c **** 	t1Offset  = 535;		// Corresponds to ~59.5s delay before going to sleep
-  78               		.loc 1 225 2 view .LVU13
-  79               		.loc 1 225 12 is_stmt 0 view .LVU14
+ 224:wake-on-shake.c ****     // t1Offset  = 63535;        // Corresponds to ~5s delay before going to sleep
+ 225:wake-on-shake.c ****     t1Offset  = 535;        // Corresponds to ~59.5s delay before going to sleep
+  78               		.loc 1 225 5 view .LVU13
+  79               		.loc 1 225 15 is_stmt 0 view .LVU14
   80 0030 87E1      		ldi r24,lo8(23)
   81 0032 92E0      		ldi r25,lo8(2)
   82 0034 9093 0000 		sts t1Offset+1,r25
@@ -621,16 +621,16 @@
  322               		.file 6 "ui.h"
 DEFINED SYMBOLS
                             *ABS*:0000000000000000 wake-on-shake.c
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:2      *ABS*:000000000000003d __SP_L__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:3      *ABS*:000000000000003f __SREG__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:4      *ABS*:0000000000000000 __tmp_reg__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:5      *ABS*:0000000000000001 __zero_reg__
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:11     .text:0000000000000000 EEPROMRetrieve
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:2      *ABS*:000000000000003d __SP_L__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:3      *ABS*:000000000000003f __SREG__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:4      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:5      *ABS*:0000000000000001 __zero_reg__
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:11     .text:0000000000000000 EEPROMRetrieve
                             *COM*:0000000000000002 t1Offset
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:70     .text:0000000000000030 EEPROMConfig
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:122    .text.startup:0000000000000000 main
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:313    .bss:0000000000000001 sleepyTime
-/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccBcMyvA.s:308    .bss:0000000000000000 serialRxData
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:70     .text:0000000000000030 EEPROMConfig
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:122    .text.startup:0000000000000000 main
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:313    .bss:0000000000000001 sleepyTime
+/var/folders/jy/pkqnkk1s5x97h68j2fkh30vh0000gq/T//ccDhPOrF.s:308    .bss:0000000000000000 serialRxData
 
 UNDEFINED SYMBOLS
 EEPROMReadWord
