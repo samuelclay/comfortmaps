@@ -12,6 +12,7 @@ class BluetoothManager {
         this.photoDataCharacteristic = new PhotoDataCharacteristic();
         this.snapshotCharacteristic.camera = this.camera;
         this.photoDataCharacteristic.camera = this.camera;
+        this.connected = false;
         
         console.log(" ---> Bluetooth pre-init:", bleno.state);
         
@@ -43,6 +44,8 @@ class BluetoothManager {
     }
     
     async sendPhoto(snapshot) {
+        this.camera.buttonManager.stayAwake();
+
         this.snapshotCharacteristic.beginSnapshotTransfer(snapshot);
         this.photoDataCharacteristic.beginPhotoDataTransfer(snapshot);
     }
@@ -123,6 +126,7 @@ class SnapshotCharacteristic {
 
         this._updateValueCallback = updateValueCallback;
         this.snapshot = null;
+        this.camera.bluetoothManager.connected = true;
     }
     
     onUnsubscribe() {
@@ -130,6 +134,7 @@ class SnapshotCharacteristic {
 
         this._updateValueCallback = null;
         this.snapshot = null;
+        this.camera.bluetoothManager.connected = false;
     }
 }
 
@@ -163,7 +168,14 @@ class PhotoDataCharacteristic {
             return;
         }
         
-        console.log(' ---> Uploading photo thumb: ', photoRaw.length, " -> ", photoThumb.length);
+        if (this.camera.bluetoothManager.connected) {
+            console.log(' ---> Uploading photo thumb: ', photoRaw.length, " -> ", photoThumb.length);
+        } else {
+            console.log('---> Discarding photo, no phone connected!', photoRaw.length, " -> ", photoThumb.length);
+
+            this.camera.buttonManager.allowSleep();
+            return;
+        }
         
         this.photo = photoThumb;
         this.snapshot = snapshot;
@@ -204,9 +216,13 @@ class PhotoDataCharacteristic {
         let snapshot = await this.camera.databaseManager.nextSnapshotThumbnailToSend();
         if (snapshot) {
             console.log(" ---> Sending next unsent photo:", snapshot, snapshot.photoId);
+
+            this.camera.buttonManager.stayAwake();
             this.beginPhotoDataTransfer(snapshot);
         } else {
             console.log(" ---> Done sending unsent photos");
+
+            this.camera.buttonManager.allowSleep();
         }
     }
     

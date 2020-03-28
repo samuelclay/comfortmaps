@@ -29,8 +29,25 @@ class ButtonManager {
             if (err) {
                 console.log(" ---> GPIO error", err);
             }
-            gpio.write(this.override, 1);
+            this.stayAwake();
+            setTimeout(() => {
+                if (!this.camera.bluetoothManager.connected) {
+                    this.allowSleep();
+                }
+            }, 60*1000);
         });
+    }
+    
+    stayAwake() {
+        console.log(" ---> Staying awake...");
+
+        gpio.write(this.override, 1);
+    }
+    
+    allowSleep() {
+        console.log(" ---> Done staying awake.");
+
+        gpio.write(this.override, 0);
     }
     
     buttonToRating(channel) {
