@@ -22,8 +22,8 @@ listsd:
 	diskutil list
 
 readsd:
-	sudo dd if=/dev/disk6 bs=1m | pv | gzip > ~/projects/comfortmaps/cm01.dmg
+	sudo dd if=/dev/disk7 bs=1m | pv | gzip > ~/Desktop/cm01.dmg
 
 writesd:
 	sudo diskutil unmountDisk /dev/disk7
-	sudo gzip -dc ~/projects/comfortmaps/cm01.dmg | sudo dd of=/dev/disk7 bs=5m | pv
+	sudo gzip -dc ~/Desktop/cm01.dmg | pv | sudo dd of=/dev/disk7 bs=5m

@@ -19,6 +19,8 @@ class Snapshot(models.Model):
     rating = models.IntegerField()
     rating_scale = models.ForeignKey(SnapshotRatingScale, on_delete=models.CASCADE)
     location = models.PointField()
+    heading = models.FloatField()
+    speed_mph = models.FloatField()
     date = models.DateTimeField('date snapshot taken', default=timezone.now)
     
     def __str__(self):

@@ -33,12 +33,15 @@ def record_snapshot(request):
     rating = int(request.POST['rating'])
     gps_lat = float(request.POST['gps[latitude]'])
     gps_long = float(request.POST['gps[longitude]'])
-    heading_x = request.POST['acceleration[x]']
+    heading = float(request.POST['heading'])
+    speed_mph = float(request.POST['speed_mph'])
 
     snapshot = Snapshot(user=request.user, 
                         photo_id=photo_id,
                         rating=rating, 
                         rating_scale=snapshot_rating_scale,
+                        heading=heading,
+                        speed=speed,
                         location=Point(gps_lat, gps_long))
     snapshot.save()
     logging.info(" ---> Snapshot: %s / %s" % (snapshot, request.POST))
