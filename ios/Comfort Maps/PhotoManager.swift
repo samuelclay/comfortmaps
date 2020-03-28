@@ -42,7 +42,7 @@ struct Snapshot: Codable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case photoId = "photo_id", rating, acceleration, coords = "gps", heading, speed
+        case photoId = "photo_id", rating, acceleration, coords = "gps", heading, speed = "speed_mph"
     }
 }
 class PhotoManager: PhotoDelegate {
@@ -134,9 +134,9 @@ class PhotoManager: PhotoDelegate {
         }
 
         if let speed = currentSpeed {
-            snapshot.speed = speed
+            snapshot.speed = speed * 2.23694 // m/s -> mph
         } else if let speed = appDelegate().locationManager.latestSpeed {
-            snapshot.speed = speed
+            snapshot.speed = speed * 2.23694 // m/s -> mph
         } else {
             print(" ---> Error, could not retrieve GPS speed!")
         }
