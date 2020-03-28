@@ -32,6 +32,8 @@ struct Snapshot: Codable {
     var rating: Int
     var acceleration: [String: Int]
     var coords: Coordinate?
+    var heading: Double?
+    var speed: Double?
     
     init(_ dictionary: [String: Any]) {
         self.photoId = dictionary["id"] as! String
@@ -40,7 +42,7 @@ struct Snapshot: Codable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case photoId = "photo_id", rating, acceleration, coords = "gps"
+        case photoId = "photo_id", rating, acceleration, coords = "gps", heading, speed
     }
 }
 class PhotoManager: PhotoDelegate {
@@ -54,6 +56,8 @@ class PhotoManager: PhotoDelegate {
     private var streamStartTime         : TimeInterval = 0
     private var transferRate            : Double       = 0
     private var currentCoords           : CLLocationCoordinate2D?
+    private var currentHeading          : CLLocationDirection?
+    private var currentSpeed            : CLLocationSpeed?
     private var currentPhotoId          : String       = String()
     
     func beginSnapshotTransfer(header: String) {
@@ -61,6 +65,8 @@ class PhotoManager: PhotoDelegate {
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
 
         currentCoords = appDelegate().locationManager.latestLocation
+        currentHeading = appDelegate().locationManager.latestHeading
+        currentSpeed = appDelegate().locationManager.latestSpeed
         
         uploadingSnapshot = Data()
         imageStartTime = Date().timeIntervalSince1970
@@ -118,7 +124,23 @@ class PhotoManager: PhotoDelegate {
         } else {
             print(" ---> Error, could not retrieve GPS coordinates!")
         }
-        
+
+        if let heading = currentHeading {
+            snapshot.heading = heading
+        } else if let heading = appDelegate().locationManager.latestHeading {
+            snapshot.heading = heading
+        } else {
+            print(" ---> Error, could not retrieve GPS heading!")
+        }
+
+        if let speed = currentSpeed {
+            snapshot.speed = speed
+        } else if let speed = appDelegate().locationManager.latestSpeed {
+            snapshot.speed = speed
+        } else {
+            print(" ---> Error, could not retrieve GPS speed!")
+        }
+
         AF.request("https://comfortmaps.com/record/snapshot/", method: .post, parameters: snapshot,
                    encoder: URLEncodedFormParameterEncoder.default).response { response in
             print(" ---> Snapshot response:", snapshot, response)

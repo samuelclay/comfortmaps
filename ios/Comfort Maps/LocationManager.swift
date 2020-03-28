@@ -17,6 +17,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     
     private let locationManager: CLLocationManager
     public var latestLocation: CLLocationCoordinate2D?
+    public var latestHeading: CLLocationDirection?
+    public var latestSpeed: CLLocationSpeed?
     private var delegates: [LocationManagerDelegate] = []
     
     override init() {
@@ -47,6 +49,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
 //        print("location = \(locValue.latitude) \(locValue.longitude)")
         self.latestLocation = locValue
+        
+        guard let headingValue: CLLocationDirection = manager.location?.course else { return }
+        self.latestHeading = headingValue
+        
+        guard let speedValue: CLLocationSpeed = manager.location?.speed else { return }
+        self.latestSpeed = speedValue
+        
         for delegate in delegates {
             delegate.didUpdateLocation()
         }
