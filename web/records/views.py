@@ -41,7 +41,7 @@ def record_snapshot(request):
                         rating=rating, 
                         rating_scale=snapshot_rating_scale,
                         heading=heading,
-                        speed=speed,
+                        speed_mph=speed_mph,
                         location=Point(gps_lat, gps_long))
     snapshot.save()
     logging.info(" ---> Snapshot: %s / %s" % (snapshot, request.POST))
