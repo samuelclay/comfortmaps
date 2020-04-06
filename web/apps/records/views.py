@@ -67,8 +67,8 @@ def record_photo(request, photo_id):
     return JsonResponse({"code": 1, "image_size": len(image_file)})
     
 @login_required()
-def map(request):
-    return render(request, "records/map.html", {        
+def raw_google_map(request):
+    return render(request, "records/raw_google_map.html", {        
         'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY
     })
 
