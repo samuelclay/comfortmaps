@@ -72,7 +72,6 @@ def raw_google_map(request):
         'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY
     })
 
-@login_required()
 def snapshots_from_point(request, format="json"):
     lat = float(request.POST.get('lat') or request.GET.get('lat'))
     lng = float(request.POST.get('lng') or request.GET.get('lng'))

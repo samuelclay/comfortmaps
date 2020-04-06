@@ -1,24 +1,22 @@
-window.CM = {};
-
 CM.snapshotVue = new Vue({
-    el: ".CM-ratings",
+  el: ".CM-ratings",
     
-    methods: {
-        sendSnapshot: function(rating) {
-            console.log(['sendSnapshot', rating]);
-            jQuery.post("/record/snapshot/", {
-                rating: rating,
-                gps: CM.geolocation
-            });
+  methods: {
+    sendSnapshot: function(rating) {
+      console.log(['sendSnapshot', rating]);
+      jQuery.post("/record/snapshot/", {
+        rating: rating,
+        gps: CM.geolocation
+      });
             
-            new google.maps.Marker({
-              position: CM.googleMap.getCenter(),
-              label: ""+rating,
-              animation: google.maps.Animation.DROP,
-              map: CM.googleMap
-            })
-        }
+      new google.maps.Marker({
+        position: CM.googleMap.getCenter(),
+        label: ""+rating,
+        animation: google.maps.Animation.DROP,
+        map: CM.googleMap
+      })
     }
+  }
 });
 
 window.initMap = function() {
@@ -73,8 +71,7 @@ window.processGpsPosition = function(position) {
     fillOpacity: 1,
     rotation: rotation
   };
-  const distance = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, 
-                                                               pos.lng, CM.lastPos.lng);
+  const distance = window.distanceBetweenLatLongs(pos.lat, CM.lastPos.lat, pos.lng, CM.lastPos.lng);
 
   if (distance < 0.05 && CM.lastMarker) {
     CM.lastMarker.setPosition(CM.googleMap.getCenter());

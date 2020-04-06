@@ -20,16 +20,21 @@
     </div>
   </div>
 </div>
-      <div id="map"></div>
-      <script>
-          mapboxgl.accessToken = 'pk.eyJ1Ijoic2NsYXkiLCJhIjoiY2szcTl2czU2MDlnejNldWd1ZnBrOW5wcyJ9.BdZP1b0mQlxRuK2UST4d7A';
-          var map = new mapboxgl.Map({
-              container: 'map',
-              style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
-              center: [-71.115, 42.375], // [long, lat]
-              zoom: 15
-          });
-          // disable map zoom when using scroll
-          map.scrollZoom.disable();
-      </script>
+
+<div id="map"></div>
+{% endblock %}
+
+{% block script %}
+{% csrf_token %}
+<script type="text/javascript">
+// using jQuery
+window.csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+</script>
+
+<script src="{% static "js/main_map.js" %}"></script>
+<script>
+  $(document).ready(() => {
+    CM.initMap();
+  });
+</script>
 {% endblock %}
