@@ -4,3 +4,5 @@ gunicorn==20.0.4
 boto3==1.12.4
 pillow==7.0.0
 geojson==2.5.0
+django_extensions==2.2.9
+redis==3.4.1

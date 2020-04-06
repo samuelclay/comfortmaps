@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'django_extensions',
     'apps.records',
     'apps.accounts',
 ]
@@ -72,7 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'comfortmaps.wsgi.application'
-AUTHENTICATION_BACKENDS = ['accounts.models.UserEmailBackend']
+AUTHENTICATION_BACKENDS = ['apps.accounts.models.UserEmailBackend']
 AUTH_USER_MODEL = 'accounts.User'
 
 # Database

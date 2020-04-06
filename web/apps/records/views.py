@@ -76,7 +76,7 @@ def map(request):
 def snapshots_from_point(request, format="json"):
     lat = float(request.POST.get('lat') or request.GET.get('lat'))
     lng = float(request.POST.get('lng') or request.GET.get('lng'))
-    locations = Snapshot.objects.filter(location__distance_lt=(Point(lat, lng), Distance(km=2)))
+    locations = Snapshot.objects.filter(location__distance_lt=(Point(lat, lng), Distance(km=5)))
     logging.info(f" ---> Snapshots near {lat},{lng}: {locations.count()}")
     
     if format == "json":
