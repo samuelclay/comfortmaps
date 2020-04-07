@@ -14,10 +14,10 @@ CM.MapboxMap = new Vue({
     init: function() {
       mapboxgl.accessToken = 'pk.eyJ1Ijoic2NsYXkiLCJhIjoiY2szcTl2czU2MDlnejNldWd1ZnBrOW5wcyJ9.BdZP1b0mQlxRuK2UST4d7A';
       var map = new mapboxgl.Map({
-          container: 'map',
-          style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
-          center: [CM.Globals.defaultLng, CM.Globals.defaultLat], // [long, lat]
-          zoom: 15
+        container: 'map',
+        style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
+        center: [CM.Globals.defaultLng, CM.Globals.defaultLat], // [long, lat]
+        zoom: 15
       });
       
       // this.disableScroll(map);
@@ -136,24 +136,43 @@ CM.MapboxMap = new Vue({
             ],
             // Color circle by earthquake magnitude
             'circle-color': [
-              'interpolate',
-              ['linear'],
-              ['get', 'rating'],
-              1,
-              'rgb(186,56,51)',
+              "step",
+              ["get", "rating"],
+              "rgb(186,56,51)",
               2,
-              'rgb(186,110,102)',
+              "rgb(186,110,102)",
               3,
-              'rgb(255, 227, 136)',
+              "rgb(255, 227, 136)",
               4,
-              'rgb(100, 204, 64)',
+              "rgb(100, 204, 64)",
               5,
-              'rgb(48, 204, 76)'
+              "rgb(48, 204, 76)"
             ],
-            'circle-stroke-color': 'white',
-            'circle-stroke-width': 0,
-            // Transition from heatmap to circle layer by zoom level
-            'circle-opacity': 1
+            'circle-stroke-color': [
+              "step",
+              ["get", "rating"],
+              "rgb(186,56,51)",
+              2,
+              "rgb(186,110,102)",
+              3,
+              "rgb(255, 227, 136)",
+              4,
+              "rgb(100, 204, 64)",
+              5,
+              "rgb(48, 204, 76)"
+            ],
+            'circle-stroke-width': 3,
+            'circle-opacity': 0.75,
+            'circle-stroke-opacity': [
+              "case",
+              [
+                "==",
+                ["get", "photo_uploaded"],
+                true
+              ],
+              1,
+              0
+            ]
           }
         },
         'waterway-label'
