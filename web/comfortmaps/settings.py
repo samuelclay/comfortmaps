@@ -76,6 +76,8 @@ WSGI_APPLICATION = 'comfortmaps.wsgi.application'
 AUTHENTICATION_BACKENDS = ['apps.accounts.models.UserEmailBackend']
 AUTH_USER_MODEL = 'accounts.User'
 
+S3_PHOTOS_BUCKET = 'camera.comfortmaps.com'
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 

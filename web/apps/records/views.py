@@ -56,10 +56,9 @@ def record_photo(request, photo_id):
     s3 = boto3.client('s3',
                       aws_access_key_id=settings.AWS_ACCESS_KEY,
                       aws_secret_access_key=settings.AWS_SECRET_KEY)
-    bucket = 'camera.comfortmaps.com'
     key_name = '%sx/%s.jpg' % (width, photo_id)
     image_file.seek(0)
-    s3.upload_fileobj(image_file, bucket, key_name, ExtraArgs={
+    s3.upload_fileobj(image_file, settings.S3_PHOTOS_BUCKET, key_name, ExtraArgs={
         'ACL':'public-read', 
         'ContentType': "image/jpeg",
     })
@@ -79,11 +78,19 @@ def snapshots_from_point(request, format="json"):
     logging.info(f" ---> Snapshots near {lat},{lng}: {locations.count()}")
     
     if format == "json":
-        points = [dict(lat=l.location.x, lng=l.location.y, rating=l.rating, user=l.user.pk, photo_id=l.photo_id) for l in locations]
+        points = [{
+            "lat": l.location.x, 
+            "lng": l.location.y, 
+            "rating": l.rating, 
+            "photo_uploaded": photo_uploaded, 
+            "user": l.user.pk, 
+            "photo_id": l.photo_id
+        } for l in locations]
         return JsonResponse({'points': points})
     elif format == "geojson":
         features = [geojson.Feature(properties={
-            "rating": l.rating
+            "rating": l.rating,
+            "photo_uploaded": l.photo_uploaded,
         }, geometry=geojson.Point((l.location.y, l.location.x))) for l in locations]
         feature_collection = geojson.FeatureCollection(features)
         return JsonResponse(feature_collection)

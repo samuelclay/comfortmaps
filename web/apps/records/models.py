@@ -21,7 +21,14 @@ class Snapshot(models.Model):
     location = models.PointField()
     heading = models.FloatField()
     speed_mph = models.FloatField()
+    photo_uploaded = models.BooleanField(default=False)
     date = models.DateTimeField('date snapshot taken', default=timezone.now)
     
     def __str__(self):
         return f"<Snapshot: {self.photo_id} {self.rating}/5 {self.location} {self.date}"
+        
+    @property
+    def s3_key_name(self):
+        width = 488
+        return '%sx/%s.jpg' % (width, self.photo_id)
+    

@@ -120,7 +120,7 @@ CM.MapboxMap = new Vue({
           'id': 'snapshots-point',
           'type': 'circle',
           'source': 'snapshots',
-          'minzoom': 7,
+          'minzoom': 1,
           'paint': {
             // Size circle radius by earthquake magnitude and zoom level
             'circle-radius': [
@@ -153,15 +153,7 @@ CM.MapboxMap = new Vue({
             'circle-stroke-color': 'white',
             'circle-stroke-width': 0,
             // Transition from heatmap to circle layer by zoom level
-            'circle-opacity': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              7,
-              0,
-              8,
-              1
-            ]
+            'circle-opacity': 1
           }
         },
         'waterway-label'
