@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.contrib.gis.db import models
 from apps.accounts.models import User
 from django.contrib.postgres.fields import ArrayField
-
+from django.conf import settings
 
 class SnapshotRatingScale(models.Model):
     names = ArrayField(models.CharField(max_length=1024))
@@ -21,6 +21,7 @@ class Snapshot(models.Model):
     location = models.PointField()
     heading = models.FloatField()
     speed_mph = models.FloatField()
+    width = models.IntegerField(default=488)
     photo_uploaded = models.BooleanField(default=False)
     date = models.DateTimeField('date snapshot taken', default=timezone.now)
     
@@ -29,6 +30,8 @@ class Snapshot(models.Model):
         
     @property
     def s3_key_name(self):
-        width = 488
-        return '%sx/%s.jpg' % (width, self.photo_id)
+        return '%sx/%s.jpg' % (self.width, self.photo_id)
     
+    @property
+    def full_photo_url(self):
+        return f"https://s3.amazonaws.com/{settings.S3_PHOTOS_BUCKET}/{self.s3_key_name}"

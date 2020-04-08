@@ -10,8 +10,15 @@ CM.initMap = function() {
 CM.MapboxMap = new Vue({
   el: ".CM-main-map",
   
+  data: {
+    hoveredStateId: 0
+  },
+  // props: {
+  //   hoveredStateId: String
+  // },
+  
   methods: {
-    init: function() {
+    init() {
       mapboxgl.accessToken = 'pk.eyJ1Ijoic2NsYXkiLCJhIjoiY2szcTl2czU2MDlnejNldWd1ZnBrOW5wcyJ9.BdZP1b0mQlxRuK2UST4d7A';
       var map = new mapboxgl.Map({
         container: 'map',
@@ -24,27 +31,29 @@ CM.MapboxMap = new Vue({
       map.on('load', this.mapLoad.bind(this, map));
     },
     
-    disableScroll: function(map) {
+    disableScroll(map) {
       // disable map zoom when using scroll
       map.scrollZoom.disable();
     },
     
-    mapLoad: function(map) {
+    mapLoad(map) {
       const lat = CM.Globals.defaultLat;
       const lng = CM.Globals.defaultLng;
       map.addSource('snapshots', {
         'type': 'geojson',
-        'data': "/record/snapshots_from_point.geojson?lat="+lat+"&lng="+lng
+        'data': "/record/snapshots_from_point.geojson?lat="+lat+"&lng="+lng,
+        'promoteId': 'id'
       });
       
       // this.addHeatmap(map);
       this.addSnapshotPoints(map);
+      this.addHoverPhotos(map);
     },
     
-    addHeatmap: function(map) {
+    addHeatmap(map) {
       map.addLayer(
         {
-          'id': 'snapshots-heat',
+          'id': 'snapshots-heatmap',
           'type': 'heatmap',
           'source': 'snapshots',
           'maxzoom': 22,
@@ -114,10 +123,10 @@ CM.MapboxMap = new Vue({
       );
     },
     
-    addSnapshotPoints: function(map) {
+    addSnapshotPoints(map) {
       map.addLayer(
         {
-          'id': 'snapshots-point',
+          'id': 'snapshot-points',
           'type': 'circle',
           'source': 'snapshots',
           'minzoom': 1,
@@ -162,7 +171,16 @@ CM.MapboxMap = new Vue({
               "rgb(48, 204, 76)"
             ],
             'circle-stroke-width': 3,
-            'circle-opacity': 0.75,
+            'circle-opacity': [
+              'case',
+              ['boolean', ['feature-state', 'hover'], false],
+              1,
+              0.1
+            ],
+            'circle-opacity-transition': {
+              "duration": 3000,
+              "delay": 0
+            },
             'circle-stroke-opacity': [
               "case",
               [
@@ -177,6 +195,36 @@ CM.MapboxMap = new Vue({
         },
         'waterway-label'
       );
+    },
+    
+    addHoverPhotos(map) {
+      map.on('mousemove', 'snapshot-points', (e) => {
+        if (e.features.length > 0) {
+          if (this.hoveredStateId) {
+            map.setFeatureState(
+              { source: 'snapshots', id: this.hoveredStateId },
+              { hover: false }
+            );
+          }
+          this.hoveredStateId = e.features[0].properties.id;
+          map.setFeatureState(
+            { source: 'snapshots', id: this.hoveredStateId },
+            { hover: true }
+          );
+        }
+      });
+ 
+      // When the mouse leaves the state-fill layer, update the feature state of the
+      // previously hovered feature.
+      map.on('mouseleave', 'snapshot-points', () => {
+        if (this.hoveredStateId) {
+          map.setFeatureState(
+            { source: 'snapshots', id: this.hoveredStateId },
+            { hover: false }
+          );
+        }
+        this.hoveredStateId = null;
+      });
     }
   }
 });

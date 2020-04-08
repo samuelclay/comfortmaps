@@ -53,15 +53,27 @@ def record_photo(request, photo_id):
     image_file = request.FILES.get('photo')
     image = Image.open(image_file)
     (width, height) = image.size
+
+    # Confirm snapshot is owned by user
+    snapshot = Snapshot.objects.get(photo_id=photo_id)
+    if snapshot.user != request.user:
+        logging.info(f" ***> User doesn't match on photo upload: {snapshot.user} vs {request.user}")
+        return JsonResponse({"code": -1, "message": "User doesn't match"})
+    
+    # Upload photo to S3
     s3 = boto3.client('s3',
                       aws_access_key_id=settings.AWS_ACCESS_KEY,
                       aws_secret_access_key=settings.AWS_SECRET_KEY)
-    key_name = '%sx/%s.jpg' % (width, photo_id)
     image_file.seek(0)
-    s3.upload_fileobj(image_file, settings.S3_PHOTOS_BUCKET, key_name, ExtraArgs={
+    s3.upload_fileobj(image_file, settings.S3_PHOTOS_BUCKET, snapshot.s3_key_name, ExtraArgs={
         'ACL':'public-read', 
         'ContentType': "image/jpeg",
     })
+    
+    snapshot.width = width
+    snapshot.photo_uploaded = True
+    snapshot.save()
+    
     logging.info(" ---> Uploaded %s: %s" % (photo_id, image))
     return JsonResponse({"code": 1, "image_size": len(image_file)})
     
@@ -84,13 +96,17 @@ def snapshots_from_point(request, format="json"):
             "rating": l.rating, 
             "photo_uploaded": photo_uploaded, 
             "user": l.user.pk, 
-            "photo_id": l.photo_id
+            "photo_id": l.photo_id,
+            "id": l.photo_id,
         } for l in locations]
         return JsonResponse({'points': points})
     elif format == "geojson":
         features = [geojson.Feature(properties={
             "rating": l.rating,
             "photo_uploaded": l.photo_uploaded,
-        }, geometry=geojson.Point((l.location.y, l.location.x))) for l in locations]
+            "url": l.full_photo_url,
+            "id": l.photo_id,
+        }, geometry=geojson.Point((l.location.y, l.location.x)),
+        id=l.photo_id) for l in locations]
         feature_collection = geojson.FeatureCollection(features)
         return JsonResponse(feature_collection)
