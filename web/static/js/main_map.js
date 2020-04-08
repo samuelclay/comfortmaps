@@ -27,7 +27,7 @@ CM.MapboxMap = new Vue({
         zoom: 15
       });
       
-      // this.disableScroll(map);
+      this.disableScroll(map);
       map.on('load', this.mapLoad.bind(this, map));
     },
     
