@@ -5,10 +5,30 @@ CM.Globals = {
 
 CM.initMap = function() {
   CM.MapboxMap.init();
+  CM.ScrollSpy();
+}
+CM.fontsReady = function() {
+
+
+}
+
+CM.ScrollSpy = function() {
+  $(".sidebar > section").scrollspy({
+    container: window,
+    buffer: $(window).outerHeight() / 2,
+    onEnter: (element, position) => {
+      console.log(['enter', element, position]);
+      $(element).addClass('active');
+    },
+    onLeave: (element, position) => {
+      console.log(['leave', element, position]);
+      $(element).removeClass('active');
+    }
+  })
 }
 
 CM.MapboxMap = new Vue({
-  el: ".CM-main-map",
+  el: "#CM-main-map",
   
   data: {
     hoveredStateId: 0
@@ -21,7 +41,7 @@ CM.MapboxMap = new Vue({
     init() {
       mapboxgl.accessToken = 'pk.eyJ1Ijoic2NsYXkiLCJhIjoiY2szcTl2czU2MDlnejNldWd1ZnBrOW5wcyJ9.BdZP1b0mQlxRuK2UST4d7A';
       var map = new mapboxgl.Map({
-        container: 'map',
+        container: 'CM-main-map',
         style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
         center: [CM.Globals.defaultLng, CM.Globals.defaultLat], // [long, lat]
         zoom: 15
