@@ -92,7 +92,7 @@ body.cm {
 }
 
 figure.snapshot-photo-container {
-  position: absolute;
+  position: fixed;
   top: 60px;
   right: 18px;
   padding: 18px;
