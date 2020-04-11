@@ -12,29 +12,35 @@
 {% block content %}
 
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-4 col-md-3" href="#">Comfort Maps</a>
-  <ul class="navbar-nav px-3">
-    <li class="nav-item text-nowrap">
-      <a class="nav-link" href="#">Sign out</a>
-    </li>
-  </ul>
+  <a class="navbar-brand col-md-5 col-lg-4" href="#">Comfort Maps</a>
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+  <label class="btn btn-secondary active">
+    <input type="radio" name="options" id="option1" checked> See the Good
+  </label>
+  <label class="btn btn-secondary">
+    <input type="radio" name="options" id="option2"> 
+  </label>
+  <label class="btn btn-secondary">
+    <input type="radio" name="options" id="option3"> See the Bad
+  </label>
+</div>
 </nav>
 
 <!-- Begin page content -->
 <div class="container-fluid p-0">
   <div class="row no-gutters">
 
-    <div class="col-md-4 col-lg-3 d-none d-md-block bg-dark text-light sidebar position-relative" >
+    <div class="col-md-5 col-lg-4 d-none d-md-block bg-dark text-light sidebar position-relative" >
       <section class="sidebar-scroll-section" id="sidebar-section-1">
-        <h1>Boston's Missing Bike Lanes</h1>
-        <p>Boston is home to 670,000 people. The city has committed to increasing the share of commute trips by bike to <a href="https://www.cityofboston.gov/images_documents/Boston%20Bike%20Network%20Plan%2C%20Fall%202013_FINAL_tcm3-40525.pdf">10 percent by 2020</a>. Boston's Climate Action Plan also sets a goal of decreasing bike crashes by 50 percent.</p>
+        <h1 class="display-4">Boston's Missing Bike Lanes</h1>
+        <p class="lead">Boston is home to 670,000 people. The city has committed to increasing the share of commute trips by bike to <a href="https://www.cityofboston.gov/images_documents/Boston%20Bike%20Network%20Plan%2C%20Fall%202013_FINAL_tcm3-40525.pdf">10 percent by 2020</a>. Boston's Climate Action Plan also sets a goal of decreasing bike crashes by 50 percent.</p>
 
         <p>This is the visual story of what that plan looks like today and where changes need to be made.</p>
         <h6 class="author">Samuel Clay, October 1st, 2018</h6>
       </section>
 
       <section class="sidebar-scroll-section" id="sidebar-section-2">
-        <h2>Bike Lanes of Today</h2>
+        <h2 class="display-4">Bike Lanes of Today</h2>
         <p>In 2018 there are 195 miles of bike lanes across the city of Boston. The <a href="https://www.cityofboston.gov/images_documents/Boston%20Bike%20Network%20Plan%2C%20Fall%202013_FINAL_tcm3-40525.pdf">Boston Bike Network Plan</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
 
         <p>Boston is attempting to create a world-class biking city, but to do that the city needs to do more than add bike lanes. Improving safety is what leads to increasing usage of the bike faciities in the city and to do that Boston needs to consider several problem areas.</p>
@@ -98,7 +104,12 @@
     <main role="main" class="container-fluid position-fixed h-100 p-0">
       <div id="CM-main-map" class="mapbox w-100 h-100 m-0 row"></div>
     </main>
-
+    
+    <figure class="figure snapshot-photo-container bg-dark col-4">
+      <img src="..." class="figure-img img-fluid rounded" alt="...">
+      <figcaption class="figure-caption text-right">A caption for the above image.</figcaption>
+    </figure>
+    
   </div>
 </div>
 {% endblock %}

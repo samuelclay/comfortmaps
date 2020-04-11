@@ -24,7 +24,8 @@ CM.ScrollSpy = function() {
       console.log(['leave', element, position]);
       $(element).removeClass('active');
     }
-  })
+  });
+  $(window).scroll();
 }
 
 CM.MapboxMap = new Vue({
