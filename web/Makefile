@@ -29,3 +29,7 @@ rlog:
 
 log:
 	tail -f /srv/comfortmaps/logs/errors.log
+
+dumpdata:
+	scp  -i /srv/comfortmaps-secrets/keys/comfortmaps-web.pem sclay@comfortmaps.com:/srv/comfortmaps/web/2020-04-05.json .
+	./manage.py loaddata 2020-04-05.json
