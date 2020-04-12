@@ -221,17 +221,18 @@ CM.MapboxMap = new Vue({
     addHoverPhotos(map) {
       map.on('mousemove', 'snapshot-points', (e) => {
         if (e.features.length > 0) {
-          if (this.hoveredStateId) {
+          if (this.hoveredStateId != e.features[0].properties.id) {
             map.setFeatureState(
               { source: 'snapshots', id: this.hoveredStateId },
               { hover: false }
             );
+            this.hoveredStateId = e.features[0].properties.id;
+            map.setFeatureState(
+              { source: 'snapshots', id: this.hoveredStateId },
+              { hover: true }
+            );
+            this.displaySnapshotPhoto();
           }
-          this.hoveredStateId = e.features[0].properties.id;
-          map.setFeatureState(
-            { source: 'snapshots', id: this.hoveredStateId },
-            { hover: true }
-          );
         }
       });
  
@@ -245,7 +246,34 @@ CM.MapboxMap = new Vue({
           );
         }
         this.hoveredStateId = null;
+        this.hideSnapshotPhoto();
       });
+    },
+    
+    displaySnapshotPhoto() {
+      console.log(['displaySnapshotPhoto', this.hoveredStateId]);
+      $(".snapshot-photo-container").addClass('active');
+      CM.SnapshotPhoto.activeSnapshotId = this.hoveredStateId;
+    },
+    
+    hideSnapshotPhoto() {
+      console.log(['hideSnapshotPhoto', this.hoveredStateId]);
+      $(".snapshot-photo-container").removeClass('active');      
+      CM.SnapshotPhoto.activeSnapshotId = null;
     }
+    
   }
 });
+
+CM.SnapshotPhoto = new Vue({
+  el: ".snapshot-photo-container",
+  
+  data: {
+    activeSnapshotId: null
+  },
+  
+  methods: {
+    
+  }
+  
+})

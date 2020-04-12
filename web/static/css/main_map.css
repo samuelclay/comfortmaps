@@ -97,8 +97,14 @@ figure.snapshot-photo-container {
   right: 18px;
   padding: 18px;
   border-radius: 4px;
-  opacity: .9;
+  opacity: 0;
+  transition: opacity 1s;
 }
+figure.snapshot-photo-container.active {
+  display: block;
+  opacity: 0.9;
+}
+
 .snapshot-photo-container .figure-img {
   width: 488px;
   height: 384px;
