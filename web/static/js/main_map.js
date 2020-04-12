@@ -1,6 +1,6 @@
 CM.Globals = {
   defaultLat: 42.375,
-  defaultLng: -71.115
+  defaultLng: -71.122
 };
 
 CM.initMap = function() {
@@ -31,8 +31,12 @@ CM.ScrollSpy = function() {
 CM.MapboxMap = new Vue({
   el: "#CM-main-map",
   
-  data: {
-    hoveredStateId: 0
+  data: () => {
+    return {
+      hoveredStateId: 0,
+      activeSnapshot: null,
+      map: null
+    };
   },
   // props: {
   //   hoveredStateId: String
@@ -41,38 +45,39 @@ CM.MapboxMap = new Vue({
   methods: {
     init() {
       mapboxgl.accessToken = 'pk.eyJ1Ijoic2NsYXkiLCJhIjoiY2szcTl2czU2MDlnejNldWd1ZnBrOW5wcyJ9.BdZP1b0mQlxRuK2UST4d7A';
-      var map = new mapboxgl.Map({
+      this.map = new mapboxgl.Map({
         container: 'CM-main-map',
         style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
         center: [CM.Globals.defaultLng, CM.Globals.defaultLat], // [long, lat]
         zoom: 15
       });
       
-      this.disableScroll(map);
-      map.on('load', this.mapLoad.bind(this, map));
+      this.disableScroll();
+      this.map.on('load', this.mapLoad.bind(this));
     },
     
-    disableScroll(map) {
+    disableScroll() {
       // disable map zoom when using scroll
-      map.scrollZoom.disable();
+      this.map.scrollZoom.disable();
     },
     
-    mapLoad(map) {
+    mapLoad() {
       const lat = CM.Globals.defaultLat;
       const lng = CM.Globals.defaultLng;
-      map.addSource('snapshots', {
+      this.map.addSource('snapshots', {
         'type': 'geojson',
         'data': "/record/snapshots_from_point.geojson?lat="+lat+"&lng="+lng,
         'promoteId': 'id'
       });
       
-      // this.addHeatmap(map);
-      this.addSnapshotPoints(map);
-      this.addHoverPhotos(map);
+      // this.addHeatmap();
+      this.addSnapshotPoints();
+      this.addHoverPhotos();
+      this.addClickPhoto();
     },
     
-    addHeatmap(map) {
-      map.addLayer(
+    addHeatmap() {
+      this.map.addLayer(
         {
           'id': 'snapshots-heatmap',
           'type': 'heatmap',
@@ -144,8 +149,8 @@ CM.MapboxMap = new Vue({
       );
     },
     
-    addSnapshotPoints(map) {
-      map.addLayer(
+    addSnapshotPoints() {
+      this.map.addLayer(
         {
           'id': 'snapshot-points',
           'type': 'circle',
@@ -218,48 +223,61 @@ CM.MapboxMap = new Vue({
       );
     },
     
-    addHoverPhotos(map) {
-      map.on('mousemove', 'snapshot-points', (e) => {
-        if (e.features.length > 0) {
-          if (this.hoveredStateId != e.features[0].properties.id) {
-            map.setFeatureState(
-              { source: 'snapshots', id: this.hoveredStateId },
-              { hover: false }
-            );
-            this.hoveredStateId = e.features[0].properties.id;
-            map.setFeatureState(
-              { source: 'snapshots', id: this.hoveredStateId },
-              { hover: true }
-            );
-            this.displaySnapshotPhoto();
-          }
+    addHoverPhotos() {
+      this.map.on('mousemove', 'snapshot-points', (e) => {
+        if (e.features.length == 0) return;
+        if (this.activeSnapshot && this.activeSnapshot.properties.id ==
+            e.features[0].properties.id) return;
+
+        if (this.activeSnapshot) {
+          this.map.setFeatureState(
+            { source: 'snapshots', id: this.activeSnapshot.properties.id },
+            { hover: false }
+          );
         }
+        
+        this.activeSnapshot = e.features[0];
+        
+        this.map.setFeatureState(
+          { source: 'snapshots', id: this.activeSnapshot.properties.id },
+          { hover: true }
+        );
+        
+        this.displaySnapshotPhoto();
       });
  
       // When the mouse leaves the state-fill layer, update the feature state of the
       // previously hovered feature.
-      map.on('mouseleave', 'snapshot-points', () => {
-        if (this.hoveredStateId) {
-          map.setFeatureState(
-            { source: 'snapshots', id: this.hoveredStateId },
+      this.map.on('mouseleave', 'snapshot-points', () => {
+        if (this.activeSnapshot) {
+          this.map.setFeatureState(
+            { source: 'snapshots', id: this.activeSnapshot.properties.id },
             { hover: false }
           );
         }
-        this.hoveredStateId = null;
+        this.activeSnapshot = null;
         this.hideSnapshotPhoto();
       });
     },
     
     displaySnapshotPhoto() {
-      console.log(['displaySnapshotPhoto', this.hoveredStateId]);
+      console.log(['displaySnapshotPhoto', this.activeSnapshot]);
       $(".snapshot-photo-container").addClass('active');
-      CM.SnapshotPhoto.activeSnapshotId = this.hoveredStateId;
+      CM.SnapshotPhoto.activeSnapshot = this.activeSnapshot;
     },
     
     hideSnapshotPhoto() {
-      console.log(['hideSnapshotPhoto', this.hoveredStateId]);
+      console.log(['hideSnapshotPhoto', this.activeSnapshot]);
       $(".snapshot-photo-container").removeClass('active');      
-      CM.SnapshotPhoto.activeSnapshotId = null;
+      CM.SnapshotPhoto.activeSnapshot = null;
+    },
+    
+    addClickPhoto() {
+      this.map.on('click', 'snapshot-points', (e) => {
+        this.map.flyTo({
+          center: e.features[0].geometry.coordinates
+        });
+      });
     }
     
   }
@@ -268,8 +286,10 @@ CM.MapboxMap = new Vue({
 CM.SnapshotPhoto = new Vue({
   el: ".snapshot-photo-container",
   
-  data: {
-    activeSnapshotId: null
+  data: () => {
+    return {
+      activeSnapshot: null
+    };
   },
   
   methods: {

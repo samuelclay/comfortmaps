@@ -106,9 +106,11 @@
     </main>
     
     
-    <figure class="figure snapshot-photo-container bg-dark col-4">
-      <img src="..." class="figure-img img-fluid rounded" alt="...">
-      <figcaption class="figure-caption text-right">A caption for the above image.</figcaption>
+    <figure class="figure card snapshot-photo-container bg-dark col-4 rounded p-0" v-if="activeSnapshot">
+      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded">
+      <div class="card-body">
+        <figcaption class="figure-caption text-right">A caption for the above image.</figcaption>
+      </div>
     </figure>
     
   </div>
