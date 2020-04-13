@@ -180,7 +180,8 @@ CM.MapboxMap = new Vue({
               17,
               19
             ],
-            // Color circle by earthquake magnitude
+
+            // Circle color
             'circle-color': [
               "step",
               ["get", "rating"],
@@ -194,6 +195,18 @@ CM.MapboxMap = new Vue({
               5,
               "rgb(48, 204, 76)"
             ],
+            'circle-opacity': [
+              'case',
+              ['boolean', ['feature-state', 'hover'], false],
+              1,
+              0.1
+            ],
+            'circle-opacity-transition': {
+              "duration": 3000,
+              "delay": 0
+            },
+            
+            // Stroke
             'circle-stroke-color': [
               "step",
               ["get", "rating"],
@@ -208,16 +221,6 @@ CM.MapboxMap = new Vue({
               "rgb(48, 204, 76)"
             ],
             'circle-stroke-width': 3,
-            'circle-opacity': [
-              'case',
-              ['boolean', ['feature-state', 'hover'], false],
-              1,
-              0.1
-            ],
-            'circle-opacity-transition': {
-              "duration": 3000,
-              "delay": 0
-            },
             'circle-stroke-opacity': [
               "case",
               [
@@ -270,7 +273,7 @@ CM.MapboxMap = new Vue({
         { hover: true }
       );
       
-      this.displaySnapshotPhoto();
+      this.displaySnapshotDetail();
     },
     
     deactivateSnapshot() {
@@ -283,23 +286,23 @@ CM.MapboxMap = new Vue({
       
       this.activeSnapshot = null;
       
-      this.hideSnapshotPhoto();
+      this.hideSnapshotDetail();
     },
     
-    displaySnapshotPhoto() {
-      console.log(['displaySnapshotPhoto', this.activeSnapshot]);
-      CM.SnapshotPhoto.activeSnapshot = this.activeSnapshot;
+    displaySnapshotDetail() {
+      console.log(['Snapshot detail', this.activeSnapshot]);
+      CM.SnapshotDetail.activeSnapshot = this.activeSnapshot;
       this.$nextTick(() => {
-        $(".snapshot-photo-container").addClass('active');
+        $(".snapshot-detail-container").addClass('active');
       });
     },
     
-    hideSnapshotPhoto() {
-      console.log(['hideSnapshotPhoto', this.activeSnapshot]);
-      $(".snapshot-photo-container").removeClass('active');
+    hideSnapshotDetail() {
+      console.log(['hideSnapshotDetail', this.activeSnapshot]);
+      $(".snapshot-detail-container").removeClass('active');
       this.hideSnapshotTimeout = setTimeout(() => {
         if (this.activeSnapshot == null) {
-          CM.SnapshotPhoto.activeSnapshot = null;
+          CM.SnapshotDetail.activeSnapshot = null;
         }
       }, 1000);
     },
@@ -320,8 +323,8 @@ CM.MapboxMap = new Vue({
         this.clickLocked = !this.clickLocked;
         var snapshot = e.features[0];
         setTimeout(() => {
-          CM.SnapshotPhoto.topSide = false;
-          CM.SnapshotPhoto.leftSide = true;
+          CM.SnapshotDetail.topSide = false;
+          CM.SnapshotDetail.leftSide = true;
           this.activateSnapshot(snapshot);
         }, 1000);
       });
@@ -341,14 +344,14 @@ CM.MapboxMap = new Vue({
         if (!this.clickLocked) {
           var topSide = topHalf >= top;
           var leftSide = sidebar + leftHalf >= e.pageX;;
-          if (CM.SnapshotPhoto.topSide != topSide) 
-            CM.SnapshotPhoto.topSide = topSide;
+          if (CM.SnapshotDetail.topSide != topSide) 
+            CM.SnapshotDetail.topSide = topSide;
           
-          if (CM.SnapshotPhoto.leftSide != leftSide) 
-            CM.SnapshotPhoto.leftSide = leftSide
+          if (CM.SnapshotDetail.leftSide != leftSide) 
+            CM.SnapshotDetail.leftSide = leftSide
         } else {
-          CM.SnapshotPhoto.topSide = false;
-          CM.SnapshotPhoto.leftSide = true;
+          CM.SnapshotDetail.topSide = false;
+          CM.SnapshotDetail.leftSide = true;
         }
       });
     },
@@ -371,8 +374,8 @@ CM.MapboxMap = new Vue({
   }
 });
 
-CM.SnapshotPhoto = new Vue({
-  el: ".snapshot-photo-container",
+CM.SnapshotDetail = new Vue({
+  el: ".snapshot-detail-container",
   
   data: () => {
     return {

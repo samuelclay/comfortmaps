@@ -142,25 +142,29 @@ body a:focus {
   }
 }
 
-figure.snapshot-photo-container {
+/* =================== */
+/* = Snapshot Detail = */
+/* =================== */
+
+figure.snapshot-detail-container {
   position: fixed;
   opacity: 0;
   transition: opacity 1s;
   top: 60px;
   right: 18px;
 }
-figure.snapshot-photo-container.top-side.right-side {
+figure.snapshot-detail-container.top-side.right-side {
   top: auto;
   bottom: 60px;
   left: auto;
   right: 18px;
 }
-figure.snapshot-photo-container.active {
+figure.snapshot-detail-container.active {
   display: block;
   opacity: 1.0;
 }
 
-.snapshot-photo-container .figure-img {
+.snapshot-detail-container .figure-img {
   width: 488px;
   height: 366px;
 }
