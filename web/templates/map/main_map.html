@@ -13,7 +13,10 @@
 
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
   
-  <a class="navbar-brand col-2" href="#">Comfort Maps</a>
+  <a class="navbar-brand col-2" href="#">
+    <img src="{% static "img/favicon64.png" %}" class="logo">
+    Comfort Maps
+  </a>
   
   <ul class="nav col-6">
 
@@ -39,14 +42,14 @@
   </ul>
   
   <div class="btn-group btn-group-toggle d-flex flex-row col-4" data-toggle="buttons">
-    <label class="btn btn-secondary align-self-stretch rounded-0 shadow-none">
+    <label class="btn btn-filter-good btn-secondary align-self-stretch rounded-0 shadow-none">
       <input type="radio" name="options" id="option1" > See the Good
     </label>
-    <label class="btn btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
+    <label class="btn btn-filter-none btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
       <input type="radio" name="options" id="option2" checked> 
       <img src="{% static "img/noun_both.png" %}">
     </label>
-    <label class="btn btn-secondary align-self-stretch rounded-0 shadow-none">
+    <label class="btn btn-filter-bad btn-secondary align-self-stretch rounded-0 shadow-none">
       <input type="radio" name="options" id="option3"> See the Bad
     </label>
   </div>

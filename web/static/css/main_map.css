@@ -21,6 +21,11 @@ body a:focus {
 * Navbar
 */
 
+.navbar .logo {
+  width: 24px;
+  height: 24px;
+  margin-top: -4px;
+}
 .navbar .nav,
 .navbar .btn {
   font-family: "Montserrat", sans-serif;

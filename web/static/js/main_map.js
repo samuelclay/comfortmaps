@@ -37,7 +37,8 @@ CM.MapboxMap = new Vue({
       activeSnapshot: null,
       map: null,
       clickLocked: false,
-      hideSnapshotTimeout: null
+      hideSnapshotTimeout: null,
+      filter: none
     };
   },
   // props: {
@@ -82,6 +83,7 @@ CM.MapboxMap = new Vue({
       this.bindHoverPhotos();
       this.bindClickPhoto();
       this.bindMouseSide();
+      this.bindNavbar();
       $(window).resize(this.bindMouseSide.bind(this));
     },
     
@@ -348,6 +350,21 @@ CM.MapboxMap = new Vue({
           CM.SnapshotPhoto.topSide = false;
           CM.SnapshotPhoto.leftSide = true;
         }
+      });
+    },
+    
+    bindNavbar() {
+      $(".btn-filter-bad").click(() => {
+        this.filter = "bad";
+        this.map.setFilter('snapshot-points', ['<=', 'rating', 2]);
+      });
+      $(".btn-filter-none").click(() => {
+        this.filter = null;
+        this.map.setFilter('snapshot-points', null);
+      });
+      $(".btn-filter-good").click(() => {
+        this.filter = "good";
+        this.map.setFilter('snapshot-points', ['>=', 'rating', 4]);
       });
     }
     
