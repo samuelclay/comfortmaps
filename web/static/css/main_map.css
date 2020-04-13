@@ -2,7 +2,13 @@ body.cm {
   font-size: .875rem;
   font-family: 'Lora', serif;
 }
-
+body a {
+  color: #88bae3;
+}
+body a:hover,
+body a:focus {
+  color: #88bae3;
+}
 .feather {
   width: 16px;
   height: 16px;
@@ -17,6 +23,14 @@ body.cm {
 .navbar .btn {
   font-family: "Montserrat", sans-serif;
 }
+.navbar-dark .nav-item .nav-link {
+  color: #fff;
+}
+.navbar-dark .nav-item.active .nav-link,
+.navbar-dark .nav-item:focus .nav-link,
+.navbar-dark .nav-item:hover .nav-link {
+  color: #88bae3;
+}
 .navbar .btn {
   outline: none;
 }
@@ -24,9 +38,10 @@ body.cm {
   width: 24px;
   height: 24px;
 }
-
-.dropdown:hover>.dropdown-menu {
-  display: block;
+.navbar li:hover .dropdown-menu {
+    display: block;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 /*
@@ -122,10 +137,24 @@ body.cm {
 
 figure.snapshot-photo-container {
   position: fixed;
-  top: 60px;
-  right: 18px;
   opacity: 0;
   transition: opacity 1s;
+}
+figure.snapshot-photo-container.top-side {
+  top: none;
+  bottom: 60px;
+}
+figure.snapshot-photo-container.bottom-side {
+  bottom: none;
+  top: 60px;
+}
+figure.snapshot-photo-container.left-side {
+  left: none;
+  right: 18px;
+}
+figure.snapshot-photo-container.right-side {
+  right: none;
+  left: 18px;
 }
 figure.snapshot-photo-container.active {
   display: block;
@@ -134,6 +163,6 @@ figure.snapshot-photo-container.active {
 
 .snapshot-photo-container .figure-img {
   width: 488px;
-  height: 384px;
+  height: 366px;
 }
 

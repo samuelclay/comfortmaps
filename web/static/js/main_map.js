@@ -74,8 +74,9 @@ CM.MapboxMap = new Vue({
       
       // this.addHeatmap();
       this.addSnapshotPoints();
-      this.addHoverPhotos();
-      this.addClickPhoto();
+      this.bindHoverPhotos();
+      this.bindClickPhoto();
+      this.bindMouseSide();
     },
     
     addHeatmap() {
@@ -225,7 +226,7 @@ CM.MapboxMap = new Vue({
       );
     },
     
-    addHoverPhotos() {
+    bindHoverPhotos() {
       this.map.on('mousemove', 'snapshot-points', (e) => {
         if (e.features.length == 0) return;
         if (this.activeSnapshot && this.activeSnapshot.properties.id ==
@@ -289,7 +290,7 @@ CM.MapboxMap = new Vue({
       }, 1000);
     },
     
-    addClickPhoto() {
+    bindClickPhoto() {
       this.map.on('click', 'snapshot-points', (e) => {
         this.map.flyTo({
           center: e.features[0].geometry.coordinates
@@ -297,6 +298,22 @@ CM.MapboxMap = new Vue({
         
         this.clickLocked = !this.clickLocked;
         this.activateSnapshot(e.features[0]);
+      });
+    },
+    
+    bindMouseSide() {
+      let $map = $("#CM-main-map");
+      let sidebar = $(".sidebar").width();
+      let topHalf = ($map.height() / 2);
+      let leftHalf = (($map.width() - sidebar) / 2);
+      
+      $(window).off('mousemove.mapposition').on('mousemove.mapposition', (e) => {
+        // CM.SnapshotPhoto.topSide = false;
+        CM.SnapshotPhoto.topSide = topHalf >= e.pageY;
+        CM.SnapshotPhoto.leftSide = sidebar + leftHalf >= e.pageX;
+        
+        // console.log(['Side', e.pageX, e.pageY, topSide, leftSide]);
+        
       });
     }
     
@@ -308,7 +325,9 @@ CM.SnapshotPhoto = new Vue({
   
   data: () => {
     return {
-      activeSnapshot: null
+      activeSnapshot: null,
+      topSide: false,
+      leftSide: false
     };
   },
   
