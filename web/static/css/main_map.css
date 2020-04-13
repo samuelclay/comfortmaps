@@ -10,8 +10,28 @@ body.cm {
 }
 
 /*
- * Sidebar
- */
+* Navbar
+*/
+
+.navbar .nav,
+.navbar .btn {
+  font-family: "Montserrat", sans-serif;
+}
+.navbar .btn {
+  outline: none;
+}
+.navbar .btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}
+
+/*
+* Sidebar
+*/
 
 .sidebar {
   z-index: 100; /* Behind the navbar */
@@ -26,7 +46,7 @@ body.cm {
 .sidebar > section {
   opacity: .3;
   transition: opacity 1s;
-  padding: 20vh 18px 20vh;
+  padding: 4vh 18px 20vh;
 } 
 .sidebar > section:first-child {
   padding-top: 4vh;
@@ -40,8 +60,8 @@ body.cm {
 }
 
 /*
- * Content
- */
+* Content
+*/
 
 [role="main"] {
   padding-top: 133px; /* Space for fixed navbar */
@@ -53,9 +73,18 @@ body.cm {
   }
 }
 
+.scroll-down {
+  margin: 148px auto 0;
+  height: 64px;
+  width: 64px;
+  background: url(/static/img/noun_scroll_down.png) no-repeat center center;
+  background-size: 64px;
+  opacity: 0.8;
+}
+
 /*
- * Navbar
- */
+* Navbar
+*/
 
 .navbar-brand {
   padding-top: .75rem;
@@ -100,7 +129,7 @@ figure.snapshot-photo-container {
 }
 figure.snapshot-photo-container.active {
   display: block;
-  opacity: 0.9;
+  opacity: 1.0;
 }
 
 .snapshot-photo-container .figure-img {

@@ -12,18 +12,45 @@
 {% block content %}
 
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-5 col-lg-4" href="#">Comfort Maps</a>
-<div class="btn-group btn-group-toggle" data-toggle="buttons">
-  <label class="btn btn-secondary active">
-    <input type="radio" name="options" id="option1" checked> See the Good
-  </label>
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="option2"> 
-  </label>
-  <label class="btn btn-secondary">
-    <input type="radio" name="options" id="option3"> See the Bad
-  </label>
-</div>
+  
+  <a class="navbar-brand col-2" href="#">Comfort Maps</a>
+  
+  <ul class="nav col-6">
+
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWhat" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        What are these?
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdownWhat">
+        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <a class="dropdown-item" href="#">Something else here</a>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Active</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Link</a>
+    </li>
+  </ul>
+  
+  <div class="btn-group btn-group-toggle d-flex flex-row col-4" data-toggle="buttons">
+    <label class="btn btn-secondary align-self-stretch rounded-0 shadow-none">
+      <input type="radio" name="options" id="option1" > See the Good
+    </label>
+    <label class="btn btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
+      <input type="radio" name="options" id="option2" checked> 
+      <img src="{% static "img/noun_both.png" %}">
+    </label>
+    <label class="btn btn-secondary align-self-stretch rounded-0 shadow-none">
+      <input type="radio" name="options" id="option3"> See the Bad
+    </label>
+  </div>
+  
 </nav>
 
 <!-- Begin page content -->
@@ -37,28 +64,31 @@
 
         <p>This is the visual story of what that plan looks like today and where changes need to be made.</p>
         <h6 class="author">Samuel Clay, October 1st, 2018</h6>
+        
+        <div class="scroll-down"></div>
+        
       </section>
 
       <section class="sidebar-scroll-section" id="sidebar-section-2">
         <h2 class="display-4">Bike Lanes of Today</h2>
-        <p>In 2018 there are 195 miles of bike lanes across the city of Boston. The <a href="https://www.cityofboston.gov/images_documents/Boston%20Bike%20Network%20Plan%2C%20Fall%202013_FINAL_tcm3-40525.pdf">Boston Bike Network Plan</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
+        <p class="lead">In 2018 there are 195 miles of bike lanes across the city of Boston. The <a href="https://www.cityofboston.gov/images_documents/Boston%20Bike%20Network%20Plan%2C%20Fall%202013_FINAL_tcm3-40525.pdf">Boston Bike Network Plan</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
 
         <p>Boston is attempting to create a world-class biking city, but to do that the city needs to do more than add bike lanes. Improving safety is what leads to increasing usage of the bike faciities in the city and to do that Boston needs to consider several problem areas.</p>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-3">
         <h2>Complaints Tell a Story</h2>
-        <p>Public records show a pattern behind complaints around inadequate bike facilities and bike lanes. This map shows the spots where citizens complained about the street being hazardous for bikes.</p>
+        <p class="lead">Public records show a pattern behind complaints around inadequate bike facilities and bike lanes. This map shows the spots where citizens complained about the street being hazardous for bikes.</p>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-4">
         <h2>Crashes Also Tell a Story</h2>
-        <p>As part of the Vision Zero plan for Boston, every crash involving a bike that required a public safety response through 911 has been shown here.</p>
+        <p class="lead">As part of the Vision Zero plan for Boston, every crash involving a bike that required a public safety response through 911 has been shown here.</p>
         <p>Most crashes in Boston are caused by drivers not seeing bikes, whether or not the bike was in a bike lane.</p>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-5">
-        <p>Zooming in highlights streets with numerous complaints lacking bike lanes.</p>
+        <p class="lead">Zooming in highlights streets with numerous complaints lacking bike lanes.</p>
         <p class="note live-driving off">
           <span class="live-driving-icon"></span> 
           <span class="live-driving-text">Live driving is off</span>
@@ -106,7 +136,7 @@
     </main>
     
     
-    <figure class="figure card snapshot-photo-container bg-dark col-4 rounded p-0" v-if="activeSnapshot">
+    <figure class="figure card snapshot-photo-container bg-dark col-4 rounded p-0" v-bind:class="{ active: !!activeSnapshot }" v-if="activeSnapshot">
       <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded">
       <div class="card-body">
         <figcaption class="figure-caption text-right">A caption for the above image.</figcaption>
@@ -122,26 +152,26 @@
 <script type="text/javascript">
   // using jQuery
   window.csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
-  </script>
+</script>
 
-  <script src="{% static "js/main_map.js" %}"></script>
-  <script>
-    $(document).ready(() => {
-      CM.initMap();
-    });
+<script src="{% static "js/main_map.js" %}"></script>
+<script>
+  $(document).ready(() => {
+    CM.initMap();
+  });
 
-    WebFont.load({
-      google: {
-        families: ['Lora', 'Montserrat']
-      },
-      fontactive: function(fontName) {
-        console.log(['Fonts loaded', fontName]);
-        if (!CM.fontsLoaded) CM.fontsLoaded = 0;
-        CM.fontsLoaded += 1;
-        if (fontName == "Lora" || CM.fontsLoaded >= 2) {
-          CM.fontsReady && CM.fontsReady();
-        }
+  WebFont.load({
+    google: {
+      families: ['Lora', 'Montserrat']
+    },
+    fontactive: function(fontName) {
+      console.log(['Fonts loaded', fontName]);
+      if (!CM.fontsLoaded) CM.fontsLoaded = 0;
+      CM.fontsLoaded += 1;
+      if (fontName == "Lora" || CM.fontsLoaded >= 2) {
+        CM.fontsReady && CM.fontsReady();
       }
-    });
-    </script>
-    {% endblock %}
+    }
+  });
+</script>
+{% endblock %}

@@ -35,7 +35,9 @@ CM.MapboxMap = new Vue({
     return {
       hoveredStateId: 0,
       activeSnapshot: null,
-      map: null
+      map: null,
+      clickLocked: false,
+      hideSnapshotTimeout: null
     };
   },
   // props: {
@@ -227,28 +229,16 @@ CM.MapboxMap = new Vue({
       this.map.on('mousemove', 'snapshot-points', (e) => {
         if (e.features.length == 0) return;
         if (this.activeSnapshot && this.activeSnapshot.properties.id ==
-            e.features[0].properties.id) return;
+          e.features[0].properties.id) return;
+        if (this.clickLocked) return;
 
-        if (this.activeSnapshot) {
-          this.map.setFeatureState(
-            { source: 'snapshots', id: this.activeSnapshot.properties.id },
-            { hover: false }
-          );
-        }
-        
-        this.activeSnapshot = e.features[0];
-        
-        this.map.setFeatureState(
-          { source: 'snapshots', id: this.activeSnapshot.properties.id },
-          { hover: true }
-        );
-        
-        this.displaySnapshotPhoto();
+        this.activateSnapshot(e.features[0]);
       });
  
       // When the mouse leaves the state-fill layer, update the feature state of the
       // previously hovered feature.
       this.map.on('mouseleave', 'snapshot-points', () => {
+        if (this.clickLocked) return;
         if (this.activeSnapshot) {
           this.map.setFeatureState(
             { source: 'snapshots', id: this.activeSnapshot.properties.id },
@@ -260,16 +250,43 @@ CM.MapboxMap = new Vue({
       });
     },
     
+    activateSnapshot(snapshot) {
+      if (!snapshot.properties.photo_uploaded) return;
+      
+      if (this.activeSnapshot) {
+        this.map.setFeatureState(
+          { source: 'snapshots', id: this.activeSnapshot.properties.id },
+          { hover: false }
+        );
+      }
+      
+      this.activeSnapshot = snapshot;
+      clearTimeout(this.hideSnapshotTimeout);
+      
+      this.map.setFeatureState(
+        { source: 'snapshots', id: this.activeSnapshot.properties.id },
+        { hover: true }
+      );
+      
+      this.displaySnapshotPhoto();
+    },
+    
     displaySnapshotPhoto() {
       console.log(['displaySnapshotPhoto', this.activeSnapshot]);
-      $(".snapshot-photo-container").addClass('active');
       CM.SnapshotPhoto.activeSnapshot = this.activeSnapshot;
+      this.$nextTick(() => {
+        $(".snapshot-photo-container").addClass('active');
+      });
     },
     
     hideSnapshotPhoto() {
       console.log(['hideSnapshotPhoto', this.activeSnapshot]);
-      $(".snapshot-photo-container").removeClass('active');      
-      CM.SnapshotPhoto.activeSnapshot = null;
+      $(".snapshot-photo-container").removeClass('active');
+      this.hideSnapshotTimeout = setTimeout(() => {
+        if (this.activeSnapshot == null) {
+          CM.SnapshotPhoto.activeSnapshot = null;
+        }
+      }, 1000);
     },
     
     addClickPhoto() {
@@ -277,6 +294,9 @@ CM.MapboxMap = new Vue({
         this.map.flyTo({
           center: e.features[0].geometry.coordinates
         });
+        
+        this.clickLocked = !this.clickLocked;
+        this.activateSnapshot(e.features[0]);
       });
     }
     
