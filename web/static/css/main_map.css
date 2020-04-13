@@ -14,7 +14,9 @@ body a:focus {
   height: 16px;
   vertical-align: text-bottom;
 }
-
+.page-content {
+  margin-top: 40px; /* fixed navbar offset */
+}
 /*
 * Navbar
 */
@@ -139,22 +141,14 @@ figure.snapshot-photo-container {
   position: fixed;
   opacity: 0;
   transition: opacity 1s;
-}
-figure.snapshot-photo-container.top-side {
-  top: none;
-  bottom: 60px;
-}
-figure.snapshot-photo-container.bottom-side {
-  bottom: none;
   top: 60px;
-}
-figure.snapshot-photo-container.left-side {
-  left: none;
   right: 18px;
 }
-figure.snapshot-photo-container.right-side {
-  right: none;
-  left: 18px;
+figure.snapshot-photo-container.top-side.right-side {
+  top: auto;
+  bottom: 60px;
+  left: auto;
+  right: 18px;
 }
 figure.snapshot-photo-container.active {
   display: block;

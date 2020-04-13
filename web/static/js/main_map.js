@@ -45,20 +45,25 @@ CM.MapboxMap = new Vue({
   // },
   
   methods: {
-    init() {
+    init() {      
+      this.setupMap();
+      this.map.on('load', this.mapLoad.bind(this));
+    },
+    
+    setupMap() {
       mapboxgl.accessToken = 'pk.eyJ1Ijoic2NsYXkiLCJhIjoiY2szcTl2czU2MDlnejNldWd1ZnBrOW5wcyJ9.BdZP1b0mQlxRuK2UST4d7A';
       this.map = new mapboxgl.Map({
         container: 'CM-main-map',
         style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
         center: [CM.Globals.defaultLng, CM.Globals.defaultLat], // [long, lat]
-        zoom: 15
+        zoom: 15,
+        pitchWithRotate: false
       });
       
-      this.disableScroll();
-      this.map.on('load', this.mapLoad.bind(this));
-    },
-    
-    disableScroll() {
+      this.map.addControl(new mapboxgl.NavigationControl({
+        showCompass: false
+      }));
+      
       // disable map zoom when using scroll
       this.map.scrollZoom.disable();
     },
@@ -77,6 +82,7 @@ CM.MapboxMap = new Vue({
       this.bindHoverPhotos();
       this.bindClickPhoto();
       this.bindMouseSide();
+      $(window).resize(this.bindMouseSide.bind(this));
     },
     
     addHeatmap() {
@@ -240,14 +246,7 @@ CM.MapboxMap = new Vue({
       // previously hovered feature.
       this.map.on('mouseleave', 'snapshot-points', () => {
         if (this.clickLocked) return;
-        if (this.activeSnapshot) {
-          this.map.setFeatureState(
-            { source: 'snapshots', id: this.activeSnapshot.properties.id },
-            { hover: false }
-          );
-        }
-        this.activeSnapshot = null;
-        this.hideSnapshotPhoto();
+        this.deactivateSnapshot();
       });
     },
     
@@ -272,6 +271,19 @@ CM.MapboxMap = new Vue({
       this.displaySnapshotPhoto();
     },
     
+    deactivateSnapshot() {
+      if (this.activeSnapshot) {
+        this.map.setFeatureState(
+          { source: 'snapshots', id: this.activeSnapshot.properties.id },
+          { hover: false }
+        );
+      }
+      
+      this.activeSnapshot = null;
+      
+      this.hideSnapshotPhoto();
+    },
+    
     displaySnapshotPhoto() {
       console.log(['displaySnapshotPhoto', this.activeSnapshot]);
       CM.SnapshotPhoto.activeSnapshot = this.activeSnapshot;
@@ -290,30 +302,52 @@ CM.MapboxMap = new Vue({
       }, 1000);
     },
     
-    bindClickPhoto() {
+    bindClickPhoto() {      
+      this.map.on('click', () => {
+        console.log(['clickLocked?', this.clickLocked]);
+        if (this.clickLocked) {
+          this.clickLocked = false;
+          this.deactivateSnapshot();
+        }
+      });
+      
       this.map.on('click', 'snapshot-points', (e) => {
         this.map.flyTo({
           center: e.features[0].geometry.coordinates
         });
-        
         this.clickLocked = !this.clickLocked;
-        this.activateSnapshot(e.features[0]);
+        var snapshot = e.features[0];
+        setTimeout(() => {
+          CM.SnapshotPhoto.topSide = false;
+          CM.SnapshotPhoto.leftSide = true;
+          this.activateSnapshot(snapshot);
+        }, 1000);
       });
     },
     
     bindMouseSide() {
       let $map = $("#CM-main-map");
       let sidebar = $(".sidebar").width();
-      let topHalf = ($map.height() / 2);
+      let navHeight = $(".navbar").height();
+      let topHalf = ($map.height() / 2) + navHeight;
       let leftHalf = (($map.width() - sidebar) / 2);
       
       $(window).off('mousemove.mapposition').on('mousemove.mapposition', (e) => {
-        // CM.SnapshotPhoto.topSide = false;
-        CM.SnapshotPhoto.topSide = topHalf >= e.pageY;
-        CM.SnapshotPhoto.leftSide = sidebar + leftHalf >= e.pageX;
+        var top = e.pageY - $(window).scrollTop();
+        // console.log(['mouse', top, $map.height()/2, navHeight]);
         
-        // console.log(['Side', e.pageX, e.pageY, topSide, leftSide]);
-        
+        if (!this.clickLocked) {
+          var topSide = topHalf >= top;
+          var leftSide = sidebar + leftHalf >= e.pageX;;
+          if (CM.SnapshotPhoto.topSide != topSide) 
+            CM.SnapshotPhoto.topSide = topSide;
+          
+          if (CM.SnapshotPhoto.leftSide != leftSide) 
+            CM.SnapshotPhoto.leftSide = leftSide
+        } else {
+          CM.SnapshotPhoto.topSide = false;
+          CM.SnapshotPhoto.leftSide = true;
+        }
       });
     }
     
