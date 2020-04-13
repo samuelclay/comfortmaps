@@ -148,9 +148,9 @@ figure.snapshot-detail-container {
   right: 18px;
   max-width: 32%;
 }
-figure.snapshot-detail-container.right-side {
-  top: auto;
-  bottom: 18px;
+figure.snapshot-detail-container.top-side.right-side {
+  top: 60px;
+  bottom: auto;
   left: 18px;
   right: auto;
 }
