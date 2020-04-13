@@ -78,86 +78,14 @@ CM.MapboxMap = new Vue({
         'promoteId': 'id'
       });
       
-      // this.addHeatmap();
       this.addSnapshotPoints();
       this.bindHoverPhotos();
       this.bindClickPhoto();
       this.bindMouseSide();
       this.bindNavbar();
       $(window).resize(this.bindMouseSide.bind(this));
-    },
-    
-    addHeatmap() {
-      this.map.addLayer(
-        {
-          'id': 'snapshots-heatmap',
-          'type': 'heatmap',
-          'source': 'snapshots',
-          'maxzoom': 22,
-          'paint': {
-            // Increase the heatmap weight based on frequency and property magnitude
-            'heatmap-weight': [
-              'interpolate',
-              ['linear'],
-              ['get', 'mag'],
-              0,
-              0,
-              6,
-              1
-            ],
-            // Increase the heatmap color weight weight by zoom level
-            // heatmap-intensity is a multiplier on top of heatmap-weight
-            'heatmap-intensity': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              0,
-              1,
-              22,
-              3
-            ],
-            // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
-            // Begin color ramp at 0-stop with a 0-transparancy color
-            // to create a blur-like effect.
-            'heatmap-color': [
-              'interpolate',
-              ['linear'],
-              ['heatmap-density'],
-              0,
-              'rgba(186,56,51,0.5)',
-              0.2,
-              'rgb(186,110,102)',
-              0.4,
-              'rgb(255, 227, 136)',
-              0.6,
-              'rgb(100, 204, 64)',
-              1,
-              'rgb(48, 204, 76)'
-            ],
-            // Adjust the heatmap radius by zoom level
-            'heatmap-radius': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              0,
-              40,
-              22,
-              40
-            ],
-            // Transition from heatmap to circle layer by zoom level
-            'heatmap-opacity': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              12,
-              1,
-              22,
-              0.5
-            ]
-          }
-        },
-        'waterway-label'
-      );
+      
+      this.flyToPhotoId("55_t_gSm");
     },
     
     addSnapshotPoints() {
@@ -168,7 +96,6 @@ CM.MapboxMap = new Vue({
           'source': 'snapshots',
           'minzoom': 1,
           'paint': {
-            // Size circle radius by earthquake magnitude and zoom level
             'circle-radius': [
               'interpolate',
               ['linear'],
@@ -202,8 +129,7 @@ CM.MapboxMap = new Vue({
               0.1
             ],
             'circle-opacity-transition': {
-              "duration": 3000,
-              "delay": 0
+              "duration": 1000
             },
             
             // Stroke
@@ -317,17 +243,39 @@ CM.MapboxMap = new Vue({
       });
       
       this.map.on('click', 'snapshot-points', (e) => {
-        this.map.flyTo({
-          center: e.features[0].geometry.coordinates
-        });
-        this.clickLocked = !this.clickLocked;
-        var snapshot = e.features[0];
-        setTimeout(() => {
-          CM.SnapshotDetail.topSide = false;
-          CM.SnapshotDetail.leftSide = true;
-          this.activateSnapshot(snapshot);
-        }, 1000);
+        this.flyToSnapshot(e.features[0]);
       });
+    },
+    
+    flyToSnapshot(snapshot) {
+      this.map.flyTo({
+        center: snapshot.geometry.coordinates
+      });
+      this.clickLocked = true;
+      this.activateSnapshot(snapshot);
+      
+      if (CM.SnapshotDetail.topSide && CM.SnapshotDetail.rightSide) {
+        setTimeout(() => {
+          CM.SnapshotDetail.topSide = true;
+          CM.SnapshotDetail.leftSide = true;
+        }, 1000);
+      } else {
+        CM.SnapshotDetail.topSide = false;
+        CM.SnapshotDetail.leftSide = true;
+      }
+    },
+    
+    flyToPhotoId(photoId) {
+      let feature = CM.MapboxMap.map.querySourceFeatures('snapshots', { 
+        filter: ['==', 'id', photoId] 
+      });
+      
+      if (!feature) {
+        console.log(["Error, couldn't find photo feature", photoId]);
+        return;
+      }
+      
+      this.flyToSnapshot(feature);
     },
     
     bindMouseSide() {
@@ -370,7 +318,7 @@ CM.MapboxMap = new Vue({
         this.map.setFilter('snapshot-points', ['>=', 'rating', 4]);
       });
     }
-    
+        
   }
 });
 
