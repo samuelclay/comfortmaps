@@ -145,7 +145,7 @@ class PhotoManager: PhotoDelegate {
                    encoder: URLEncodedFormParameterEncoder.default)
             .validate(statusCode: 200..<300)
             .responseJSON { response in
-                print(" ---> Snapshot response:", snapshot, response, response.result)
+                print(" ---> Snapshot response:", snapshot, response, response.result, response.response?.statusCode)
                 switch response.result {
                 case let .success(value):
                     if let json = value as? [String: Any] {

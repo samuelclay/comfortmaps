@@ -24,9 +24,11 @@ def rating_scale(request):
         'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY
     })
 
-@login_required()
 @csrf_exempt
 def record_snapshot(request):
+    if request.user.is_anonymous():
+        return JsonResponse({code: -1, "message": "Please login"}, status=403)
+
     snapshot_rating_scale = SnapshotRatingScale.objects.all()[0] # TODO: Rewrite for multiple scales
     
     photo_id = request.POST['photo_id']
@@ -45,6 +47,7 @@ def record_snapshot(request):
                         location=Point(gps_lat, gps_long))
     snapshot.save()
     logging.info(" ---> Snapshot: %s / %s" % (snapshot, request.POST))
+        
     return JsonResponse({"code": 1, "message": "OK"})
     
 @login_required()
