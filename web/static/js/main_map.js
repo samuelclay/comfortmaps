@@ -24,6 +24,9 @@ CM.ScrollSpy = function() {
       // console.log(['leave', element]);
       $(element).removeClass('active');
       // CM.MapboxMap.activateSectionFromScroll(element)
+    },
+    onTick: (element, position, inside, enters, leaves) => {
+      console.log(['onTick', element, position, inside, enters, leaves]);
     }
   });
   $(window).scroll();
