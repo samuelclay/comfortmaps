@@ -262,6 +262,24 @@ CM.MapboxMap = new Vue({
       });
     },
     
+    flyToPhotoId(photoId, options) {
+      console.log(['Flying to', photoId]);
+      let feature = this.geodata.features.find((feature) => {
+        return feature.id == photoId;
+      });
+      // let feature = CM.MapboxMap.map.querySourceFeatures('snapshots', {
+      //   filter: ['==', 'id', photoId]
+      // });
+      
+      if (!feature) {
+        console.log(["Error, couldn't find photo feature", photoId]);
+        this.loadedSource = false;
+        return;
+      }
+
+      this.flyToSnapshot(feature, options);
+    },
+    
     flyToSnapshot(snapshot, options) {
       options = $.extend({}, {
         center: snapshot.geometry.coordinates,
@@ -281,24 +299,6 @@ CM.MapboxMap = new Vue({
         CM.SnapshotDetail.topSide = false;
         CM.SnapshotDetail.leftSide = true;
       }
-    },
-    
-    flyToPhotoId(photoId, options) {
-      console.log(['Flying to', photoId]);
-      let feature = this.geodata.features.find((feature) => {
-        return feature.id == photoId;
-      });
-      // let feature = CM.MapboxMap.map.querySourceFeatures('snapshots', {
-      //   filter: ['==', 'id', photoId]
-      // });
-      
-      if (!feature) {
-        console.log(["Error, couldn't find photo feature", photoId]);
-        this.loadedSource = false;
-        return;
-      }
-
-      this.flyToSnapshot(feature, options);
     },
     
     bindMouseSide() {
@@ -342,10 +342,15 @@ CM.MapboxMap = new Vue({
     activateSectionFromScroll(sectionEl) {
       if ($(sectionEl).is("#sidebar-section-1")) {
         this.map.setFilter('snapshot-points', null);
+        this.map.flyTo({center: {
+          lat: CM.Globals.defaultLat,
+          lng: CM.Globals.defaultLng
+        }, speed: 0.2, zoom: 15});
+        this.deactivateSnapshot();
         $(".btn-filter-none").button("toggle");
         $(".btn-filter-none").click();
       } else if ($(sectionEl).is("#sidebar-section-2")) {
-        this.flyToPhotoId("-U9Wblf7N", {zoom: 15});
+        this.flyToPhotoId("-U9Wblf7N", {zoom: 17});
         $(".btn-filter-good").button("toggle");
         $(".btn-filter-good").click();
       } else if ($(sectionEl).is("#sidebar-section-3")) {
