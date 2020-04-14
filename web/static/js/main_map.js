@@ -17,12 +17,14 @@ CM.ScrollSpy = function() {
     container: window,
     buffer: $(window).outerHeight() / 2,
     onEnter: (element, position) => {
-      console.log(['enter', element, position]);
+      // console.log(['enter', element, position]);
       $(element).addClass('active');
+      CM.MapboxMap.activateSectionFromScroll(element)
     },
     onLeave: (element, position) => {
-      console.log(['leave', element, position]);
+      // console.log(['leave', element, position]);
       $(element).removeClass('active');
+      CM.MapboxMap.activateSectionFromScroll(element)
     }
   });
   $(window).scroll();
@@ -84,8 +86,6 @@ CM.MapboxMap = new Vue({
       this.bindMouseSide();
       this.bindNavbar();
       $(window).resize(this.bindMouseSide.bind(this));
-      
-      this.flyToPhotoId("55_t_gSm");
     },
     
     addSnapshotPoints() {
@@ -249,7 +249,8 @@ CM.MapboxMap = new Vue({
     
     flyToSnapshot(snapshot) {
       this.map.flyTo({
-        center: snapshot.geometry.coordinates
+        center: snapshot.geometry.coordinates,
+        speed: 0.2
       });
       this.clickLocked = true;
       this.activateSnapshot(snapshot);
@@ -274,8 +275,10 @@ CM.MapboxMap = new Vue({
         console.log(["Error, couldn't find photo feature", photoId]);
         return;
       }
-      
-      this.flyToSnapshot(feature);
+      if (feature.length) {
+        console.log(['Flying to snapshot', feature]);
+        this.flyToSnapshot(feature[0]);
+      }
     },
     
     bindMouseSide() {
@@ -317,6 +320,14 @@ CM.MapboxMap = new Vue({
         this.filter = "good";
         this.map.setFilter('snapshot-points', ['>=', 'rating', 4]);
       });
+    },
+    
+    activateSectionFromScroll(sectionEl) {
+      if ($(sectionEl).is("#sidebar-section-2")) {
+        this.flyToPhotoId("aAJ-l6wp");
+      } else if ($(sectionEl).is("#sidebar-section-3")) {
+        this.flyToPhotoId("55_t_gSm");
+      }
     }
         
   }
