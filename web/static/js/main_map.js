@@ -40,7 +40,8 @@ CM.MapboxMap = new Vue({
       clickLocked: false,
       hideSnapshotTimeout: null,
       filter: null,
-      loadedSource: false
+      loadedSource: false,
+      geodata: null
     };
   },
   // props: {
@@ -72,30 +73,34 @@ CM.MapboxMap = new Vue({
     },
     
     mapLoad() {
-      const lat = CM.Globals.defaultLat;
-      const lng = CM.Globals.defaultLng;
-      this.map.addSource('snapshots', {
-        'type': 'geojson',
-        'data': "/record/snapshots_from_point.geojson?lat="+lat+"&lng="+lng,
-        'promoteId': 'id'
+      $.getJSON("/record/snapshots_from_point.geojson", {
+        lat: CM.Globals.defaultLat,
+        lng: CM.Globals.defaultLng
+      }, (geodata) => {
+        this.geodata = geodata;
+        this.map.addSource('snapshots', {
+          'type': 'geojson',
+          'data': geodata,
+          'promoteId': 'id'
+        });
+        
+        this.map.on('sourcedata', (data) => {
+          if (this.loadedSource) {
+            // console.log(['Already loaded source, ignoring new sourcedata', data]);
+            return;
+          }
+          if (this.map.getSource('snapshots') && data.isSourceLoaded) {
+            this.loadedSource = true;
+            CM.ScrollSpy();
+          }
+        });
+        this.addSnapshotPoints();
+        this.bindHoverPhotos();
+        this.bindClickPhoto();
+        this.bindMouseSide();
+        this.bindNavbar();
+        $(window).resize(this.bindMouseSide.bind(this));
       });
-      
-      this.map.on('sourcedata', (data) => {
-        if (this.loadedSource) {
-          // console.log(['Already loaded source, ignoring new sourcedata', data]);
-          return;
-        }
-        if (this.map.getSource('snapshots') && data.isSourceLoaded) {
-          this.loadedSource = true;
-          CM.ScrollSpy();
-        }
-      });
-      this.addSnapshotPoints();
-      this.bindHoverPhotos();
-      this.bindClickPhoto();
-      this.bindMouseSide();
-      this.bindNavbar();
-      $(window).resize(this.bindMouseSide.bind(this));
     },
     
     addSnapshotPoints() {
@@ -257,11 +262,13 @@ CM.MapboxMap = new Vue({
       });
     },
     
-    flyToSnapshot(snapshot) {
-      this.map.flyTo({
+    flyToSnapshot(snapshot, options) {
+      options = $.extend({}, {
         center: snapshot.geometry.coordinates,
+        zoom: this.map.getZoom(),
         speed: 0.2
-      });
+      }, options);
+      this.map.flyTo(options);
       this.clickLocked = true;
       this.activateSnapshot(snapshot);
       
@@ -276,19 +283,22 @@ CM.MapboxMap = new Vue({
       }
     },
     
-    flyToPhotoId(photoId) {
+    flyToPhotoId(photoId, options) {
       console.log(['Flying to', photoId]);
-      let feature = CM.MapboxMap.map.querySourceFeatures('snapshots', { 
-        filter: ['==', 'id', photoId] 
+      let feature = this.geodata.features.find((feature) => {
+        return feature.id == photoId;
       });
+      // let feature = CM.MapboxMap.map.querySourceFeatures('snapshots', {
+      //   filter: ['==', 'id', photoId]
+      // });
       
-      if (!feature || !feature.length) {
+      if (!feature) {
         console.log(["Error, couldn't find photo feature", photoId]);
         this.loadedSource = false;
         return;
       }
 
-      this.flyToSnapshot(feature[0]);
+      this.flyToSnapshot(feature, options);
     },
     
     bindMouseSide() {
@@ -319,26 +329,32 @@ CM.MapboxMap = new Vue({
     
     bindNavbar() {
       $(".btn-filter-bad").click(() => {
-        this.filter = "bad";
         this.map.setFilter('snapshot-points', ['<=', 'rating', 2]);
       });
       $(".btn-filter-none").click(() => {
-        this.filter = null;
         this.map.setFilter('snapshot-points', null);
       });
       $(".btn-filter-good").click(() => {
-        this.filter = "good";
         this.map.setFilter('snapshot-points', ['>=', 'rating', 4]);
       });
     },
     
     activateSectionFromScroll(sectionEl) {
-      if ($(sectionEl).is("#sidebar-section-2")) {
-        this.flyToPhotoId("aAJ-l6wp");
+      if ($(sectionEl).is("#sidebar-section-1")) {
+        this.map.setFilter('snapshot-points', null);
+        $(".btn-filter-none").click();
+      } else if ($(sectionEl).is("#sidebar-section-2")) {
+        this.flyToPhotoId("aAJ-l6wp", {zoom: 15});
+        $(".btn-filter-good").click();
       } else if ($(sectionEl).is("#sidebar-section-3")) {
-        this.flyToPhotoId("55_t_gSm");
+        this.flyToPhotoId("55_t_gSm", {zoom: 16});
+        $(".btn-filter-bad").click();
       } else if ($(sectionEl).is("#sidebar-section-4")) {
-        this.flyToPhotoId("7I1g61mU");
+        this.flyToPhotoId("7I1g61mU", {zoom: 15});
+        $(".btn-filter-bad").click();
+      } else if ($(sectionEl).is("#sidebar-section-5")) {
+        this.flyToPhotoId("55_t_gSm", {zoom: 17});
+        $(".btn-filter-bad").click();
       }
     }
         
