@@ -26,8 +26,8 @@ def rating_scale(request):
 
 @csrf_exempt
 def record_snapshot(request):
-    if request.user.is_anonymous():
-        return JsonResponse({code: -1, "message": "Please login"}, status=403)
+    if request.user.is_anonymous:
+        return JsonResponse({"code": -1, "message": "Please login"}, status=403)
 
     snapshot_rating_scale = SnapshotRatingScale.objects.all()[0] # TODO: Rewrite for multiple scales
     
