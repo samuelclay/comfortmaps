@@ -72,10 +72,10 @@ body a:focus {
 .sidebar > section {
   opacity: .3;
   transition: opacity 1s;
-  padding: 4vh 18px 20vh;
+  padding: 4vh 18px 40vh;
 } 
 .sidebar > section:first-child {
-  padding-top: 4vh;
+  padding-bottom: 20vh;
 }
 
 .sidebar > section.active {
@@ -100,7 +100,7 @@ body a:focus {
 }
 
 .scroll-down {
-  margin: 148px auto 0;
+  margin: 64px auto 0;
   height: 64px;
   width: 64px;
   background: url(/static/img/noun_scroll_down.png) no-repeat center center;
