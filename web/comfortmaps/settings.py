@@ -26,7 +26,7 @@ SECRET_KEY = '@ig*-qi2c3ma8b2f=w#^-&x4c8)dpx^fohvp0!%9h4m-q$n-9-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["comfortmaps.com", "www.comfortmaps.com", "cm.local.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["comfortmaps.com", "www.comfortmaps.com", "cm.local.com", "127.0.0.1", "67.207.91.194"]
 
 
 # Application definition
