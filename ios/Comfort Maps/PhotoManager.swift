@@ -142,9 +142,21 @@ class PhotoManager: PhotoDelegate {
         }
 
         AF.request("https://comfortmaps.com/record/snapshot/", method: .post, parameters: snapshot,
-                   encoder: URLEncodedFormParameterEncoder.default).response { response in
-            print(" ---> Snapshot response:", snapshot, response)
-        }
+                   encoder: URLEncodedFormParameterEncoder.default)
+            .validate(statusCode: 200..<300)
+            .responseJSON { response in
+                print(" ---> Snapshot response:", snapshot, response, response.result)
+                switch response.result {
+                case let .success(value):
+                    if let json = value as? [String: Any] {
+                        print("Record snapshot: \(json)")
+                    }
+                case let .failure(error):
+                    print("Record snapshot error: \(error)")
+                    appDelegate().window?.rootViewController?.performSegue(withIdentifier: "presentLogin", sender: self)
+
+                }
+            }
 //        print("Done uploading snapshot", uploadingSnapshot, snapshot)
         
         uploadingSnapshot = Data()
@@ -162,7 +174,7 @@ class PhotoManager: PhotoDelegate {
         if uploadingData.count >= currentImageSize {
             self.endPhotoTransfer()
         } else {
-//            print(" ---> Photo progress:", uploadingData.count, currentImageSize)
+            print(" ---> Photo progress:", uploadingData.count, currentImageSize)
         }
     }
 

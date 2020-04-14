@@ -45,7 +45,7 @@ def record_snapshot(request):
                         location=Point(gps_lat, gps_long))
     snapshot.save()
     logging.info(" ---> Snapshot: %s / %s" % (snapshot, request.POST))
-    return HttpResponse("OK")
+    return JsonResponse({"code": 1, "message": "OK"})
     
 @login_required()
 @csrf_exempt
