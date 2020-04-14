@@ -5,7 +5,6 @@ CM.Globals = {
 
 CM.initMap = function() {
   CM.MapboxMap.init();
-  CM.ScrollSpy();
 }
 CM.fontsReady = function() {
 
@@ -17,14 +16,14 @@ CM.ScrollSpy = function() {
     container: window,
     buffer: $(window).outerHeight() / 2,
     onEnter: (element, position) => {
-      // console.log(['enter', element, position]);
+      console.log(['enter', element]);
       $(element).addClass('active');
       CM.MapboxMap.activateSectionFromScroll(element)
     },
     onLeave: (element, position) => {
-      // console.log(['leave', element, position]);
+      // console.log(['leave', element]);
       $(element).removeClass('active');
-      CM.MapboxMap.activateSectionFromScroll(element)
+      // CM.MapboxMap.activateSectionFromScroll(element)
     }
   });
   $(window).scroll();
@@ -40,7 +39,8 @@ CM.MapboxMap = new Vue({
       map: null,
       clickLocked: false,
       hideSnapshotTimeout: null,
-      filter: none
+      filter: null,
+      loadedSource: false
     };
   },
   // props: {
@@ -80,6 +80,16 @@ CM.MapboxMap = new Vue({
         'promoteId': 'id'
       });
       
+      this.map.on('sourcedata', (data) => {
+        if (this.loadedSource) {
+          // console.log(['Already loaded source, ignoring new sourcedata', data]);
+          return;
+        }
+        if (this.map.getSource('snapshots') && data.isSourceLoaded) {
+          this.loadedSource = true;
+          CM.ScrollSpy();
+        }
+      });
       this.addSnapshotPoints();
       this.bindHoverPhotos();
       this.bindClickPhoto();
@@ -267,18 +277,18 @@ CM.MapboxMap = new Vue({
     },
     
     flyToPhotoId(photoId) {
+      console.log(['Flying to', photoId]);
       let feature = CM.MapboxMap.map.querySourceFeatures('snapshots', { 
         filter: ['==', 'id', photoId] 
       });
       
-      if (!feature) {
+      if (!feature || !feature.length) {
         console.log(["Error, couldn't find photo feature", photoId]);
+        this.loadedSource = false;
         return;
       }
-      if (feature.length) {
-        console.log(['Flying to snapshot', feature]);
-        this.flyToSnapshot(feature[0]);
-      }
+
+      this.flyToSnapshot(feature[0]);
     },
     
     bindMouseSide() {
@@ -327,6 +337,8 @@ CM.MapboxMap = new Vue({
         this.flyToPhotoId("aAJ-l6wp");
       } else if ($(sectionEl).is("#sidebar-section-3")) {
         this.flyToPhotoId("55_t_gSm");
+      } else if ($(sectionEl).is("#sidebar-section-4")) {
+        this.flyToPhotoId("7I1g61mU");
       }
     }
         
