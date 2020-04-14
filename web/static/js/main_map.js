@@ -342,18 +342,23 @@ CM.MapboxMap = new Vue({
     activateSectionFromScroll(sectionEl) {
       if ($(sectionEl).is("#sidebar-section-1")) {
         this.map.setFilter('snapshot-points', null);
+        $(".btn-filter-none").button("toggle");
         $(".btn-filter-none").click();
       } else if ($(sectionEl).is("#sidebar-section-2")) {
         this.flyToPhotoId("aAJ-l6wp", {zoom: 15});
+        $(".btn-filter-good").button("toggle");
         $(".btn-filter-good").click();
       } else if ($(sectionEl).is("#sidebar-section-3")) {
         this.flyToPhotoId("55_t_gSm", {zoom: 16});
+        $(".btn-filter-bad").button("toggle");
         $(".btn-filter-bad").click();
       } else if ($(sectionEl).is("#sidebar-section-4")) {
         this.flyToPhotoId("7I1g61mU", {zoom: 15});
+        $(".btn-filter-bad").button("toggle");
         $(".btn-filter-bad").click();
       } else if ($(sectionEl).is("#sidebar-section-5")) {
         this.flyToPhotoId("55_t_gSm", {zoom: 17});
+        $(".btn-filter-bad").button("toggle");
         $(".btn-filter-bad").click();
       }
     }
