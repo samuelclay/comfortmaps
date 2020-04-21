@@ -26,7 +26,7 @@
       </a>
       <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownWhat">
         <p class="nav-what">
-          These are stories told about the lived experience of bicyclists on city streets.<br><br>The Comfort Maps camera is a special device used to capture real-life data on the streets. </p>
+          These are stories told about the lived experience of bicyclists on city streets.<br><br>The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility. </p>
         <a class="dropdown-item" href="#">Learn more...</a>
       </div>
     </li>
@@ -133,11 +133,11 @@
     </main>
     
     
-    <figure class="figure card snapshot-detail-container bg-dark rounded p-0 offset-4" v-bind:class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide }" v-if="activeSnapshot">
+    <figure class="figure card snapshot-detail-container bg-dark rounded-top p-0 offset-4" v-bind:class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide }" v-if="activeSnapshot">
       <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded">
       <div class="card-body">
-        <figcaption class="figure-caption text-center">
-          {{ activeSnapshot.properties.id }}
+        <figcaption class="figure-caption text-center" :data="activeSnapshot.id">
+          {% verbatim %} {{ activeSnapshot.properties }} {% endverbatim %}
         </figcaption>
       </div>
     </figure>
@@ -164,7 +164,7 @@
       families: ['Lora', 'Montserrat']
     },
     fontactive: function(fontName) {
-      console.log(['Fonts loaded', fontName]);
+      // console.log(['Fonts loaded', fontName]);
       if (!CM.fontsLoaded) CM.fontsLoaded = 0;
       CM.fontsLoaded += 1;
       if (fontName == "Lora" || CM.fontsLoaded >= 2) {

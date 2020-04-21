@@ -16,7 +16,7 @@ CM.ScrollSpy = function() {
     container: window,
     buffer: $(window).outerHeight() / 2,
     onEnter: (element, position) => {
-      console.log(['enter', element]);
+      // console.log(['enter', element]);
       $(element).addClass('active');
       CM.MapboxMap.activateSectionFromScroll(element)
     },
@@ -25,9 +25,9 @@ CM.ScrollSpy = function() {
       $(element).removeClass('active');
       // CM.MapboxMap.activateSectionFromScroll(element)
     },
-    onTick: (element, position, inside, enters, leaves) => {
-      console.log(['onTick', element, position, inside, enters, leaves]);
-    }
+    // onTick: (element, position, inside, enters, leaves) => {
+    //   console.log(['onTick', element, position, inside, enters, leaves]);
+    // }
   });
   $(window).scroll();
 }
@@ -102,6 +102,7 @@ CM.MapboxMap = new Vue({
         this.bindClickPhoto();
         this.bindMouseSide();
         this.bindNavbar();
+        this.addHeadingImage();
         $(window).resize(this.bindMouseSide.bind(this));
       });
     },
@@ -152,17 +153,22 @@ CM.MapboxMap = new Vue({
             
             // Stroke
             'circle-stroke-color': [
-              "step",
-              ["get", "rating"],
-              "rgb(186,56,51)",
-              2,
-              "rgb(186,110,102)",
-              3,
-              "rgb(255, 227, 136)",
-              4,
-              "rgb(100, 204, 64)",
-              5,
-              "rgb(48, 204, 76)"
+              'case',
+              ['boolean', ['feature-state', 'selected'], false],
+              "rgb(255, 255, 255)",
+              [
+                "step",
+                ["get", "rating"],
+                "rgb(186,56,51)",
+                2,
+                "rgb(186,110,102)",
+                3,
+                "rgb(255, 227, 136)",
+                4,
+                "rgb(100, 204, 64)",
+                5,
+                "rgb(48, 204, 76)"
+              ]
             ],
             'circle-stroke-width': 3,
             'circle-stroke-opacity': [
@@ -179,6 +185,47 @@ CM.MapboxMap = new Vue({
         },
         'waterway-label'
       );
+    },
+    
+    addHeadingImage() {
+      this.map.loadImage('/static/img/heading.png', (err, image) => {
+        this.map.addImage('heading-image', image);
+        this.map.addSource('heading', { type: 'geojson', data: {type: 'FeatureCollection', features: []} });
+        this.map.addLayer({
+          'id': 'headings',
+          'type': 'symbol',
+          'source': 'heading',
+          'layout': {
+            'icon-image': 'heading-image',
+            'icon-size': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              9,
+              0.1,
+              15,
+              0.5,
+              17,
+              1
+            ],
+            "icon-rotate": ["get", "heading"],
+          }
+        });
+        this.updateHeading();
+      });
+    },
+    
+    updateHeading() {
+      let heading = this.map.getSource('heading');
+      if (!heading) return; // Not loaded yet
+      
+      if (this.activeSnapshot && this.activeSnapshot.properties.heading) {
+        heading.setData({type: 'FeatureCollection', features: [
+          this.activeSnapshot
+        ]});
+      } else {
+        heading.setData({type: 'FeatureCollection', features: []});
+      }
     },
     
     bindHoverPhotos() {
@@ -205,7 +252,7 @@ CM.MapboxMap = new Vue({
       if (this.activeSnapshot) {
         this.map.setFeatureState(
           { source: 'snapshots', id: this.activeSnapshot.properties.id },
-          { hover: false }
+          { hover: false, selected: false }
         );
       }
       
@@ -217,6 +264,7 @@ CM.MapboxMap = new Vue({
         { hover: true }
       );
       
+      this.updateHeading();
       this.displaySnapshotDetail();
     },
     
@@ -224,18 +272,19 @@ CM.MapboxMap = new Vue({
       if (this.activeSnapshot) {
         this.map.setFeatureState(
           { source: 'snapshots', id: this.activeSnapshot.properties.id },
-          { hover: false }
+          { hover: false, selected: false }
         );
       }
       
       this.activeSnapshot = null;
-      
+
+      this.updateHeading();
       this.hideSnapshotDetail();
     },
     
     displaySnapshotDetail() {
-      console.log(['Snapshot detail', this.activeSnapshot]);
       CM.SnapshotDetail.activeSnapshot = this.activeSnapshot;
+      console.log(['Snapshot detail', this.activeSnapshot, CM.SnapshotDetail.activeSnapshot]);
       this.$nextTick(() => {
         $(".snapshot-detail-container").addClass('active');
       });
@@ -261,6 +310,7 @@ CM.MapboxMap = new Vue({
       });
       
       this.map.on('click', 'snapshot-points', (e) => {
+        console.log(['Click', e.features]);
         this.flyToSnapshot(e.features[0]);
       });
     },
@@ -292,6 +342,10 @@ CM.MapboxMap = new Vue({
       this.map.flyTo(options);
       this.clickLocked = true;
       this.activateSnapshot(snapshot);
+      this.map.setFeatureState(
+        { source: 'snapshots', id: this.activeSnapshot.properties.id },
+        { selected: true }
+      );
       
       if (CM.SnapshotDetail.topSide && CM.SnapshotDetail.rightSide) {
         setTimeout(() => {
@@ -377,16 +431,24 @@ CM.MapboxMap = new Vue({
 CM.SnapshotDetail = new Vue({
   el: ".snapshot-detail-container",
   
-  data: () => {
-    return {
+  // data: () => {
+  //   return {
+  data: {
       activeSnapshot: null,
       topSide: false,
       leftSide: false
-    };
+    // };
+  },
+  
+  watch: {
+    activeSnapshot(snapshot) {
+      console.log(['Snapshot', snapshot, this.activeSnapshot, this]);
+    }
   },
   
   methods: {
     
   }
   
-})
+});
+

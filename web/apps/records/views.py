@@ -100,6 +100,7 @@ def snapshots_from_point(request, format="json"):
             "photo_uploaded": photo_uploaded, 
             "user": l.user.pk, 
             "photo_id": l.photo_id,
+            "date": l.date,
             "id": l.photo_id,
         } for l in locations]
         return JsonResponse({'points': points})
@@ -108,6 +109,9 @@ def snapshots_from_point(request, format="json"):
             "rating": l.rating,
             "photo_uploaded": l.photo_uploaded,
             "url": l.full_photo_url,
+            "speed_mph": l.speed_mph,
+            "heading": l.heading,
+            "date": l.date,
             "id": l.photo_id,
         }, geometry=geojson.Point((l.location.y, l.location.x)),
         id=l.photo_id) for l in locations]

@@ -54,7 +54,9 @@ body a:focus {
 .navbar .nav-what {
   padding: .25rem 1.5rem;
 }
-
+.navbar .dropdown-menu {
+  width: 200%;
+}
 /*
 * Sidebar
 */
