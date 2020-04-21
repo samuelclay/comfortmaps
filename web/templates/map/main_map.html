@@ -37,17 +37,48 @@
     </li>
   </ul>
   
-  <div class="btn-group btn-group-toggle d-flex flex-row col-4" data-toggle="buttons">
-    <label class="btn btn-filter-good btn-secondary align-self-stretch rounded-0 shadow-none">
-      <input type="radio" name="options" id="option1" > See the Good
-    </label>
-    <label class="btn btn-filter-none btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
-      <input type="radio" name="options" id="option2" checked> 
-      <img src="{% static "img/noun_both.png" %}">
-    </label>
-    <label class="btn btn-filter-bad btn-secondary align-self-stretch rounded-0 shadow-none">
-      <input type="radio" name="options" id="option3"> See the Bad
-    </label>
+  <div class="col-4">
+    <ul class="nav justify-content-end">
+      <li class="nav-item nav-filter dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWhat" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="img"></span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right mt-0" aria-labelledby="navbarDropdownWhat">
+          <div class="filter-ratings btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
+            <label class="btn btn-filter-bad btn-secondary align-self-stretch rounded-0 shadow-none">
+              <input type="radio" name="options" id="option1" >
+              <div class="snapshot-rating filter-rating-bad">
+                <span class="rating rating-1"></span>
+                <span class="rating rating-2"></span>
+                <span class="rating rating-3"></span>
+                <span class="rating rating-4"></span>
+                <span class="rating rating-5"></span>
+              </div>
+            </label>
+            <label class="btn btn-filter-none btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
+              <input type="radio" name="options" id="option2" checked> 
+              <div class="snapshot-rating filter-rating-all">
+                <span class="rating rating-1"></span>
+                <span class="rating rating-2"></span>
+                <span class="rating rating-3"></span>
+                <span class="rating rating-4"></span>
+                <span class="rating rating-5"></span>
+              </div>
+            </label>
+            <label class="btn btn-filter-good btn-secondary align-self-stretch rounded-0 shadow-none">
+              <input type="radio" name="options" id="option3">
+              <div class="snapshot-rating filter-rating-good">
+                <span class="rating rating-1"></span>
+                <span class="rating rating-2"></span>
+                <span class="rating rating-3"></span>
+                <span class="rating rating-4"></span>
+                <span class="rating rating-5"></span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
   
 </nav>
@@ -148,7 +179,7 @@
               <span class="rating rating-4"></span>
               <span class="rating rating-5"></span>
             </div>
-            <div class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</div>
+            <span class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</span>
           </div>
           <h3>{{ activeSnapshot.properties.poi }}</h3>
           <h5>{{ activeSnapshot.properties.address }}</h5>
