@@ -6,6 +6,8 @@
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet" />
 <link rel="stylesheet" href="{% static "css/main_map.css" %}">
 <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+<script src="{% static "js/vendor/moment.min.js" %}"></script>
 {% endblock %}
 
 
@@ -133,11 +135,26 @@
     </main>
     
     
-    <figure class="figure card snapshot-detail-container bg-dark rounded-top p-0 offset-4" v-bind:class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide }" v-if="activeSnapshot">
-      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded">
+    <figure class="figure card snapshot-detail-container bg-dark rounded p-0 offset-4" v-bind:class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide }" v-if="activeSnapshot">
+      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top">
       <div class="card-body">
-        <figcaption class="figure-caption text-center" :data="activeSnapshot.id">
-          {% verbatim %} {{ activeSnapshot.properties }} {% endverbatim %}
+        <figcaption class="figure-caption text-light">
+          {% verbatim %}
+          <div class="snapshot-rating-date">
+            <div class="snapshot-rating" :class="'active-rating-'+activeSnapshot.properties.rating">
+              <span class="rating rating-1"></span>
+              <span class="rating rating-2"></span>
+              <span class="rating rating-3"></span>
+              <span class="rating rating-4"></span>
+              <span class="rating rating-5"></span>
+            </div>
+            <div class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</div>
+          </div>
+          <h3>{{ activeSnapshot.properties.poi }}</h3>
+          <h5>{{ activeSnapshot.properties.address }}</h5>
+          <br />
+          {% endverbatim %}
+          {# {{ activeSnapshot.properties }}  #}
         </figcaption>
       </div>
     </figure>

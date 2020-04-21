@@ -452,3 +452,9 @@ CM.SnapshotDetail = new Vue({
   
 });
 
+
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('LLLL')
+  }
+});

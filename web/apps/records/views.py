@@ -12,6 +12,7 @@ import boto3
 from PIL import Image
 from io import BytesIO
 import geojson
+from mapbox import Geocoder
 
 logger = logging.getLogger(__name__)
 
@@ -96,23 +97,29 @@ def snapshots_from_point(request, format="json"):
         points = [{
             "lat": l.location.x, 
             "lng": l.location.y, 
-            "rating": l.rating, 
-            "photo_uploaded": photo_uploaded, 
-            "user": l.user.pk, 
-            "photo_id": l.photo_id,
+
             "date": l.date,
+            "poi": l.poi,
+            "address": l.address,
+            "heading": l.heading,
             "id": l.photo_id,
+            "photo_uploaded": photo_uploaded, 
+            "rating": l.rating, 
+            "speed_mph": l.speed_mph, 
+            "user": l.user.pk, 
         } for l in locations]
         return JsonResponse({'points': points})
     elif format == "geojson":
         features = [geojson.Feature(properties={
-            "rating": l.rating,
-            "photo_uploaded": l.photo_uploaded,
-            "url": l.full_photo_url,
-            "speed_mph": l.speed_mph,
-            "heading": l.heading,
             "date": l.date,
+            "poi": l.poi,
+            "address": l.address,
+            "heading": l.heading,
             "id": l.photo_id,
+            "photo_uploaded": l.photo_uploaded,
+            "rating": l.rating,
+            "speed_mph": l.speed_mph,
+            "url": l.full_photo_url,
         }, geometry=geojson.Point((l.location.y, l.location.x)),
         id=l.photo_id) for l in locations]
         feature_collection = geojson.FeatureCollection(features)
