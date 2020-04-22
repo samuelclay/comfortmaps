@@ -45,7 +45,7 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right mt-0" aria-labelledby="navbarDropdownFilter">
           <div class="filter-ratings btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
-            <label class="btn btn-filter-bad btn-secondary align-self-stretch rounded-0 shadow-none">
+            <label class="btn btn-filter-bad btn-secondary justify-content-center align-items-center d-flex flex-wrap rounded-0 shadow-none">
               <input type="radio" name="options" id="option1" >
               <div class="snapshot-rating filter-rating-bad">
                 <span class="rating rating-1"></span>
@@ -54,6 +54,7 @@
                 <span class="rating rating-4"></span>
                 <span class="rating rating-5"></span>
               </div>
+              <div class="">The bad</div>
             </label>
             <label class="btn btn-filter-none btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
               <input type="radio" name="options" id="option2" checked> 
@@ -64,8 +65,9 @@
                 <span class="rating rating-4"></span>
                 <span class="rating rating-5"></span>
               </div>
+              <div class="">All snapshots</div>
             </label>
-            <label class="btn btn-filter-good btn-secondary align-self-stretch rounded-0 shadow-none">
+            <label class="btn btn-filter-good btn-secondary justify-content-center align-items-center d-flex flex-wrap rounded-0 shadow-none">
               <input type="radio" name="options" id="option3">
               <div class="snapshot-rating filter-rating-good">
                 <span class="rating rating-1"></span>
@@ -74,18 +76,21 @@
                 <span class="rating rating-4"></span>
                 <span class="rating rating-5"></span>
               </div>
+              <div class="">The good</div>
             </label>
           </div>
           <div class="filter-ownership btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
             <label class="btn btn-ownership-self btn-secondary rounded-0 shadow-none">
               <input type="radio" name="ownership" id="ownership1" >
               <div class="snapshot-ownership ownership-self">
+                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
                 Only my snapshots
               </div>
             </label>
             <label class="btn btn-ownership-all btn-secondary rounded-0 shadow-none active">
               <input type="radio" name="ownership" id="ownership2" checked> 
               <div class="snapshot-ownership ownership-all">
+                <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
                 Everybody's snapshots
               </div>
             </label>
@@ -209,7 +214,7 @@
     
     
     <figure class="figure card snapshot-detail-container bg-dark rounded p-0 offset-4" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
-      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top">
+      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top" v-if="activeSnapshot.properties.photo_uploaded">
       <div class="card-body">
         <figcaption class="figure-caption text-light">
           <div class="snapshot-rating-date">

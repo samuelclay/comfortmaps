@@ -351,7 +351,7 @@ CM.MapboxMap = new Vue({
           e.features[0].id) return;
         if (this.clickLocked) return;
 
-        this.activateSnapshot(e.features[0]);
+        this.activateSnapshot(e.features[0], {hover: true});
       });
  
       // When the mouse leaves the state-fill layer, update the feature state of the
@@ -362,8 +362,9 @@ CM.MapboxMap = new Vue({
       });
     },
     
-    activateSnapshot(snapshot) {
-      if (!snapshot.properties.photo_uploaded) return;
+    activateSnapshot(snapshot, options) {
+      options = _.extend({hover: false}, options);
+      if (options.hover && !snapshot.properties.photo_uploaded) return;
       
       if (this.activeSnapshot) {
         this.map.setFeatureState(

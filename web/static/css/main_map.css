@@ -65,6 +65,8 @@ body a:focus {
 }
 .navbar .dropdown-menu {
   width: 200%;
+  box-shadow: 0px 8px 10px  rgba(0, 0, 0, .1), 
+      -10px 8px 10px  rgba(0, 0, 0, .1), 10px 8px 10px rgba(0, 0, 0, .1);
 }
 .navbar .nav-filter .dropdown-menu {
   width: 400px;
@@ -75,33 +77,36 @@ body a:focus {
 .navbar .nav-item .img {
   vertical-align: middle;
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 36px;
+  height: 36px;
   background: url(/static/img/noun_filter.png) no-repeat center center;
-  background-size: 20px;
+  background-size: 36px;
 }
 .navbar .nav-filter .img {
   background-image: url(/static/img/noun_filter.png);
-  background-size: 20px;
+  background-size: 36px;
 }
 .navbar .nav-filter:hover .img {
   background-image: url(/static/img/noun_filter_hover.png);
 }
-.navbar .nav-filter .filter-ratings .btn {
-  line-height: 0;
-}
-
 .navbar .nav-account .dropdown-menu {
   width: 256px;
 }
 .navbar .nav-account .img {
-  width: 22px;
-  height: 22px;
+  width: 36px;
+  height: 36px;
   background-image: url(/static/img/noun_account.png);
-  background-size: 22px;
+  background-size: 36px;
 }
 .navbar .nav-account:hover .img {
   background-image: url(/static/img/noun_account_hover.png);
+}
+.navbar .snapshot-ownership img {
+  width: 48px;
+  height: 48px;
+}
+.navbar .snapshot-rating {
+  float: none;
 }
 
 /*
@@ -225,6 +230,7 @@ figure.snapshot-detail-container.active {
 .snapshot-rating {
   float: right;
   cursor: default;
+  white-space: nowrap;
 }
 .rating {
   display: inline-block;
