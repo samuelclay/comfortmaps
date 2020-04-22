@@ -11,6 +11,54 @@ CM.fontsReady = function() {
 
 }
 
+CM.Filters = new Vue({
+  el: '.nav-filter',
+  
+  data: () => {
+    return {
+      ratings: 'all',
+      days: 0,
+      owned: false
+    }
+  },
+  
+  watch: {
+    ratings(rating) {
+      if (rating == "all") {
+        $(".btn-filter-none").button("toggle");
+        $(".btn-filter-none").click();
+      } else if (rating == "bad") {
+        $(".btn-filter-bad").button("toggle");
+        $(".btn-filter-bad").click();
+      } else if (rating == "good") {
+        $(".btn-filter-good").button("toggle");
+        $(".btn-filter-good").click();
+      }
+    },
+    
+    days(days) {
+      
+    },
+    
+    owned(owned) {
+      
+    }
+  },
+  
+  mounted() {    
+    $(".btn-filter-bad").click(() => {
+      CM.MapboxMap.map.setFilter('snapshot-points', ['<=', 'rating', 2]);
+    });
+    $(".btn-filter-none").click(() => {
+      CM.MapboxMap.map.setFilter('snapshot-points', null);
+    });
+    $(".btn-filter-good").click(() => {
+      CM.MapboxMap.map.setFilter('snapshot-points', ['>=', 'rating', 4]);
+    });
+  }  
+  
+});
+
 CM.ScrollSpy = function() {
   $(".sidebar > section").scrollspy({
     container: window,
@@ -101,7 +149,6 @@ CM.MapboxMap = new Vue({
         this.bindHoverPhotos();
         this.bindClickPhoto();
         this.bindMouseSide();
-        this.bindNavbar();
         this.addHeadingImage();
         $(window).resize(this.bindMouseSide.bind(this));
       });
@@ -339,7 +386,10 @@ CM.MapboxMap = new Vue({
         zoom: this.map.getZoom(),
         speed: 0.2
       }, options);
-      this.map.flyTo(options);
+      setTimeout(() => {
+        console.log(['Flying', options]);
+        this.map.flyTo(options);
+      }, 0);
       this.clickLocked = true;
       this.activateSnapshot(snapshot);
       this.map.setFeatureState(
@@ -384,44 +434,29 @@ CM.MapboxMap = new Vue({
       });
     },
     
-    bindNavbar() {
-      $(".btn-filter-bad").click(() => {
-        this.map.setFilter('snapshot-points', ['<=', 'rating', 2]);
-      });
-      $(".btn-filter-none").click(() => {
-        this.map.setFilter('snapshot-points', null);
-      });
-      $(".btn-filter-good").click(() => {
-        this.map.setFilter('snapshot-points', ['>=', 'rating', 4]);
-      });
-    },
-    
     activateSectionFromScroll(sectionEl) {
       if ($(sectionEl).is("#sidebar-section-1")) {
         this.map.setFilter('snapshot-points', null);
-        this.map.flyTo({center: {
-          lat: CM.Globals.defaultLat,
-          lng: CM.Globals.defaultLng
-        }, speed: 0.2, zoom: 15});
+        setTimeout(() => {
+          this.map.flyTo({center: {
+            lat: CM.Globals.defaultLat,
+            lng: CM.Globals.defaultLng
+          }, speed: 0.2, zoom: 15});
+        }, 0);
         this.deactivateSnapshot();
-        $(".btn-filter-none").button("toggle");
-        $(".btn-filter-none").click();
+        CM.Filters.ratings = "all";
       } else if ($(sectionEl).is("#sidebar-section-2")) {
         this.flyToPhotoId("-U9Wblf7N", {zoom: 17});
-        $(".btn-filter-good").button("toggle");
-        $(".btn-filter-good").click();
+        CM.Filters.ratings = "good";
       } else if ($(sectionEl).is("#sidebar-section-3")) {
         this.flyToPhotoId("aAJ-l6wp", {zoom: 16});
-        $(".btn-filter-bad").button("toggle");
-        $(".btn-filter-bad").click();
+        CM.Filters.ratings = "bad";
       } else if ($(sectionEl).is("#sidebar-section-4")) {
         this.flyToPhotoId("7I1g61mU", {zoom: 15});
-        $(".btn-filter-bad").button("toggle");
-        $(".btn-filter-bad").click();
+        CM.Filters.ratings = "bad";
       } else if ($(sectionEl).is("#sidebar-section-5")) {
         this.flyToPhotoId("55_t_gSm", {zoom: 17});
-        $(".btn-filter-bad").button("toggle");
-        $(".btn-filter-bad").click();
+        CM.Filters.ratings = "bad";
       }
     }
         
