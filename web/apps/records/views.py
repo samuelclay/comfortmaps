@@ -47,7 +47,7 @@ def record_snapshot(request):
                         speed_mph=speed_mph,
                         location=Point(gps_lat, gps_long))
     snapshot.save()
-    logging.info(" ---> Snapshot: %s / %s" % (snapshot, request.POST))
+    logging.info(" ---> Recording snapshot: %s / %s" % (snapshot, request.POST))
         
     return JsonResponse({"code": 1, "message": "OK"})
     
@@ -80,7 +80,24 @@ def record_photo(request, photo_id):
     
     logging.info(" ---> Uploaded %s: %s" % (photo_id, image))
     return JsonResponse({"code": 1, "image_size": len(image_file)})
+
+@login_required()
+def change_rating(request, photo_id):
+    new_rating = request.POST['rating']
     
+    snapshot = Snapshot.objects.get(photo_id=photo_id)
+    old_rating = snapshot.rating
+    if snapshot.user != request.user:
+        logging.info(f" ***> User doesn't match on rating change: {snapshot.user} vs {request.user}")
+        return JsonResponse({'code': -1, 'message': "Not your rating to change."})
+        
+    snapshot.rating = new_rating
+    snapshot.save()
+
+    message =f"Rating changed on {photo_id} from {old_rating} to {new_rating}."
+    logging.info(f" ---> {message}")
+    return JsonResponse({'code': 1, 'message': message})
+
 @login_required()
 def raw_google_map(request):
     return render(request, "records/raw_google_map.html", {        

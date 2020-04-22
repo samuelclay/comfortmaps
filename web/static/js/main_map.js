@@ -212,6 +212,17 @@ CM.MapboxMap = new Vue({
       });
     },
     
+    updateSnapshot(photoId, data) {
+      _.each(this.geodata.features, (feature) => {
+        if (feature.id == photoId) {
+          // console.log(['Extending snapshot', photoId, feature.properties, data]);
+          _.extend(feature.properties, data);
+        }
+      });
+      
+      this.map.getSource('snapshots').setData(this.geodata);
+    },
+    
     addSnapshotPoints() {
       this.map.addLayer(
         {
@@ -336,8 +347,8 @@ CM.MapboxMap = new Vue({
     bindHoverPhotos() {
       this.map.on('mousemove', 'snapshot-points', (e) => {
         if (e.features.length == 0) return;
-        if (this.activeSnapshot && this.activeSnapshot.properties.id ==
-          e.features[0].properties.id) return;
+        if (this.activeSnapshot && this.activeSnapshot.id ==
+          e.features[0].id) return;
         if (this.clickLocked) return;
 
         this.activateSnapshot(e.features[0]);
@@ -356,7 +367,7 @@ CM.MapboxMap = new Vue({
       
       if (this.activeSnapshot) {
         this.map.setFeatureState(
-          { source: 'snapshots', id: this.activeSnapshot.properties.id },
+          { source: 'snapshots', id: this.activeSnapshot.id },
           { hover: false, selected: false }
         );
       }
@@ -365,7 +376,7 @@ CM.MapboxMap = new Vue({
       clearTimeout(this.hideSnapshotTimeout);
       
       this.map.setFeatureState(
-        { source: 'snapshots', id: this.activeSnapshot.properties.id },
+        { source: 'snapshots', id: this.activeSnapshot.id },
         { hover: true }
       );
       
@@ -376,7 +387,7 @@ CM.MapboxMap = new Vue({
     deactivateSnapshot() {
       if (this.activeSnapshot) {
         this.map.setFeatureState(
-          { source: 'snapshots', id: this.activeSnapshot.properties.id },
+          { source: 'snapshots', id: this.activeSnapshot.id },
           { hover: false, selected: false }
         );
       }
@@ -453,7 +464,7 @@ CM.MapboxMap = new Vue({
       this.clickLocked = true;
       this.activateSnapshot(snapshot);
       this.map.setFeatureState(
-        { source: 'snapshots', id: this.activeSnapshot.properties.id },
+        { source: 'snapshots', id: this.activeSnapshot.id },
         { selected: true }
       );
       
@@ -529,6 +540,7 @@ CM.SnapshotDetail = new Vue({
   data: () => {
     return {
       activeSnapshot: null,
+      owned: false,
       topSide: false,
       leftSide: false
     };
@@ -537,11 +549,24 @@ CM.SnapshotDetail = new Vue({
   watch: {
     activeSnapshot(snapshot) {
       console.log(['Snapshot', this.activeSnapshot]);
+      if (this.activeSnapshot) {
+        this.owned = this.activeSnapshot.properties.email_hash == CM.Globals.emailHash;
+      }
     }
   },
   
   methods: {
-    
+    changeRating(newRating) {
+      $.post('/record/snapshot/rating/'+this.activeSnapshot.id+'/', {
+        rating: newRating,
+        photo_id: this.activeSnapshot.id
+      }, (data) => {
+        console.log(['Changed rating', data]);
+      });
+      
+      CM.MapboxMap.updateSnapshot(this.activeSnapshot.id, {rating: newRating});
+      this.activeSnapshot.properties.rating = newRating;
+    }
   }
   
 });

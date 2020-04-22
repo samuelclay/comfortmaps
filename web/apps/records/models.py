@@ -1,3 +1,4 @@
+import hashlib
 import datetime
 from django.utils import timezone
 from django.contrib.gis.db import models
@@ -34,7 +35,8 @@ class Snapshot(models.Model):
         return f"<Snapshot: {self.photo_id} {self.rating}/5 {self.location} {self.date}"
     
     def save(self, *args, **kwargs):
-        self.email_hash = hashlib.md5(self.user.email.encode('utf-8')).hexdigest()
+        if not self.email_hash:
+            self.email_hash = hashlib.md5(self.user.email.encode('utf-8')).hexdigest()
         super(Snapshot, self).save(*args, **kwargs)
     
     @property

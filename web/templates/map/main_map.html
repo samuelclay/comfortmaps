@@ -208,17 +208,17 @@
     </main>
     
     
-    <figure class="figure card snapshot-detail-container bg-dark rounded p-0 offset-4" v-bind:class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide }" v-if="activeSnapshot">
+    <figure class="figure card snapshot-detail-container bg-dark rounded p-0 offset-4" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
       <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top">
       <div class="card-body">
         <figcaption class="figure-caption text-light">
           <div class="snapshot-rating-date">
             <div class="snapshot-rating" :class="'active-rating-'+activeSnapshot.properties.rating">
-              <span class="rating rating-1"></span>
-              <span class="rating rating-2"></span>
-              <span class="rating rating-3"></span>
-              <span class="rating rating-4"></span>
-              <span class="rating rating-5"></span>
+              <span class="rating rating-1" v-on:click="changeRating(1)"></span>
+              <span class="rating rating-2" v-on:click="changeRating(2)"></span>
+              <span class="rating rating-3" v-on:click="changeRating(3)"></span>
+              <span class="rating rating-4" v-on:click="changeRating(4)"></span>
+              <span class="rating rating-5" v-on:click="changeRating(5)"></span>
             </div>
             {% verbatim %}
               <span class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</span>

@@ -224,6 +224,7 @@ figure.snapshot-detail-container.active {
 }
 .snapshot-rating {
   float: right;
+  cursor: default;
 }
 .rating {
   display: inline-block;
@@ -235,6 +236,9 @@ figure.snapshot-detail-container.active {
   border-style: solid;
   opacity: 0.5;
   transition: opacity 1s;
+}
+.owned .rating {
+  cursor: pointer;
 }
 .rating-1 {
   border-color: rgb(186,56,51);
@@ -253,30 +257,35 @@ figure.snapshot-detail-container.active {
 }
 .active-rating-1 .rating-1,
 .filter-rating-bad .rating-1,
-.filter-rating-all .rating-1 {
+.filter-rating-all .rating-1,
+.owned .rating-1:hover {
   opacity: 1;
   background-color: rgb(186,56,51);
 }
 .active-rating-2 .rating-2,
 .filter-rating-bad .rating-2,
-.filter-rating-all .rating-2 {
+.filter-rating-all .rating-2,
+.owned .rating-2:hover {
   opacity: 1;
   background-color: rgb(186,110,102);
 }
 .active-rating-3 .rating-3,
-.filter-rating-all .rating-3 {
+.filter-rating-all .rating-3,
+.owned .rating-3:hover {
   opacity: 1;
   background-color: rgb(255, 227, 136);
 }
 .active-rating-4 .rating-4,
 .filter-rating-good .rating-4,
-.filter-rating-all .rating-4 {
+.filter-rating-all .rating-4,
+.owned .rating-4:hover {
   opacity: 1;
   background-color: rgb(100, 204, 64);
 }
 .active-rating-5 .rating-5,
 .filter-rating-good .rating-5,
-.filter-rating-all .rating-5 {
+.filter-rating-all .rating-5,
+.owned .rating-5:hover {
   opacity: 1;
   background-color: rgb(48, 204, 76);
 }
