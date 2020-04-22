@@ -66,12 +66,16 @@ body a:focus {
 .nav-filter .rating {
   opacity: 0;
 }
-.navbar .nav-filter .img {
+.navbar .nav-item .img {
   vertical-align: middle;
   display: inline-block;
   width: 20px;
   height: 20px;
   background: url(/static/img/noun_filter.png) no-repeat center center;
+  background-size: 20px;
+}
+.navbar .nav-filter .img {
+  background-image: url(/static/img/noun_filter.png);
   background-size: 20px;
 }
 .navbar .nav-filter:hover .img {
@@ -81,6 +85,18 @@ body a:focus {
   line-height: 0;
 }
 
+.navbar .nav-account .dropdown-menu {
+  width: 256px;
+}
+.navbar .nav-account .img {
+  width: 22px;
+  height: 22px;
+  background-image: url(/static/img/noun_account.png);
+  background-size: 22px;
+}
+.navbar .nav-account:hover .img {
+  background-image: url(/static/img/noun_account_hover.png);
+}
 
 /*
 * Sidebar

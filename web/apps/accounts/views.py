@@ -14,7 +14,8 @@ def login_user(request):
         # if not user:
             # user = User.objects.create(email=email)
         login(request, user)
-        return HttpResponseRedirect(request.GET['next'])
+        next = request.GET.get('next', '/')
+        return HttpResponseRedirect(next)
     else:
         print('invalid')
     return render(request, "accounts/login.html", {

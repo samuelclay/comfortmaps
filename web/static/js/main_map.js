@@ -1,8 +1,3 @@
-CM.Globals = {
-  defaultLat: 42.375,
-  defaultLng: -71.122
-};
-
 CM.initMap = function() {
   CM.MapboxMap.init();
 }
@@ -10,6 +5,32 @@ CM.fontsReady = function() {
 
 
 }
+
+CM.Account = new Vue({
+  el: '.nav-account',
+  
+  data: () => {
+    return {
+
+    }
+  },
+  
+  watch: {
+
+  },
+  
+  mounted() {    
+    $("#input-account-email").on('focus', () => {
+      // $(".nav-account .dropdown-toggle").dropdown('toggle');
+      // return true;
+    });
+    $("#input-account-email").on('blur', () => {
+      // $(".nav-account .dropdown-toggle").dropdown('toggle');
+      // return true;
+    });
+  }  
+  
+});
 
 CM.Filters = new Vue({
   el: '.nav-filter',
@@ -331,7 +352,9 @@ CM.MapboxMap = new Vue({
     
     displaySnapshotDetail() {
       CM.SnapshotDetail.activeSnapshot = this.activeSnapshot;
-      console.log(['Snapshot detail', this.activeSnapshot, CM.SnapshotDetail.activeSnapshot]);
+
+      // console.log(['Snapshot detail', this.activeSnapshot, CM.SnapshotDetail.activeSnapshot]);
+
       this.$nextTick(() => {
         $(".snapshot-detail-container").addClass('active');
       });
@@ -363,7 +386,7 @@ CM.MapboxMap = new Vue({
     },
     
     flyToPhotoId(photoId, options) {
-      console.log(['Flying to', photoId]);
+      // console.log(['Flying to', photoId]);
       let feature = this.geodata.features.find((feature) => {
         return feature.id == photoId;
       });
@@ -387,7 +410,7 @@ CM.MapboxMap = new Vue({
         speed: 0.2
       }, options);
       setTimeout(() => {
-        console.log(['Flying', options]);
+        // console.log(['Flying', options]);
         this.map.flyTo(options);
       }, 0);
       this.clickLocked = true;
@@ -466,18 +489,17 @@ CM.MapboxMap = new Vue({
 CM.SnapshotDetail = new Vue({
   el: ".snapshot-detail-container",
   
-  // data: () => {
-  //   return {
-  data: {
+  data: () => {
+    return {
       activeSnapshot: null,
       topSide: false,
       leftSide: false
-    // };
+    };
   },
   
   watch: {
     activeSnapshot(snapshot) {
-      console.log(['Snapshot', snapshot, this.activeSnapshot, this]);
+      console.log(['Snapshot', this.activeSnapshot]);
     }
   },
   
