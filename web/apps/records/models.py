@@ -17,6 +17,7 @@ class SnapshotRatingScale(models.Model):
 class Snapshot(models.Model):
     photo_id = models.TextField(max_length=32)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    email_hash = models.CharField(max_length=64)
     rating = models.IntegerField()
     rating_scale = models.ForeignKey(SnapshotRatingScale, on_delete=models.CASCADE)
     location = models.PointField()

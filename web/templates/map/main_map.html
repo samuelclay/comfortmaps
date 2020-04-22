@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static records_extras %}
 {% block head %}
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
@@ -73,6 +73,20 @@
                 <span class="rating rating-3"></span>
                 <span class="rating rating-4"></span>
                 <span class="rating rating-5"></span>
+              </div>
+            </label>
+          </div>
+          <div class="filter-ownership btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
+            <label class="btn btn-ownership-self btn-secondary rounded-0 shadow-none">
+              <input type="radio" name="ownership" id="ownership1" >
+              <div class="snapshot-ownership ownership-self">
+                Only my snapshots
+              </div>
+            </label>
+            <label class="btn btn-ownership-all btn-secondary rounded-0 shadow-none active">
+              <input type="radio" name="ownership" id="ownership2" checked> 
+              <div class="snapshot-ownership ownership-all">
+                Everybody's snapshots
               </div>
             </label>
           </div>
@@ -198,7 +212,6 @@
       <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top">
       <div class="card-body">
         <figcaption class="figure-caption text-light">
-          {% verbatim %}
           <div class="snapshot-rating-date">
             <div class="snapshot-rating" :class="'active-rating-'+activeSnapshot.properties.rating">
               <span class="rating rating-1"></span>
@@ -207,11 +220,13 @@
               <span class="rating rating-4"></span>
               <span class="rating rating-5"></span>
             </div>
-            <span class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</span>
+            {% verbatim %}
+              <span class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</span>
+            {% endverbatim %}
           </div>
-          <h3>{{ activeSnapshot.properties.poi }}</h3>
-          <h5>{{ activeSnapshot.properties.address }}</h5>
-          <br />
+          {% verbatim %}
+            <h3>{{ activeSnapshot.properties.poi }}</h3>
+            <h5>{{ activeSnapshot.properties.address }}</h5>
           {% endverbatim %}
           {# {{ activeSnapshot.properties }}  #}
         </figcaption>
@@ -236,6 +251,8 @@
       defaultLat: 42.375,
       defaultLng: -71.122,
       authenticated: {{ user.is_authenticated|yesno:"true,false" }},
+      email: "{{ user.email }}",
+      emailHash: "{{ user.email|md5:"6" }}"
     };
     CM.initMap();
   });

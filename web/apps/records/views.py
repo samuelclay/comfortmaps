@@ -107,6 +107,7 @@ def snapshots_from_point(request, format="json"):
             "rating": l.rating, 
             "speed_mph": l.speed_mph, 
             "user": l.user.pk, 
+            "email_hash": l.email_hash[:6],
         } for l in locations]
         return JsonResponse({'points': points})
     elif format == "geojson":
@@ -120,6 +121,7 @@ def snapshots_from_point(request, format="json"):
             "rating": l.rating,
             "speed_mph": l.speed_mph,
             "url": l.full_photo_url,
+            "email_hash": l.email_hash[:6],
         }, geometry=geojson.Point((l.location.y, l.location.x)),
         id=l.photo_id) for l in locations]
         feature_collection = geojson.FeatureCollection(features)

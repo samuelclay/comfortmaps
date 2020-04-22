@@ -42,6 +42,12 @@ body a:focus {
 .navbar-dark .nav-item:hover .nav-link {
   color: #88bae3;
 }
+.navbar .btn-group {
+  margin-bottom: 8px;
+}
+.navbar .btn-group:last-child {
+  margin-bottom: 0;
+}
 .navbar .btn {
   outline: none;
 }

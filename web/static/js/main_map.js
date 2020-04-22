@@ -39,7 +39,7 @@ CM.Filters = new Vue({
     return {
       ratings: 'all',
       days: 0,
-      owned: false
+      ownership: 'all',
     }
   },
   
@@ -61,22 +61,59 @@ CM.Filters = new Vue({
       
     },
     
-    owned(owned) {
-      
+    ownership(ownership) {
+      if (ownership == 'all') {
+        $(".btn-ownership-all").button("toggle");
+        $(".btn-ownership-all").click();
+      } else if (ownership == 'self') {
+        $(".btn-ownership-self").button("toggle");
+        $(".btn-ownership-self").click();
+      }
     }
   },
   
   mounted() {    
     $(".btn-filter-bad").click(() => {
-      CM.MapboxMap.map.setFilter('snapshot-points', ['<=', 'rating', 2]);
+      this.ratings = 'bad';
+      this.updateFilter();
     });
     $(".btn-filter-none").click(() => {
-      CM.MapboxMap.map.setFilter('snapshot-points', null);
+      this.ratings = 'all';
+      this.updateFilter();
     });
     $(".btn-filter-good").click(() => {
-      CM.MapboxMap.map.setFilter('snapshot-points', ['>=', 'rating', 4]);
+      this.ratings = 'good';
+      this.updateFilter();
     });
-  }  
+    
+    $(".btn-ownership-all").click(() => {
+      this.ownership = 'all';
+      this.updateFilter();
+    });
+    $(".btn-ownership-self").click(() => {
+      this.ownership = 'self';
+      this.updateFilter();
+    });
+  },
+  
+  methods: {
+    updateFilter() {
+      var filters = ['all'];
+
+      if (this.ratings == 'bad') {
+        filters.push(['<=', 'rating', 2]);
+      } else if (this.ratings == 'good') {
+        filters.push(['>=', 'rating', 4]);
+      }
+      
+      if (this.ownership == 'self') {
+        filters.push(['==', 'email_hash', CM.Globals.emailHash]);
+      }
+      
+      console.log('Filters', filters, this.ratings, this.ownership);
+      CM.MapboxMap.map.setFilter('snapshot-points', filters);
+    }
+  }
   
 });
 
