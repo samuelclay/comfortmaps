@@ -32,7 +32,11 @@ class Snapshot(models.Model):
     
     def __str__(self):
         return f"<Snapshot: {self.photo_id} {self.rating}/5 {self.location} {self.date}"
-        
+    
+    def save(self, *args, **kwargs):
+        self.email_hash = hashlib.md5(self.user.email.encode('utf-8')).hexdigest()
+        super(Snapshot, self).save(*args, **kwargs)
+    
     @property
     def s3_key_name(self):
         return '%sx/%s.jpg' % (self.width, self.photo_id)
