@@ -13,10 +13,10 @@
 
 {% block content %}
 
-<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+<nav class="navbar navbar-dark fixed-top flex-md-nowrap p-0 shadow">
   
   <a class="navbar-brand col-2" href="#">
-    <img src="{% static "img/favicon64.png" %}" class="logo">
+    <img src="{% static "img/logo_white.png" %}" class="logo">
     Comfort Maps
   </a>
   
@@ -32,8 +32,15 @@
         <a class="dropdown-item" href="#">Learn more...</a>
       </div>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Get the Camera</a>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGet" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Get the camera
+      </a>
+      <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownGet">
+        <p class="nav-what">
+          These are stories told about the lived experience of bicyclists on city streets.<br><br>The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility. </p>
+        <a class="dropdown-item" href="#">Learn more...</a>
+      </div>
     </li>
   </ul>
   
@@ -134,12 +141,12 @@
 <div class="container-fluid p-0 page-content">
   <div class="row no-gutters">
 
-    <div class="col-md-5 col-lg-4 d-none d-md-block bg-dark text-light sidebar position-relative" >
+    <div class="col-md-5 col-lg-4 d-none d-md-block text-light sidebar position-relative" >
       <section class="sidebar-scroll-section" id="sidebar-section-1">
-        <h1 class="display-4">Why are the bike lanes in Cambridge so dangerous?</h1>
+        <h1>Where does biking in Cambridge fall short?</h1>
         <p class="lead">Cambridge is home to 120,000 people. There are 670,000 people in neighboring Boston. In the <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclenetworkplan">Cambridge Bicycle Plan</a>, published in 2015, Cambridge has committed to increasing the share of commute trips by bike to 10 percent by 2020. Cambridge has also set a goal of decreasing bike crashes by 50 percent.</p>
 
-        <p>This is the visual story of what that plan looks like today and where changes need to be made.</p>
+        <p>This is the story of what's out there on the streets today and where changes need to be made.</p>
         <h6 class="author">Samuel Clay, May 12th, 2020</h6>
         
         <div class="scroll-down"></div>
@@ -147,7 +154,7 @@
       </section>
 
       <section class="sidebar-scroll-section" id="sidebar-section-2">
-        <h2 class="display-4">Bike Lanes of Today</h2>
+        <h2>Bike Lanes of Today</h2>
         <p class="lead">In 2018 there are 195 miles of bike lanes across the city of Boston. The <a href="https://www.cityofboston.gov/images_documents/Boston%20Bike%20Network%20Plan%2C%20Fall%202013_FINAL_tcm3-40525.pdf">Boston Bike Network Plan</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
 
         <p>Boston is attempting to create a world-class biking city, but to do that the city needs to do more than add bike lanes. Improving safety is what leads to increasing usage of the bike faciities in the city and to do that Boston needs to consider several problem areas.</p>
@@ -213,9 +220,9 @@
     </main>
     
     
-    <figure class="figure card snapshot-detail-container bg-dark rounded p-0 offset-4" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
-      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top" v-if="activeSnapshot.properties.photo_uploaded">
-      <div class="card-body">
+    <figure class="figure card snapshot-detail-container p-0 rounded-0 offset-4" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
+      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top m-0" v-if="activeSnapshot.properties.photo_uploaded">
+      <div class="card-body rounded-bottom">
         <figcaption class="figure-caption text-light">
           <div class="snapshot-rating-date">
             <div class="snapshot-rating" :class="'active-rating-'+activeSnapshot.properties.rating">
@@ -264,13 +271,13 @@
 
   WebFont.load({
     google: {
-      families: ['Lora', 'Montserrat']
+      families: ['Lora', 'Ubuntu', 'Oswald']
     },
     fontactive: function(fontName) {
       // console.log(['Fonts loaded', fontName]);
       if (!CM.fontsLoaded) CM.fontsLoaded = 0;
       CM.fontsLoaded += 1;
-      if (fontName == "Lora" || CM.fontsLoaded >= 2) {
+      if (fontName == "Lora" || CM.fontsLoaded >= 3) {
         CM.fontsReady && CM.fontsReady();
       }
     }

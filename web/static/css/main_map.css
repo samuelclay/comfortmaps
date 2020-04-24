@@ -15,13 +15,27 @@ body a:focus {
   vertical-align: text-bottom;
 }
 .page-content {
-  margin-top: 40px; /* fixed navbar offset */
+  margin-top: 52px; /* fixed navbar offset */
+}
+h1 {
+  font-size: 2.75rem;
+}
+h1, h2 {
+  color: #E8C547;
+}
+.lead {
+  font-size: 1.35rem;
+}
+p {
+  font-size: 1rem;
 }
 
 /*
 * Navbar
 */
-
+.navbar {
+  background-color: #1B252D;
+}
 .navbar .nav-tabs {
   border-bottom: none;
 }
@@ -32,7 +46,12 @@ body a:focus {
 }
 .navbar .nav,
 .navbar .btn {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Ubuntu", sans-serif;
+}
+.navbar .navbar-brand {
+  font-family: "Oswald", sans-serif;
+  text-transform: uppercase;
+  font-size: 1.45rem;
 }
 .navbar-dark .nav-item .nav-link {
   color: #fff;
@@ -120,7 +139,7 @@ body a:focus {
   position: relative;
   top: 0;
   opacity: 0.9;
-  
+  background-color: #1B252D;
 }
 
 .sidebar > section {
@@ -202,6 +221,7 @@ figure.snapshot-detail-container {
   right: 18px;
   width: 32%;
   max-width: 490px;
+  background-color: #1B252D;
 }
 figure.snapshot-detail-container.top-side.right-side {
   top: 60px;
@@ -211,20 +231,29 @@ figure.snapshot-detail-container.top-side.right-side {
 }
 figure.snapshot-detail-container.active {
   display: block;
-  opacity: 1.0;
+  opacity: 1;
 }
 
 .snapshot-detail-container .figure-img {
   width: 488px;
   height: auto;
 }
+.snapshot-detail-container .card-body {
+  position: absolute;
+  top: 100%;
+  background-color: #1B252D;
+  border: 1px solid rgba(0,0,0,.125);
+  opacity: 0.9;
+  width: 488px;
+  max-width: 100%;
+}
 .snapshot-rating-date {
   margin-bottom: 12px;
 }
 .snapshot-date {
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
-  color: bisque;
+  font-family: 'Oswald', sans-serif;
+  color: #E8C547;
   font-size: 0.7rem;
 }
 .snapshot-rating {
