@@ -157,7 +157,19 @@ p {
 
 .sidebar-scroll-section {
 }
-
+.section-scroller {  
+  position: relative;
+  min-height: 800px;
+}
+.section-scroller-fixed {
+  position: absolute;
+  top: 0;
+  left: 18px;
+}
+.section-scroller-fixed.active {
+  position: fixed;
+  top: 40px;
+}
 /*
 * Content
 */
@@ -185,7 +197,6 @@ p {
 /* = Main Map = */
 /* ============ */
 
-
 .main-map {
   position: fixed;
   top: 0;
@@ -200,6 +211,13 @@ p {
   top: 0;
   height: calc(100vh - 48px);
   padding-top: .5rem;
+}
+
+.map-move-protector {
+  position: absolute;
+/*  background-color: rgba(0, 0, 0, 0.2);*/
+  z-index: 1;
+  display: none;
 }
 
 @supports ((position: -webkit-sticky) or (position: sticky)) {

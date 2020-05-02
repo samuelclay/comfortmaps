@@ -171,44 +171,46 @@
         <p>Most crashes in Boston are caused by drivers not seeing bikes, whether or not the bike was in a bike lane.</p>
       </section>
       
-      <section class="sidebar-scroll-section" id="sidebar-section-5">
-        <p class="lead">Zooming in highlights streets with numerous complaints lacking bike lanes.</p>
-        <p class="note live-driving off">
-          <span class="live-driving-icon"></span> 
-          <span class="live-driving-text">Live driving is off</span>
-        </p>
-        <div class="zoom-streets">
-          <div class="zoom-street zoom-street-1 active">
-            <div class="zoom-street-number">1</div>
-            <div class="zoom-street-name">Washington St. in Roslindale</div>
-          </div>
-          <div class="zoom-street zoom-street-2">
-            <div class="zoom-street-number">2</div>
-            <div class="zoom-street-name">Massachusetts Ave.</div>
-          </div>
-          <div class="zoom-street zoom-street-3">
-            <div class="zoom-street-number">3</div>
-            <div class="zoom-street-name">Huntington St.</div>
-          </div>
-          <div class="zoom-street zoom-street-4">
-            <div class="zoom-street-number">4</div>
-            <div class="zoom-street-name">Seaport Blvd.</div>
-          </div>
-          <div class="zoom-street zoom-street-5">
-            <div class="zoom-street-number">5</div>
-            <div class="zoom-street-name">Tremont St.</div>
-          </div>
-          <div class="zoom-street zoom-street-6">
-            <div class="zoom-street-number">6</div>
-            <div class="zoom-street-name">W Roxbury Pkwy.</div>
-          </div>
-          <div class="zoom-street zoom-street-7">
-            <div class="zoom-street-number">7</div>
-            <div class="zoom-street-name">Washington St. in Dorchester</div>
-          </div>
-          <div class="zoom-street zoom-street-8">
-            <div class="zoom-street-number">8</div>
-            <div class="zoom-street-name">Charles St.</div>
+      <section class="sidebar-scroll-section section-scroller" id="sidebar-section-5">
+        <div class="section-scroller-fixed">
+          <p class="lead">Zooming in highlights streets with numerous complaints lacking bike lanes.</p>
+          <p class="note live-driving off">
+            <span class="live-driving-icon"></span> 
+            <span class="live-driving-text">Live driving is off</span>
+          </p>
+          <div class="zoom-streets">
+            <div class="zoom-street zoom-street-1 active">
+              <div class="zoom-street-number">1</div>
+              <div class="zoom-street-name">Washington St. in Roslindale</div>
+            </div>
+            <div class="zoom-street zoom-street-2">
+              <div class="zoom-street-number">2</div>
+              <div class="zoom-street-name">Massachusetts Ave.</div>
+            </div>
+            <div class="zoom-street zoom-street-3">
+              <div class="zoom-street-number">3</div>
+              <div class="zoom-street-name">Huntington St.</div>
+            </div>
+            <div class="zoom-street zoom-street-4">
+              <div class="zoom-street-number">4</div>
+              <div class="zoom-street-name">Seaport Blvd.</div>
+            </div>
+            <div class="zoom-street zoom-street-5">
+              <div class="zoom-street-number">5</div>
+              <div class="zoom-street-name">Tremont St.</div>
+            </div>
+            <div class="zoom-street zoom-street-6">
+              <div class="zoom-street-number">6</div>
+              <div class="zoom-street-name">W Roxbury Pkwy.</div>
+            </div>
+            <div class="zoom-street zoom-street-7">
+              <div class="zoom-street-number">7</div>
+              <div class="zoom-street-name">Washington St. in Dorchester</div>
+            </div>
+            <div class="zoom-street zoom-street-8">
+              <div class="zoom-street-number">8</div>
+              <div class="zoom-street-name">Charles St.</div>
+            </div>
           </div>
         </div>
       </section>
@@ -216,6 +218,7 @@
     </div>
     
     <main role="main" class="container-fluid position-fixed h-100 p-0">
+      <div class="map-move-protector w-100 h-100"></div>
       <div id="CM-main-map" class="mapbox w-100 h-100 m-0 row"></div>
     </main>
     

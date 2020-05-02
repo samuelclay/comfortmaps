@@ -110,7 +110,7 @@ CM.Filters = new Vue({
         filters.push(['==', 'email_hash', CM.Globals.emailHash]);
       }
       
-      console.log('Filters', filters, this.ratings, this.ownership);
+      // console.log('Filters', filters, this.ratings, this.ownership);
       CM.MapboxMap.map.setFilter('snapshot-points', filters);
     }
   }
@@ -131,10 +131,25 @@ CM.ScrollSpy = function() {
       $(element).removeClass('active');
       // CM.MapboxMap.activateSectionFromScroll(element)
     },
-    // onTick: (element, position, inside, enters, leaves) => {
-    //   console.log(['onTick', element, position, inside, enters, leaves]);
-    // }
+    onTick: (element, position, inside, enters, leaves) => {
+      // console.log(['onTick', position.top, $(".sidebar .section-scroller-fixed").offset().top]);
+      CM.MapboxMap.protectMapMove();
+    }
   });
+  
+  $(".sidebar .section-scroller").scrollspy({
+    container: window,
+    min: $(".sidebar .section-scroller").offset().top,
+    onEnter: (element, position) => {
+      console.log(['enter section scroll', element, position]);
+      $(".section-scroller-fixed").addClass('active');
+    },
+    onLeave: (element, position) => {
+      console.log(['leave section scroll', element, position]);
+      $(".section-scroller-fixed").removeClass('active');
+    }
+  });
+  
   $(window).scroll();
 }
 
@@ -146,11 +161,13 @@ CM.MapboxMap = new Vue({
       hoveredStateId: 0,
       activeSnapshot: null,
       map: null,
-      clickLocked: false,
+      clickLocked: null,
       hideSnapshotTimeout: null,
       filter: null,
       loadedSource: false,
-      geodata: null
+      geodata: null,
+      mapMoveProtectorTimeout: null,
+      flying: 0
     };
   },
   // props: {
@@ -207,6 +224,7 @@ CM.MapboxMap = new Vue({
         this.bindHoverPhotos();
         this.bindClickPhoto();
         this.bindMouseSide();
+        this.bindMapMove();
         this.addHeadingImage();
         $(window).resize(this.bindMouseSide.bind(this));
       });
@@ -349,16 +367,30 @@ CM.MapboxMap = new Vue({
         if (e.features.length == 0) return;
         if (this.activeSnapshot && this.activeSnapshot.id ==
           e.features[0].id) return;
-        if (this.clickLocked) return;
-
+        // if (this.clickLocked) return; // Comment out to allow hover over photos
+        
         this.activateSnapshot(e.features[0], {hover: true});
+        if (this.clickLocked && e.features[0].id == this.clickLocked.id) {
+          this.map.setFeatureState(
+            { source: 'snapshots', id: this.clickLocked.id },
+            { selected: true }
+          );
+        }
       });
  
       // When the mouse leaves the state-fill layer, update the feature state of the
       // previously hovered feature.
       this.map.on('mouseleave', 'snapshot-points', () => {
-        if (this.clickLocked) return;
-        this.deactivateSnapshot();
+        if (this.clickLocked) {
+          // Go back to click locked photo
+          this.activateSnapshot(this.clickLocked);
+          this.map.setFeatureState(
+            { source: 'snapshots', id: this.clickLocked.id },
+            { selected: true }
+          );
+        } else {
+          this.deactivateSnapshot();
+        }
       });
     },
     
@@ -423,7 +455,7 @@ CM.MapboxMap = new Vue({
       this.map.on('click', () => {
         console.log(['clickLocked?', this.clickLocked]);
         if (this.clickLocked) {
-          this.clickLocked = false;
+          this.clickLocked = null;
           this.deactivateSnapshot();
         }
       });
@@ -458,11 +490,12 @@ CM.MapboxMap = new Vue({
         zoom: this.map.getZoom(),
         speed: 0.2
       }, options);
+      this.protectMapMove(true);
       setTimeout(() => {
-        // console.log(['Flying', options]);
+        console.log(['Flying', snapshot.id, snapshot.properties.poi, this.flying]);
         this.map.flyTo(options);
       }, 0);
-      this.clickLocked = true;
+      this.clickLocked = snapshot;
       this.activateSnapshot(snapshot);
       this.map.setFeatureState(
         { source: 'snapshots', id: this.activeSnapshot.id },
@@ -478,6 +511,35 @@ CM.MapboxMap = new Vue({
         CM.SnapshotDetail.topSide = false;
         CM.SnapshotDetail.leftSide = true;
       }
+    },
+    
+    protectMapMove(indefinite) {
+      if (indefinite) this.flying += 1;
+      if (this.flying && !indefinite) return;
+      
+      if (!this.mapMoveProtectorTimeout) {
+        $(".map-move-protector").show();
+      } else {
+        clearTimeout(this.mapMoveProtectorTimeout);
+      }
+      
+      if (!indefinite) {
+        this.mapMoveProtectorTimeout = setTimeout(() => {
+          this.endProtectMapMove();
+        }, 500);
+      } else {
+        console.log(['Protect ON', indefinite]);
+      }
+    },
+    
+    endProtectMapMove(endIndefinite) {
+      if (endIndefinite) this.flying -= 1;
+      if (this.flying > 0) return;
+      
+      console.log(['Protect OVER AND OUT', endIndefinite, this.flying]);
+      $(".map-move-protector").hide();
+      clearTimeout(this.mapMoveProtectorTimeout);
+      this.mapMoveProtectorTimeout = null;    
     },
     
     bindMouseSide() {
@@ -506,9 +568,25 @@ CM.MapboxMap = new Vue({
       });
     },
     
+    bindMapMove() {
+      this.map.on('moveend', ({ originalEvent }) => {
+        if (originalEvent) {
+          this.map.fire('usermoveend');
+        } else {
+          this.map.fire('flyend');
+        }
+      });
+      
+      this.map.on('flyend', (data, msg) => {
+        this.endProtectMapMove(true);
+      });
+    },
+    
     activateSectionFromScroll(sectionEl) {
       if ($(sectionEl).is("#sidebar-section-1")) {
         this.map.setFilter('snapshot-points', null);
+        this.protectMapMove(true);
+
         setTimeout(() => {
           this.map.flyTo({center: {
             lat: CM.Globals.defaultLat,
@@ -529,7 +607,13 @@ CM.MapboxMap = new Vue({
       } else if ($(sectionEl).is("#sidebar-section-5")) {
         this.flyToPhotoId("55_t_gSm", {zoom: 17});
         CM.Filters.ratings = "bad";
+        
+        this.scrollspySection();
       }
+    },
+    
+    scrollspySection() {
+      
     }
         
   }
@@ -549,7 +633,7 @@ CM.SnapshotDetail = new Vue({
   
   watch: {
     activeSnapshot(snapshot) {
-      console.log(['Snapshot', this.activeSnapshot]);
+      // console.log(['Active snapshot', this.activeSnapshot]);
       if (this.activeSnapshot) {
         this.owned = this.activeSnapshot.properties.email_hash == CM.Globals.emailHash;
       }
