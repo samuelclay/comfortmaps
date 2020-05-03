@@ -183,6 +183,36 @@ p {
 .zoom-space {
   height: 50vh;
 }
+/*.zoom-space-1 {
+  background-color: rgba(255, 255, 255, .1);
+}
+.zoom-space-2 {
+  background-color: rgba(255, 255, 255, .2);
+}
+.zoom-space-3 {
+  background-color: rgba(255, 255, 255, .3);
+}
+.zoom-space-4 {
+  background-color: rgba(255, 255, 255, .4);
+}
+.zoom-space-5 {
+  background-color: rgba(255, 255, 255, .5);
+}*/
+.zoom-streets {
+  position: relative;
+}
+.zoom-indicator {
+  position: absolute;
+  left: 80%;
+  top: 0;
+  list-style: none;
+/*  transition: top .04s;*/
+}
+.zoom-indicator img {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
 .zoom-street {
     clear: both;
     margin: 0 0 6px;

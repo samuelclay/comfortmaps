@@ -122,9 +122,11 @@ CM.Filters = new Vue({
 });
 
 CM.ScrollSpy = function() {
+  let buffer = $(window).outerHeight() / 2;
+  
   $(".sidebar > section").scrollspy({
     container: window,
-    buffer: $(window).outerHeight() / 2,
+    buffer: buffer,
     onEnter: (element, position) => {
       // console.log(['enter', element]);
       $(element).addClass('active');
@@ -143,23 +145,30 @@ CM.ScrollSpy = function() {
   
   $(".sidebar .section-scroller > .zoom-space").scrollspy({
     container: window,
-    buffer: $(window).outerHeight() / 2,
+    buffer: buffer,
     // buffer: $(".sidebar .section-scroller").offset().top,
     onEnter: (element, position) => {
-      console.log(['enter section scroll', element, position]);
-      $(element).addClass('active');
+      // console.log(['enter section scroll', element, position]);
       let num = /zoom-space-(\d+)/.exec(element.className)[1];
+
+      $(element).addClass('active');
       $(".zoom-street-" + num).addClass('active');
       CM.MapboxMap.activateSectionFromScroll(element);
     },
     onLeave: (element, position) => {
       // console.log(['leave section scroll', element, position]);
-      $(element).removeClass('active');
       let num = /zoom-space-(\d+)/.exec(element.className)[1];
+
+      $(element).removeClass('active');
       $(".zoom-street-" + num).removeClass('active');
     },
     onTick: (element, position, inside, enters, leaves) => {
-      console.log(['onTick', position.top, $(".sidebar .section-scroller-fixed").offset().top, $(element).position().top + $(element).outerHeight()]);
+      let spaceHeight = $(element).outerHeight();
+      let spacePosition = $(element).position().top - $(window).scrollTop();
+      let scrollPct = 1 - spacePosition / spaceHeight;
+      // console.log(['onTick', spaceHeight, spacePosition, scrollPct]);
+
+      CM.ZoomList.scrollPct = scrollPct;
     }
   });
   
@@ -484,7 +493,7 @@ CM.MapboxMap = new Vue({
       let feature = this.geodata.features.find((feature) => {
         return feature.id == photoId;
       });
-      // let feature = CM.MapboxMap.map.querySourceFeatures('snapshots', {
+      // let feature = this.map.querySourceFeatures('snapshots', {
       //   filter: ['==', 'id', photoId]
       // });
       
@@ -596,11 +605,12 @@ CM.MapboxMap = new Vue({
     },
     
     hideBikeLanes() {
-      CM.MapboxMap.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', 0)
-      CM.MapboxMap.map.setPaintProperty('boston-ma-existing-bike-network', 'line-opacity', 0);
+      this.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', 0)
+      this.map.setPaintProperty('boston-ma-existing-bike-network', 'line-opacity', 0);
     },
     
     showBikeLanes() {
+      this.map.setLayoutProperty('cambridge-ma-bike-facilities', 'visibility', 'visible')
       let zoom = [
         'interpolate',
         ['linear'],
@@ -610,8 +620,8 @@ CM.MapboxMap = new Vue({
         17,
         1
       ];
-      CM.MapboxMap.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', zoom);
-      CM.MapboxMap.map.setPaintProperty('boston-ma-existing-bike-network', 'line-opacity', zoom);
+      this.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', zoom);
+      this.map.setPaintProperty('boston-ma-existing-bike-network', 'line-opacity', zoom);
     },
     
     activateSectionFromScroll(sectionEl) {
@@ -648,22 +658,27 @@ CM.MapboxMap = new Vue({
       } else if ($(sectionEl).is(".zoom-space-1")) {
         this.flyToPhotoId("55_t_gSm", {zoom: 17});
         CM.Filters.ratings = "bad";
+        CM.ZoomList.activeZoom = 1;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-2")) {
         this.flyToPhotoId("pi-6u3xz", {zoom: 17});
         CM.Filters.ratings = "bad";
+        CM.ZoomList.activeZoom = 2;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-3")) {
         this.flyToPhotoId("tF5ZKCcW", {zoom: 17});
         CM.Filters.ratings = "bad";
+        CM.ZoomList.activeZoom = 3;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-4")) {
         this.flyToPhotoId("hV7LG2cI", {zoom: 17});
         CM.Filters.ratings = "bad";
+        CM.ZoomList.activeZoom = 4;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-5")) {
         this.flyToPhotoId("C4a6-Cce", {zoom: 17});
         CM.Filters.ratings = "bad";
+        CM.ZoomList.activeZoom = 5;
         this.showBikeLanes();
       }
     }
@@ -714,3 +729,31 @@ Vue.filter('formatDate', function(value) {
     return moment(String(value)).format('LLLL')
   }
 });
+
+CM.ZoomList = new Vue({
+  el: ".zoom-streets",
+  
+  data: () => {
+    return {
+      activeZoom: null,
+      scrollPct: 0,
+      zoomHeight: 42,
+    };
+  },
+  
+  watch: {
+    scrollPct() {
+      this.adjustIndicator();
+    },
+    activeZoom() {
+      let zoomHeight = $(".zoom-street").first().outerHeight(true);
+    }
+  },
+  
+  methods: {
+    adjustIndicator() {
+      $(".zoom-indicator").css('top', ((this.activeZoom-1) * this.zoomHeight) + (this.zoomHeight * this.scrollPct));
+    }
+  }
+  
+})
