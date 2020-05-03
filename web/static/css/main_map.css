@@ -86,9 +86,17 @@ p {
   width: 200%;
   box-shadow: 0px 8px 10px  rgba(0, 0, 0, .1), 
       -10px 8px 10px  rgba(0, 0, 0, .1), 10px 8px 10px rgba(0, 0, 0, .1);
+  background-color: #1B252D;
+  color: white;
+}
+.navbar .dropdown-item {
+  color: #88bae3;
 }
 .navbar .nav-filter .dropdown-menu {
   width: 400px;
+}
+.navbar .nav-filter .btn {
+  line-height: 1.25rem;
 }
 .nav-filter .rating {
   opacity: 0;
@@ -158,18 +166,54 @@ p {
 .sidebar-scroll-section {
 }
 .section-scroller {  
-  position: relative;
-  min-height: 800px;
+
 }
 .section-scroller-fixed {
-  position: absolute;
-  top: 0;
+  position: sticky;
+  top: 40vh;
   left: 18px;
 }
 .section-scroller-fixed.active {
-  position: fixed;
-  top: 40px;
 }
+
+/* ====================== */
+/* = Zoom in on Streets = */
+/* ====================== */
+
+.zoom-space {
+  height: 50vh;
+}
+.zoom-street {
+    clear: both;
+    margin: 0 0 6px;
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 2px 6px;
+    width: 80%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.5s;
+    list-style: none;
+}
+.zoom-street:hover {
+    background-color: rgba(0, 0, 0, 0.4);    
+}
+.zoom-street.active {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.zoom-street-number {
+    float: left;
+    margin: 8px 14px 0 10px;
+/*    color: rgba(255, 255, 255, 0.4);*/
+    font-family: 'Oswald', sans-serif;
+    color: #E8C547;
+    font-size: 0.7rem;
+}
+.zoom-street-name {
+    font-size: 1rem;
+    padding: 4px 0;
+}
+
 /*
 * Content
 */
@@ -342,3 +386,5 @@ figure.snapshot-detail-container.active {
   opacity: 1;
   background-color: rgb(48, 204, 76);
 }
+
+

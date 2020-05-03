@@ -54,6 +54,8 @@ CM.Filters = new Vue({
       } else if (rating == "good") {
         $(".btn-filter-good").button("toggle");
         $(".btn-filter-good").click();
+      } else if (rating == "none") {
+        this.updateFilter();
       }
     },
     
@@ -104,6 +106,8 @@ CM.Filters = new Vue({
         filters.push(['<=', 'rating', 2]);
       } else if (this.ratings == 'good') {
         filters.push(['>=', 'rating', 4]);
+      } else if (this.ratings == 'none') {
+        filters.push(['>', 'rating', 5]);
       }
       
       if (this.ownership == 'self') {
@@ -137,16 +141,25 @@ CM.ScrollSpy = function() {
     }
   });
   
-  $(".sidebar .section-scroller").scrollspy({
+  $(".sidebar .section-scroller > .zoom-space").scrollspy({
     container: window,
-    min: $(".sidebar .section-scroller").offset().top,
+    buffer: $(window).outerHeight() / 2,
+    // buffer: $(".sidebar .section-scroller").offset().top,
     onEnter: (element, position) => {
       console.log(['enter section scroll', element, position]);
-      $(".section-scroller-fixed").addClass('active');
+      $(element).addClass('active');
+      let num = /zoom-space-(\d+)/.exec(element.className)[1];
+      $(".zoom-street-" + num).addClass('active');
+      CM.MapboxMap.activateSectionFromScroll(element);
     },
     onLeave: (element, position) => {
-      console.log(['leave section scroll', element, position]);
-      $(".section-scroller-fixed").removeClass('active');
+      // console.log(['leave section scroll', element, position]);
+      $(element).removeClass('active');
+      let num = /zoom-space-(\d+)/.exec(element.className)[1];
+      $(".zoom-street-" + num).removeClass('active');
+    },
+    onTick: (element, position, inside, enters, leaves) => {
+      console.log(['onTick', position.top, $(".sidebar .section-scroller-fixed").offset().top, $(element).position().top + $(element).outerHeight()]);
     }
   });
   
@@ -186,7 +199,7 @@ CM.MapboxMap = new Vue({
         container: 'CM-main-map',
         style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
         center: [CM.Globals.defaultLng, CM.Globals.defaultLat], // [long, lat]
-        zoom: 15,
+        zoom: CM.Globals.defaultZoom,
         pitchWithRotate: false
       });
       
@@ -442,7 +455,7 @@ CM.MapboxMap = new Vue({
     },
     
     hideSnapshotDetail() {
-      console.log(['hideSnapshotDetail', this.activeSnapshot]);
+      // console.log(['hideSnapshotDetail', this.activeSnapshot]);
       $(".snapshot-detail-container").removeClass('active');
       this.hideSnapshotTimeout = setTimeout(() => {
         if (this.activeSnapshot == null) {
@@ -488,11 +501,11 @@ CM.MapboxMap = new Vue({
       options = $.extend({}, {
         center: snapshot.geometry.coordinates,
         zoom: this.map.getZoom(),
-        speed: 0.2
+        speed: 0.3
       }, options);
       this.protectMapMove(true);
       setTimeout(() => {
-        console.log(['Flying', snapshot.id, snapshot.properties.poi, this.flying]);
+        // console.log(['Flying', snapshot.id, snapshot.properties.poi, this.flying]);
         this.map.flyTo(options);
       }, 0);
       this.clickLocked = snapshot;
@@ -528,7 +541,7 @@ CM.MapboxMap = new Vue({
           this.endProtectMapMove();
         }, 500);
       } else {
-        console.log(['Protect ON', indefinite]);
+        // console.log(['Protect ON', indefinite]);
       }
     },
     
@@ -536,7 +549,7 @@ CM.MapboxMap = new Vue({
       if (endIndefinite) this.flying -= 1;
       if (this.flying > 0) return;
       
-      console.log(['Protect OVER AND OUT', endIndefinite, this.flying]);
+      // console.log(['Protect OVER AND OUT', endIndefinite, this.flying]);
       $(".map-move-protector").hide();
       clearTimeout(this.mapMoveProtectorTimeout);
       this.mapMoveProtectorTimeout = null;    
@@ -582,38 +595,77 @@ CM.MapboxMap = new Vue({
       });
     },
     
+    hideBikeLanes() {
+      CM.MapboxMap.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', 0)
+      CM.MapboxMap.map.setPaintProperty('boston-ma-existing-bike-network', 'line-opacity', 0);
+    },
+    
+    showBikeLanes() {
+      let zoom = [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        10,
+        0,
+        17,
+        1
+      ];
+      CM.MapboxMap.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', zoom);
+      CM.MapboxMap.map.setPaintProperty('boston-ma-existing-bike-network', 'line-opacity', zoom);
+    },
+    
     activateSectionFromScroll(sectionEl) {
       if ($(sectionEl).is("#sidebar-section-1")) {
-        this.map.setFilter('snapshot-points', null);
         this.protectMapMove(true);
-
-        setTimeout(() => {
-          this.map.flyTo({center: {
-            lat: CM.Globals.defaultLat,
-            lng: CM.Globals.defaultLng
-          }, speed: 0.2, zoom: 15});
-        }, 0);
+        this.map.flyTo({center: {
+          lat: CM.Globals.defaultLat,
+          lng: CM.Globals.defaultLng
+        }, speed: 0.4, zoom: CM.Globals.defaultZoom});
         this.deactivateSnapshot();
-        CM.Filters.ratings = "all";
+        CM.Filters.ratings = "none";
+        this.hideBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-2")) {
+        this.protectMapMove(true);
+        this.map.flyTo({center: {
+          lat: CM.Globals.defaultLat,
+          lng: CM.Globals.defaultLng
+        }, speed: 0.4, zoom: CM.Globals.defaultZoom});
+        this.deactivateSnapshot();
+        CM.Filters.ratings = "none";
+        this.showBikeLanes();
+      } else if ($(sectionEl).is("#sidebar-section-3")) {
         this.flyToPhotoId("-U9Wblf7N", {zoom: 17});
         CM.Filters.ratings = "good";
-      } else if ($(sectionEl).is("#sidebar-section-3")) {
+        this.showBikeLanes();
+      } else if ($(sectionEl).is("#sidebar-section-4")) {
         this.flyToPhotoId("aAJ-l6wp", {zoom: 16});
         CM.Filters.ratings = "bad";
-      } else if ($(sectionEl).is("#sidebar-section-4")) {
-        this.flyToPhotoId("7I1g61mU", {zoom: 15});
-        CM.Filters.ratings = "bad";
+        this.showBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-5")) {
         this.flyToPhotoId("55_t_gSm", {zoom: 17});
         CM.Filters.ratings = "bad";
-        
-        this.scrollspySection();
+        this.showBikeLanes();
+      } else if ($(sectionEl).is(".zoom-space-1")) {
+        this.flyToPhotoId("55_t_gSm", {zoom: 17});
+        CM.Filters.ratings = "bad";
+        this.showBikeLanes();
+      } else if ($(sectionEl).is(".zoom-space-2")) {
+        this.flyToPhotoId("pi-6u3xz", {zoom: 17});
+        CM.Filters.ratings = "bad";
+        this.showBikeLanes();
+      } else if ($(sectionEl).is(".zoom-space-3")) {
+        this.flyToPhotoId("tF5ZKCcW", {zoom: 17});
+        CM.Filters.ratings = "bad";
+        this.showBikeLanes();
+      } else if ($(sectionEl).is(".zoom-space-4")) {
+        this.flyToPhotoId("hV7LG2cI", {zoom: 17});
+        CM.Filters.ratings = "bad";
+        this.showBikeLanes();
+      } else if ($(sectionEl).is(".zoom-space-5")) {
+        this.flyToPhotoId("C4a6-Cce", {zoom: 17});
+        CM.Filters.ratings = "bad";
+        this.showBikeLanes();
       }
-    },
-    
-    scrollspySection() {
-      
     }
         
   }

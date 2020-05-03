@@ -28,7 +28,14 @@
       </a>
       <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownWhat">
         <p class="nav-what">
-          These are stories told about the lived experience of bicyclists on city streets.<br><br>The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility. </p>
+          Comfort Maps make safer streets. Turn your two-wheeled commute into a call for action.
+        </p>
+        <p class="nav-what">
+          These are stories told about the lived experience of bicyclists on city streets.
+        </p>
+        <p class="nav-what">
+          The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility. 
+        </p>
         <a class="dropdown-item" href="#">Learn more...</a>
       </div>
     </li>
@@ -61,7 +68,7 @@
                 <span class="rating rating-4"></span>
                 <span class="rating rating-5"></span>
               </div>
-              <div class="">The bad</div>
+              <div class="">Improvement needed</div>
             </label>
             <label class="btn btn-filter-none btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
               <input type="radio" name="options" id="option2" checked> 
@@ -83,7 +90,7 @@
                 <span class="rating rating-4"></span>
                 <span class="rating rating-5"></span>
               </div>
-              <div class="">The good</div>
+              <div class="">Great streets</div>
             </label>
           </div>
           <div class="filter-ownership btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
@@ -99,6 +106,35 @@
               <div class="snapshot-ownership ownership-all">
                 <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
                 Everybody's snapshots
+              </div>
+            </label>
+          </div>
+          <div class="filter-time btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
+            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
+              <input type="radio" name="time" id="time1" >
+              <div class="snapshot-time time-peak">
+                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                Peak hours
+              </div>
+            </label>
+            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
+              <input type="radio" name="time" id="time1" >
+              <div class="snapshot-time time-daytime">
+                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                Daytime
+              </div>
+            </label>            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
+              <input type="radio" name="time" id="time1" >
+              <div class="snapshot-time time-nighttime">
+                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                Nighttime
+              </div>
+            </label>
+            <label class="btn btn-time-all btn-secondary rounded-0 shadow-none active">
+              <input type="radio" name="time" id="time2" checked> 
+              <div class="snapshot-time time-all">
+                <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
+                All day
               </div>
             </label>
           </div>
@@ -144,10 +180,10 @@
     <div class="col-md-5 col-lg-4 d-none d-md-block text-light sidebar position-relative" >
       <section class="sidebar-scroll-section" id="sidebar-section-1">
         <h1>Where does biking in Cambridge fall short?</h1>
-        <p class="lead">Cambridge is home to 120,000 people. There are 670,000 people in neighboring Boston. In the <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclenetworkplan">Cambridge Bicycle Plan</a>, published in 2015, Cambridge has committed to increasing the share of commute trips by bike to 10 percent by 2020. Cambridge has also set a goal of decreasing bike crashes by 50 percent.</p>
+        <p class="lead">Cambridge is home to 120,000 people. In the <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclenetworkplan">Cambridge Bicycle Plan</a>, published in 2015, Cambridge has committed to increasing the share of commute trips by bike to 10% by 2020. The U.S. national average in 2014 was 0.6%.</p>
 
-        <p>This is the story of what's out there on the streets today and where changes need to be made.</p>
-        <h6 class="author">Samuel Clay, May 12th, 2020</h6>
+        <p>The city has also set a goal of decreasing bike crashes by 50 percent. The path to achieving this safety goal is by improving roads to support cyclists. Here's what the bicycle network looks like on the streets today and where improvements are needed.</p>
+        <h6 class="author"><a href="http://samuelclay.com">Samuel Clay</a><br><i>May 13th, 2020</i></h6>
         
         <div class="scroll-down"></div>
         
@@ -155,64 +191,53 @@
 
       <section class="sidebar-scroll-section" id="sidebar-section-2">
         <h2>Bike Lanes of Today</h2>
-        <p class="lead">In 2018 there are 195 miles of bike lanes across the city of Boston. The <a href="https://www.cityofboston.gov/images_documents/Boston%20Bike%20Network%20Plan%2C%20Fall%202013_FINAL_tcm3-40525.pdf">Boston Bike Network Plan</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
+        <p class="lead">As of 2018 there are 92 miles of bike lanes across the city of Cambridge. The proposed <a href="https://www.cambridgema.gov/CDD/Projects/Transportation/2020bikeplanupdate">Cambridge Bicycle Plan 2020</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
 
-        <p>Boston is attempting to create a world-class biking city, but to do that the city needs to do more than add bike lanes. Improving safety is what leads to increasing usage of the bike faciities in the city and to do that Boston needs to consider several problem areas.</p>
+        <p>Cambridge is creating a world-class biking city, and to accomplish that the city needs to do more than add bike lanes. Improving safety is what leads to increasing usage of the bike facilities in the city and to do that Cambridge needs to consider several problem areas.</p>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-3">
-        <h2>Oxford Street is a bottleneck</h2>
-        <p class="lead">But there remains a handful of parking spots even though there are numerous bikes and lightweight two-wheeled vehicles rolling through. This map shows where the street is hazardous for bikes due to unnecessary parking.</p>
+        <h2>There's lots to love</h2>
+        <p class="lead"></p>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-4">
-        <h2>Crashes Also Tell a Story</h2>
-        <p class="lead">As part of the Vision Zero plan for Boston, every crash involving a bike that required a public safety response through 911 has been shown here.</p>
-        <p>Most crashes in Boston are caused by drivers not seeing bikes, whether or not the bike was in a bike lane.</p>
+        <h2>Oxford Street is a bottleneck</h2>
+        <p class="lead">But there remains a handful of parking spots even though there are numerous bikes and lightweight two-wheeled vehicles rolling through. This map shows where the street is hazardous for bikes due to unnecessary parking.</p>
+        <p>Most crashes in Cambridge are <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclecrashinformation">caused by drivers not seeing cyclists</a>, whether or not the bicycle was in a bike lane.</p>
       </section>
       
       <section class="sidebar-scroll-section section-scroller" id="sidebar-section-5">
         <div class="section-scroller-fixed">
-          <p class="lead">Zooming in highlights streets with numerous complaints lacking bike lanes.</p>
-          <p class="note live-driving off">
-            <span class="live-driving-icon"></span> 
-            <span class="live-driving-text">Live driving is off</span>
-          </p>
-          <div class="zoom-streets">
-            <div class="zoom-street zoom-street-1 active">
+          <p class="lead">Take a ride down JFK St</p>
+          <ul class="zoom-streets p-0">
+            <li class="zoom-street zoom-street-1 active">
               <div class="zoom-street-number">1</div>
-              <div class="zoom-street-name">Washington St. in Roslindale</div>
-            </div>
-            <div class="zoom-street zoom-street-2">
+              <div class="zoom-street-name">MBTA Bus Stop Eliot St & JFK St</div>
+            </li>
+            <li class="zoom-street zoom-street-2">
               <div class="zoom-street-number">2</div>
-              <div class="zoom-street-name">Massachusetts Ave.</div>
-            </div>
-            <div class="zoom-street zoom-street-3">
+              <div class="zoom-street-name">Black Sheep Bagel Cafe</div>
+            </li>
+            <li class="zoom-street zoom-street-3">
               <div class="zoom-street-number">3</div>
-              <div class="zoom-street-name">Huntington St.</div>
-            </div>
-            <div class="zoom-street zoom-street-4">
+              <div class="zoom-street-name">Capital One Café</div>
+            </li>
+            <li class="zoom-street zoom-street-4">
               <div class="zoom-street-number">4</div>
-              <div class="zoom-street-name">Seaport Blvd.</div>
-            </div>
-            <div class="zoom-street zoom-street-5">
+              <div class="zoom-street-name">Straus Hall, Harvard Yard</div>
+            </li>
+            <li class="zoom-street zoom-street-5">
               <div class="zoom-street-number">5</div>
-              <div class="zoom-street-name">Tremont St.</div>
-            </div>
-            <div class="zoom-street zoom-street-6">
-              <div class="zoom-street-number">6</div>
-              <div class="zoom-street-name">W Roxbury Pkwy.</div>
-            </div>
-            <div class="zoom-street zoom-street-7">
-              <div class="zoom-street-number">7</div>
-              <div class="zoom-street-name">Washington St. in Dorchester</div>
-            </div>
-            <div class="zoom-street zoom-street-8">
-              <div class="zoom-street-number">8</div>
-              <div class="zoom-street-name">Charles St.</div>
-            </div>
-          </div>
+              <div class="zoom-street-name">MBTA Harvard Station</div>
+            </li>
+          </ul>
         </div>
+        <div class="zoom-space zoom-space-1"></div>
+        <div class="zoom-space zoom-space-2"></div>
+        <div class="zoom-space zoom-space-3"></div>
+        <div class="zoom-space zoom-space-4"></div>
+        <div class="zoom-space zoom-space-5"></div>
       </section>
       
     </div>
@@ -223,7 +248,7 @@
     </main>
     
     
-    <figure class="figure card snapshot-detail-container p-0 rounded-0 offset-4" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
+    <figure class="figure card snapshot-detail-container p-0 rounded-top offset-4" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
       <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top m-0" v-if="activeSnapshot.properties.photo_uploaded">
       <div class="card-body rounded-bottom">
         <figcaption class="figure-caption text-light">
@@ -265,6 +290,7 @@
     CM.Globals = {
       defaultLat: 42.375,
       defaultLng: -71.122,
+      defaultZoom: 13,
       authenticated: {{ user.is_authenticated|yesno:"true,false" }},
       email: "{{ user.email }}",
       emailHash: "{{ user.email|md5:"6" }}"
