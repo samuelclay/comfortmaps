@@ -197,8 +197,9 @@
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-3">
-        <h2>There's lots to love</h2>
-        <p class="lead"></p>
+        <h2>Cambridge has many great streets for biking</h2>
+        <p class="lead">Cycleways and separated bike lanes are prominent in the city, but there's no connection between major transit hubs that a person can take on a bicycle without going through dangerous street designs.</p>
+        <p>"Networks of protected bike lanes" is the mantra of safer biking. Even with the <a href="https://www.cambridgebikesafety.org/ordinance/">Cycling Safety Ordinance</a>, which ensures the gradual building of separated bike lanes, the rate at which crashes are lowering means we will see ten more years of unnecessary deaths caused by  lack of safe biking infrastructure.</p>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-4">
@@ -211,36 +212,20 @@
         <div class="section-scroller-fixed">
           <p class="lead">Take a ride down JFK St</p>
           <ul class="zoom-streets p-0">
-            <li class="zoom-indicator">
+            <li class="zoom-indicator" :style="{top: indicatorTop}">
               <img src="{% static "img/noun_indicator.png" %}">
             </li>
-            <li class="zoom-street zoom-street-1 active">
-              <div class="zoom-street-number">1</div>
-              <div class="zoom-street-name">MBTA Bus Stop Eliot St & JFK St</div>
+            {% verbatim %}
+            <li v-for="(zoom, z) in locations" :key="zoom.photoId" class="zoom-street" :class="[`zoom-street-${z}`, zoom.activeZoom == z ? 'active': 'inactive']" @click="setActive(zoom, z)">
+              <div class="zoom-street-number">{{ z+1 }}</div>
+              <div class="zoom-street-name">{{ zoom.streetName }}</div>
             </li>
-            <li class="zoom-street zoom-street-2">
-              <div class="zoom-street-number">2</div>
-              <div class="zoom-street-name">Black Sheep Bagel Cafe</div>
-            </li>
-            <li class="zoom-street zoom-street-3">
-              <div class="zoom-street-number">3</div>
-              <div class="zoom-street-name">Capital One Café</div>
-            </li>
-            <li class="zoom-street zoom-street-4">
-              <div class="zoom-street-number">4</div>
-              <div class="zoom-street-name">Straus Hall, Harvard Yard</div>
-            </li>
-            <li class="zoom-street zoom-street-5">
-              <div class="zoom-street-number">5</div>
-              <div class="zoom-street-name">MBTA Harvard Station</div>
-            </li>
+            {% endverbatim %}
           </ul>
         </div>
-        <div class="zoom-space zoom-space-1"></div>
-        <div class="zoom-space zoom-space-2"></div>
-        <div class="zoom-space zoom-space-3"></div>
-        <div class="zoom-space zoom-space-4"></div>
-        <div class="zoom-space zoom-space-5"></div>
+        {% verbatim %}
+        <div v-for="(zoom, z) in locations" class="zoom-space" :class="[`zoom-space-${z}`, activeZoom == z ? 'active': 'inactive']"></div>
+        {% endverbatim %}
       </section>
       
     </div>

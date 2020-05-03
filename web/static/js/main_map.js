@@ -655,30 +655,30 @@ CM.MapboxMap = new Vue({
         this.flyToPhotoId("55_t_gSm", {zoom: 17});
         CM.Filters.ratings = "bad";
         this.showBikeLanes();
-      } else if ($(sectionEl).is(".zoom-space-1")) {
+      } else if ($(sectionEl).is(".zoom-space-0")) {
         this.flyToPhotoId("55_t_gSm", {zoom: 17});
+        CM.Filters.ratings = "bad";
+        CM.ZoomList.activeZoom = 0;
+        this.showBikeLanes();
+      } else if ($(sectionEl).is(".zoom-space-1")) {
+        this.flyToPhotoId("pi-6u3xz", {zoom: 17});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 1;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-2")) {
-        this.flyToPhotoId("pi-6u3xz", {zoom: 17});
+        this.flyToPhotoId("tF5ZKCcW", {zoom: 17});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 2;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-3")) {
-        this.flyToPhotoId("tF5ZKCcW", {zoom: 17});
+        this.flyToPhotoId("hV7LG2cI", {zoom: 17});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 3;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-4")) {
-        this.flyToPhotoId("hV7LG2cI", {zoom: 17});
-        CM.Filters.ratings = "bad";
-        CM.ZoomList.activeZoom = 4;
-        this.showBikeLanes();
-      } else if ($(sectionEl).is(".zoom-space-5")) {
         this.flyToPhotoId("C4a6-Cce", {zoom: 17});
         CM.Filters.ratings = "bad";
-        CM.ZoomList.activeZoom = 5;
+        CM.ZoomList.activeZoom = 4;
         this.showBikeLanes();
       }
     }
@@ -731,29 +731,67 @@ Vue.filter('formatDate', function(value) {
 });
 
 CM.ZoomList = new Vue({
-  el: ".zoom-streets",
+  el: ".section-scroller",
   
   data: () => {
     return {
-      activeZoom: null,
+      activeZoom: 0,
       scrollPct: 0,
+      indicatorTop: 0,
       zoomHeight: 42,
+      locations: [
+        {
+          streetName: "MBTA Bus Stop Eliot St & JFK St",
+          photoId: "55_t_gSm",
+          filterRating: "bad",
+          zoomLevel: 17,
+        },
+        {
+          streetName: "Black Sheep Bagel Cafe",
+          photoId: "pi-6u3xz",
+          filterRating: "bad",
+          zoomLevel: 17,
+        },
+        {
+          streetName: "Capital One Café",
+          photoId: "tF5ZKCcW",
+          filterRating: "bad",
+          zoomLevel: 17,
+        },
+        {
+          streetName: "Straus Hall, Harvard Yard",
+          photoId: "hV7LG2cI",
+          filterRating: "bad",
+          zoomLevel: 17,
+        },
+        {
+          streetName: "MBTA Harvard Station",
+          photoId: "C4a6-Cce",
+          filterRating: "bad",
+          zoomLevel: 17,
+        },
+      ]
     };
   },
   
   watch: {
     scrollPct() {
-      this.adjustIndicator();
+      this.indicatorTop = ((this.activeZoom) * this.zoomHeight) + (this.zoomHeight * this.scrollPct);
+      this.indicatorTop -= 24;
     },
+    
     activeZoom() {
-      let zoomHeight = $(".zoom-street").first().outerHeight(true);
+      this.zoomHeight = $(".zoom-street").first().outerHeight(true);
     }
   },
   
   methods: {
-    adjustIndicator() {
-      $(".zoom-indicator").css('top', ((this.activeZoom-1) * this.zoomHeight) + (this.zoomHeight * this.scrollPct));
+    setActive(location, index) {
+      this.activeZoom = index;
+      let zoomSpacePos = $(".zoom-space-" + this.activeZoom).position().top;
+      $('body').animate({scrollTop: zoomSpacePos}, 2000)
     }
   }
   
-})
+});
+
