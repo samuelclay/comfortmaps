@@ -37,7 +37,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         self.centralManager.stopScan()
-        
+        print(" ---> Found peripheral: ", peripheral)
         self.peripheral = peripheral
         self.peripheral.delegate = self
         
@@ -47,11 +47,13 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         if peripheral == self.peripheral {
             self.snapshotData.length = 0
+            print(" ---> Connected to peripheral: ", peripheral)
             peripheral.discoverServices([ComfortmapsCamera.ServiceUUID])
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print(" ---> Disconnected: ", peripheral)
         self.centralManagerDidUpdateState(central)
     }
     
@@ -63,9 +65,10 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         }
         
         guard let services = peripheral.services else {
+            print(" ***> Error, no services")
             return
         }
-
+        print(" ---> Discovered services: ", services)
         for service in services {
             if service.uuid == ComfortmapsCamera.ServiceUUID {
                 peripheral.discoverCharacteristics([ComfortmapsCamera.CharacteristicPhotoDataUUID,
@@ -81,6 +84,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
             return
         }
         
+        print(" ---> Discovered characteristics: ", service.characteristics ?? "nil")
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
                 switch characteristic.uuid {

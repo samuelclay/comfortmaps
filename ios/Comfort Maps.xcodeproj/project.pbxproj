@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B7ABE4739FE5B5574938323 /* Pods_Comfort_Maps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */; };
+		FF1DFB812460731F00F758E1 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF1DFB802460731F00F758E1 /* UIColor+Hex.swift */; };
 		FF5B7DF823FB4CEA00439D93 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */; };
 		FF88D61A23FF274C00E113BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF88D61923FF274C00E113BE /* Main.storyboard */; };
 		FF88D61C23FF2C4D00E113BE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88D61B23FF2C4D00E113BE /* LoginViewController.swift */; };
@@ -28,6 +29,7 @@
 		18755FB1AE2DBCA9F4F92E0A /* Pods-Comfort Maps.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Comfort Maps.debug.xcconfig"; path = "Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps.debug.xcconfig"; sourceTree = "<group>"; };
 		49C661D1DAF3D2A01414223B /* Pods-Comfort Maps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Comfort Maps.release.xcconfig"; path = "Target Support Files/Pods-Comfort Maps/Pods-Comfort Maps.release.xcconfig"; sourceTree = "<group>"; };
 		BFA963B2108F35E9B7994AAE /* Pods_Comfort_Maps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Comfort_Maps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF1DFB802460731F00F758E1 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
 		FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		FF88D61923FF274C00E113BE /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		FF88D61B23FF2C4D00E113BE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				FF5B7DF723FB4CEA00439D93 /* LocationManager.swift */,
 				FF88D61923FF274C00E113BE /* Main.storyboard */,
 				FF88D61F23FF400900E113BE /* MapViewController.swift */,
+				FF1DFB802460731F00F758E1 /* UIColor+Hex.swift */,
 				FF88D61D23FF3FC200E113BE /* MainTabBarController.swift */,
 				FF88D61B23FF2C4D00E113BE /* LoginViewController.swift */,
 				FFC734EF23EF4744007221A5 /* BluetoothManager.swift */,
@@ -255,6 +258,7 @@
 				FF9D2EA323F4B3AE0094F34C /* WifiManager.swift in Sources */,
 				FFC734DE23EF45FA007221A5 /* Comfort_Maps.xcdatamodeld in Sources */,
 				FFC734F023EF4744007221A5 /* BluetoothManager.swift in Sources */,
+				FF1DFB812460731F00F758E1 /* UIColor+Hex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

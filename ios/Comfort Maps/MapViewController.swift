@@ -9,7 +9,7 @@
 import UIKit
 import Mapbox
 
-class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDelegate {
+class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDelegate, PhotoUploadDelegate {
     
     @IBOutlet weak var mapView: MGLMapView!
     private var lastLocation: CLLocationCoordinate2D?
@@ -18,8 +18,13 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
         super.viewDidLoad()
         
         self.mapView.delegate = self
+        self.mapView.showsUserLocation = true
         appDelegate().locationManager.addDelegate(delegate: self)
+        appDelegate().photoManager.addDelegate(delegate: self)
         self.center(animated: false)
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+//            self.reloadMap()
+//        }
     }
     
     func didUpdateLocation() {
@@ -34,12 +39,63 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
         let newLocation = CLLocation(latitude: recentLocation.latitude, longitude: recentLocation.longitude)
         let distance = newLocation.distance(from: oldLocation)
         
-        if distance > 50 {
+        if distance > 10 {
             print(" ---> Moved \(distance) meters, recentering...")
             self.center()
         } else {
 //            print(" ---> Only moved \(distance) meters")
         }
+    }
+    
+    @objc func reloadMap() {
+        guard let style = self.mapView.style else { return }
+        if let source = style.source(withIdentifier: "snapshots") as? MGLShapeSource {
+            if let url = source.url {
+                source.url = url
+            }
+        }
+    }
+    
+    func loadMap() {
+        guard let style = self.mapView.style else {
+            return
+        }
+        
+        guard let location = appDelegate().locationManager.latestLocation else { return }
+        guard let url = URL(string: "https://comfortmaps.com/record/snapshots_from_point.geojson?lat=\(location.latitude)&lng=\(location.longitude)") else { return }
+        let source = MGLShapeSource(identifier: "snapshots", url: url, options: nil)
+        style.addSource(source)
+        
+        // Add a circle layer to represent the earthquakes at higher zoom levels.
+        let circleLayer = MGLCircleStyleLayer(identifier: "snapshot-points", source: source)
+         
+        let magnitudeDictionary: [NSNumber: UIColor] = [
+            1: UIColor(red: 186/255, green: 56/255, blue: 51/255, alpha: 1.0),
+            2: UIColor(red: 186/255, green: 110/255, blue: 102/255, alpha: 1.0),
+            3: UIColor(red: 255/255, green: 227/255, blue: 136/255, alpha: 1.0),
+            4: UIColor(red: 100/255, green: 204/255, blue: 64/255, alpha: 1.0),
+            5: UIColor(red: 48/255, green: 204/255, blue: 76/255, alpha: 1.0)
+        ]
+        circleLayer.circleColor = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:(rating, 'linear', nil, %@)", magnitudeDictionary)
+         
+        // The heatmap layer will have an opacity of 0.75 up to zoom level 9, when the opacity becomes 0.
+        circleLayer.circleOpacity = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 0, %@)", [0: 0, 9: 1])
+        circleLayer.circleRadius = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', 0.1, %@)", [9: 1, 15: 6, 17: 12])
+        style.addLayer(circleLayer)
+            
+        if let cambridge = style.layer(withIdentifier: "cambridge-ma-bike-facilities") as? MGLLineStyleLayer {
+            cambridge.lineOpacity = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 0, %@)", [0: 0.1, 9: 0.4])
+    //            cambridge.lineOpacity = NSExpression(forConstantValue: 0.4)
+            cambridge.isVisible = true
+        }
+        if let boston = style.layer(withIdentifier: "boston-ma-existing-bike-network") as? MGLLineStyleLayer {
+            boston.lineOpacity = NSExpression(forConstantValue: 0.4)
+            boston.isVisible = true
+        }
+    }
+    
+    func endSnapshotUpload() {
+        self.reloadMap()
     }
     
     func center(animated: Bool = true) {
@@ -58,59 +114,7 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        // Parse GeoJSON data. This example uses all M1.0+ earthquakes from 12/22/15 to 1/21/16 as logged by USGS' Earthquake hazards program.
-//        guard let url = URL(string: "https://www.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson") else { return }
-        guard let location = appDelegate().locationManager.latestLocation else { return }
-        guard let url = URL(string: "https://comfortmaps.com/record/snapshots_from_point.geojson?lat=\(location.latitude)&lng=\(location.longitude)") else { return }
-        let source = MGLShapeSource(identifier: "snapshots", url: url, options: nil)
-        style.addSource(source)
-         
-        // Create a heatmap layer.
-        let heatmapLayer = MGLHeatmapStyleLayer(identifier: "snapshots", source: source)
-         
-        // Adjust the color of the heatmap based on the point density.
-        let colorDictionary: [NSNumber: UIColor] = [
-            0.0: .clear,
-            0.01: UIColor(red: 0.73, green: 0.43, blue: 0.40, alpha: 1.0),
-            0.15: .yellow,
-            0.5: UIColor(red: 0.39, green: 0.80, blue: 0.25, alpha: 1.0),
-            1: UIColor(red: 0.19, green: 0.80, blue: 0.30, alpha: 1.0)
-        ]
-        heatmapLayer.heatmapColor = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)", colorDictionary)
-         
-        // Heatmap weight measures how much a single data point impacts the layer's appearance.
-        heatmapLayer.heatmapWeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:(rating, 'linear', nil, %@)",
-        [0: 0,
-        6: 1])
-         
-        // Heatmap intensity multiplies the heatmap weight based on zoom level.
-        heatmapLayer.heatmapIntensity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-        [0: 1,
-        9: 3])
-        heatmapLayer.heatmapRadius = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
-        [0: 4,
-        9: 30])
-         
-        // The heatmap layer should be visible up to zoom level 9.
-        heatmapLayer.heatmapOpacity = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 0.75, %@)", [0: 0.75, 9: 0])
-        style.addLayer(heatmapLayer)
-         
-        // Add a circle layer to represent the earthquakes at higher zoom levels.
-        let circleLayer = MGLCircleStyleLayer(identifier: "circle-layer", source: source)
-         
-        let magnitudeDictionary: [NSNumber: UIColor] = [
-        1: UIColor(red: 0.73, green: 0.23, blue: 0.20, alpha: 1.0),
-        2: UIColor(red: 0.73, green: 0.43, blue: 0.40, alpha: 1.0),
-        3: .yellow,
-        4: UIColor(red: 0.39, green: 0.80, blue: 0.25, alpha: 1.0),
-        5: UIColor(red: 0.19, green: 0.80, blue: 0.30, alpha: 1.0)
-        ]
-        circleLayer.circleColor = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:(rating, 'linear', nil, %@)", magnitudeDictionary)
-         
-        // The heatmap layer will have an opacity of 0.75 up to zoom level 9, when the opacity becomes 0.
-        circleLayer.circleOpacity = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 0, %@)", [0: 0, 9: 0.75])
-        circleLayer.circleRadius = NSExpression(forConstantValue: 20)
-        style.addLayer(circleLayer)
+        self.loadMap()
     }
     
 

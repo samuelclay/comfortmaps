@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7vB-oq-kpX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7vB-oq-kpX">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -73,7 +73,7 @@
             </objects>
             <point key="canvasLocation" x="1761" y="331"/>
         </scene>
-        <!--Delegate-->
+        <!--Map-->
         <scene sceneID="cSD-9o-7qp">
             <objects>
                 <viewController id="QbM-m9-LgO" customClass="MapViewController" customModule="Comfort_Maps" customModuleProvider="target" sceneMemberID="viewController">
@@ -86,6 +86,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="allowsRotating" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="delegate" destination="QbM-m9-LgO" id="COw-po-8Hn"/>
@@ -131,7 +132,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="map" catalog="system" width="64" height="56"/>
-        <image name="square.stack.3d.down.right" catalog="system" width="62" height="64"/>
+        <image name="map" catalog="system" width="128" height="113"/>
+        <image name="square.stack.3d.down.right" catalog="system" width="124" height="128"/>
     </resources>
 </document>

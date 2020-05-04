@@ -22,6 +22,10 @@ protocol PhotoDelegate {
     func endSnapshotTransfer()
 }
 
+protocol PhotoUploadDelegate {
+    func endSnapshotUpload()
+}
+
 struct Coordinate: Codable {
     var latitude: Double
     var longitude: Double
@@ -59,6 +63,11 @@ class PhotoManager: PhotoDelegate {
     private var currentHeading          : CLLocationDirection?
     private var currentSpeed            : CLLocationSpeed?
     private var currentPhotoId          : String       = String()
+    private var delegates: [PhotoUploadDelegate] = []
+    
+    func addDelegate(delegate: PhotoUploadDelegate) {
+        self.delegates.append(delegate)
+    }
     
     func beginSnapshotTransfer(header: String) {
         print(" ---> Beginning snapshot transfer:", header)
@@ -145,11 +154,14 @@ class PhotoManager: PhotoDelegate {
                    encoder: URLEncodedFormParameterEncoder.default)
             .validate(statusCode: 200..<300)
             .responseJSON { response in
-                print(" ---> Snapshot response:", snapshot, response, response.result, response.response?.statusCode)
+                print(" ---> Snapshot response:", snapshot, response, response.result)
                 switch response.result {
                 case let .success(value):
                     if let json = value as? [String: Any] {
                         print("Record snapshot: \(json)")
+                        for delegate in self.delegates {
+                            delegate.endSnapshotUpload()
+                        }
                     }
                 case let .failure(error):
                     print("Record snapshot error: \(error)")
@@ -193,7 +205,7 @@ class PhotoManager: PhotoDelegate {
             }
             .responseJSON { response in
                 debugPrint(response)
-                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+//                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             }
         uploadingData = Data()
     }
