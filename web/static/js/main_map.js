@@ -164,9 +164,11 @@ CM.ScrollSpy = function() {
     },
     onTick: (element, position, inside, enters, leaves) => {
       let spaceHeight = $(element).outerHeight();
-      let spacePosition = $(element).position().top - $(window).scrollTop();
-      let scrollPct = 1 - spacePosition / spaceHeight;
-      // console.log(['onTick', spaceHeight, spacePosition, scrollPct]);
+      let spacePosition = parseInt($(element).position().top, 10);
+      let windowScroll = $(window).scrollTop();
+      let spaceDiff = spacePosition - windowScroll - buffer;
+      let scrollPct = 1 - spaceDiff / spaceHeight;
+      console.log(['onTick', spaceHeight, spacePosition, position.top, windowScroll, spaceDiff, scrollPct, buffer]);
 
       CM.ZoomList.scrollPct = scrollPct;
     }
@@ -776,6 +778,7 @@ CM.ZoomList = new Vue({
   
   watch: {
     scrollPct() {
+      console.log(['Indicator', this.activeZoom, this.zoomHeight, this.scrollPct]);
       this.indicatorTop = ((this.activeZoom) * this.zoomHeight) + (this.zoomHeight * this.scrollPct);
       this.indicatorTop -= 24;
     },
