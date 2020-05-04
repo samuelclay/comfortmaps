@@ -54,7 +54,7 @@ class BluetoothManager {
 
 function SnapshotCharacteristic() {
     bleno.Characteristic.call(this, {
-        uuid: 'ecfd',
+        uuid: 'ec2d',
         properties: ['read', 'write', 'notify'],
         descriptors: [
           new bleno.Descriptor({
