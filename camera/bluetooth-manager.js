@@ -1,4 +1,4 @@
-var bleno = require('bleno');
+var bleno = require('@abandonware/bleno');
 var util = require('util');
 const fs = require('fs');
 const sharp = require('sharp');
@@ -8,10 +8,6 @@ var serviceUuids = ["ec20"]
 class BluetoothManager {    
     constructor(camera) {
         this.camera = camera;
-        this.snapshotCharacteristic = new SnapshotCharacteristic();
-        this.photoDataCharacteristic = new PhotoDataCharacteristic();
-        this.snapshotCharacteristic.camera = this.camera;
-        this.photoDataCharacteristic.camera = this.camera;
         this.connected = false;
         
         console.log(" ---> Bluetooth pre-init:", bleno.state);
@@ -28,8 +24,12 @@ class BluetoothManager {
         
         bleno.on('advertisingStart', (error) => {
             console.log(" ---> Bluetooth advertising start:", (error ? 'error ' + error : 'success'));
-            
+
             if (!error) {
+                this.snapshotCharacteristic = new SnapshotCharacteristic();
+                this.photoDataCharacteristic = new PhotoDataCharacteristic();
+                this.snapshotCharacteristic.camera = this.camera;
+                this.photoDataCharacteristic.camera = this.camera;
                 bleno.setServices([
                     new bleno.PrimaryService({
                         uuid: 'ec20',
@@ -52,19 +52,23 @@ class BluetoothManager {
 
 }
 
-class SnapshotCharacteristic {
-    constructor() {
-        SnapshotCharacteristic.super_.call(this, {
-            uuid: 'ec2d',
-            properties: ['read', 'write', 'notify'],
-            value: null
-        });
-        
-        this._value = new Buffer(0);
-        this._updateValueCallback = null;
-    }
+function SnapshotCharacteristic() {
+    bleno.Characteristic.call(this, {
+        uuid: 'ecfd',
+        properties: ['read', 'write', 'notify'],
+        descriptors: [
+          new bleno.Descriptor({
+            uuid: '2901',
+            value: 'Rating of snapshot without the photo'
+          })
+        ]
+    });
     
-    beginSnapshotTransfer(snapshot) {
+    this._value = new Buffer(0);
+    this._updateValueCallback = null;
+}
+    
+SnapshotCharacteristic.prototype.beginSnapshotTransfer = function(snapshot) {
         this.snapshot = snapshot;
         this.bytesRead = 0;
         this.chunkSize = 20;
@@ -88,7 +92,7 @@ class SnapshotCharacteristic {
         }
     }
     
-    async onReadRequest(offset, callback) {
+SnapshotCharacteristic.prototype.onReadRequest = async function (offset, callback) {
         this._value = this.dataString.slice(this.bytesRead, this.bytesRead + this.chunkSize);
         this.bytesRead += this.chunkSize;
 
@@ -107,7 +111,7 @@ class SnapshotCharacteristic {
         }
     }
     
-    onWriteRequest(data, offset, withoutResponse, callback) {
+SnapshotCharacteristic.prototype.onWriteRequest = function (data, offset, withoutResponse, callback) {
         this._value = data;
 
         console.log(' ---> Snapshot write: ' + this._value.toString('hex'));
@@ -121,7 +125,7 @@ class SnapshotCharacteristic {
         callback(this.RESULT_SUCCESS);
     }
     
-    onSubscribe(maxValueSize, updateValueCallback) {
+SnapshotCharacteristic.prototype.onSubscribe = function(maxValueSize, updateValueCallback) {
         console.log(' ---> Snapshot subscribe: Hello', maxValueSize);
 
         this._updateValueCallback = updateValueCallback;
@@ -129,21 +133,25 @@ class SnapshotCharacteristic {
         this.camera.bluetoothManager.connected = true;
     }
     
-    onUnsubscribe() {
+SnapshotCharacteristic.prototype.onUnsubscribe = function() {
         console.log(' ---> Snapshot unsubscribe: Good-bye', this._updateValueCallback);
 
         this._updateValueCallback = null;
         this.snapshot = null;
         this.camera.bluetoothManager.connected = false;
     }
-}
 
 class PhotoDataCharacteristic {
     constructor() {
         PhotoDataCharacteristic.super_.call(this, {
             uuid: 'ec2e',
             properties: ['read', 'write', 'notify'],
-            value: null
+            descriptors: [
+              new bleno.Descriptor({
+                uuid: '2901',
+                value: 'Photo of the snapshot without the rating'
+              })
+            ]
         });
         
         this._value = new Buffer(0);
