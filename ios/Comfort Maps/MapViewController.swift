@@ -9,9 +9,11 @@
 import UIKit
 import Mapbox
 
-class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDelegate, PhotoUploadDelegate {
+class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDelegate, PhotoUploadDelegate, BluetoothManagerDelegate {
     
     @IBOutlet weak var mapView: MGLMapView!
+    @IBOutlet weak var bluetoothView: UIView!
+    @IBOutlet weak var bluetoothMessage: UILabel!
     private var lastLocation: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
@@ -21,6 +23,7 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
         self.mapView.showsUserLocation = true
         appDelegate().locationManager.addDelegate(delegate: self)
         appDelegate().photoManager.addDelegate(delegate: self)
+        appDelegate().bluetoothManager.addDelegate(delegate: self)
         self.center(animated: false)
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
 //            self.reloadMap()
@@ -117,6 +120,15 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
         self.loadMap()
     }
     
+    func bluetoothMessageUpdated(_ message: String, connected: Bool) {
+        if connected {
+            self.bluetoothView.backgroundColor = UIColor.blue
+        } else {
+            self.bluetoothView.backgroundColor = UIColor.red
+        }
+
+        self.bluetoothMessage.text = message
+    }
 
     /*
     // MARK: - Navigation

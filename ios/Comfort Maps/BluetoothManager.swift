@@ -15,10 +15,15 @@ struct ComfortmapsCamera {
     public static let CharacteristicSnapshotUUID = CBUUID.init(string: "ec2d")
 }
 
+protocol BluetoothManagerDelegate {
+    func bluetoothMessageUpdated(_ message: String, connected: Bool)
+}
+
 class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate {
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral!
     public var photoDelegate: PhotoDelegate?
+    private var delegates: [BluetoothManagerDelegate] = []
     fileprivate let snapshotData = NSMutableData()
     
     override init() {
@@ -27,11 +32,23 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         self.centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
+    func addDelegate(delegate: BluetoothManagerDelegate) {
+        self.delegates.append(delegate)
+    }
+    
+    func updateMessage(_ message: String, connected: Bool) {
+        for delegate in self.delegates {
+            delegate.bluetoothMessageUpdated(message, connected: connected)
+        }
+    }
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state != .poweredOn {
             print("Bluetooth not powered on")
+            self.updateMessage("❌ Bluetooth not powered on", connected: false)
         } else {
             self.centralManager.scanForPeripherals(withServices: [ComfortmapsCamera.ServiceUUID], options: [:])
+            self.updateMessage("🕵️‍♂️ Scanning for cameras...", connected: false)
         }
     }
     
@@ -40,7 +57,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         print(" ---> Found peripheral: ", peripheral)
         self.peripheral = peripheral
         self.peripheral.delegate = self
-        
+        self.updateMessage("📷 Connecting to camera...", connected: false)
         self.centralManager.connect(self.peripheral, options: nil)
     }
     
@@ -48,12 +65,14 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         if peripheral == self.peripheral {
             self.snapshotData.length = 0
             print(" ---> Connected to peripheral: ", peripheral)
+            self.updateMessage("📷 Discovering services...", connected: true)
             peripheral.discoverServices([ComfortmapsCamera.ServiceUUID])
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print(" ---> Disconnected: ", peripheral)
+        self.updateMessage("❌ Disconnected from camera...", connected: false)
         self.centralManagerDidUpdateState(central)
     }
     
@@ -69,6 +88,8 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
             return
         }
         print(" ---> Discovered services: ", services)
+        self.updateMessage("📷 Discovered \(services.count) services...", connected: true)
+
         for service in services {
             if service.uuid == ComfortmapsCamera.ServiceUUID {
                 peripheral.discoverCharacteristics([ComfortmapsCamera.CharacteristicPhotoDataUUID,
@@ -86,6 +107,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         
         print(" ---> Discovered characteristics: ", service.characteristics ?? "nil")
         if let characteristics = service.characteristics {
+            self.updateMessage("📷 Discovered \(characteristics.count) characteristics...", connected: true)
             for characteristic in characteristics {
                 switch characteristic.uuid {
                 case ComfortmapsCamera.CharacteristicPhotoDataUUID:
@@ -122,11 +144,13 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
         
         let subdata = data[data.startIndex..<data.index(data.startIndex, offsetBy: min(data.count, 2))]
         if subdata == "S:".data(using: .utf8) {
+            self.updateMessage("🤳 Receiving snapshot...", connected: true)
             if let dataString = String(bytes: data, encoding: .utf8) {
                 self.photoDelegate?.beginSnapshotTransfer(header: dataString)
             }
             peripheral.readValue(for: characteristic)
         } else if subdata.count == 0 {
+            self.updateMessage("🤳 Received snapshot!", connected: true)
             self.photoDelegate?.endSnapshotTransfer()
         } else {
             self.photoDelegate?.receiveSnapshotData(data: data)
@@ -135,23 +159,27 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
     }
     
     func updatePhotoData(_ peripheral: CBPeripheral, _ characteristic: CBCharacteristic) {
+        guard let photoDelegate = self.photoDelegate else { return }
         guard let data = characteristic.value else {
             print(" ---> Invalid data")
-            self.photoDelegate?.endPhotoTransfer()
+            photoDelegate.endPhotoTransfer()
             return
         }
         
 //        print(" ---> Received data:", data.map { String(format: "%02x", $0) }.joined(), data, dataString)
         let subdata = data.subdata(in: 0..<min(data.count, 2))
         if subdata == "B:".data(using: .utf8) {
+            self.updateMessage("🤳 Receiving photo...", connected: true)
             if let dataString = String(bytes: data, encoding: .utf8) {
-                self.photoDelegate?.beginBluetoothPhotoTransfer(header: dataString)
+                photoDelegate.beginBluetoothPhotoTransfer(header: dataString)
             }
             peripheral.readValue(for: characteristic)
         } else if subdata.count == 0 {
-            self.photoDelegate?.endPhotoTransfer()
+            self.updateMessage("🤳 Received photo!", connected: true)
+            photoDelegate.endPhotoTransfer()
         } else {
-            self.photoDelegate?.receivePhotoData(data: data)
+            let pct = Int(round(photoDelegate.receivePhotoData(data: data) * 100))
+            self.updateMessage("🤳 Receiving photo: \(pct)%", connected: true)
             peripheral.readValue(for: characteristic)
         }
     }
@@ -159,6 +187,7 @@ class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         if characteristic.isNotifying {
             print(" ---> Notification begin on", characteristic)
+            self.updateMessage("📸 Connected to camera", connected: true)
         } else {
             print(" ---> Notification ended on", characteristic)
         }

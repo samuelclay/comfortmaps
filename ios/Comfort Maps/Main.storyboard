@@ -92,10 +92,31 @@
                                     <outlet property="delegate" destination="QbM-m9-LgO" id="COw-po-8Hn"/>
                                 </connections>
                             </view>
+                            <view opaque="NO" alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c2m-fS-ox7">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🔑 Bluetooth loading..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uqb-Qh-fmJ">
+                                        <rect key="frame" x="12" y="11.5" width="390" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="uqb-Qh-fmJ" firstAttribute="centerY" secondItem="c2m-fS-ox7" secondAttribute="centerY" id="H29-qS-Yln"/>
+                                    <constraint firstAttribute="height" constant="44" id="Ivo-Sw-vl9"/>
+                                    <constraint firstAttribute="trailing" secondItem="uqb-Qh-fmJ" secondAttribute="trailing" constant="12" id="t8u-N1-dtA"/>
+                                    <constraint firstItem="uqb-Qh-fmJ" firstAttribute="leading" secondItem="c2m-fS-ox7" secondAttribute="leading" constant="12" id="xxb-l3-har"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="Zvu-Xk-cjx" firstAttribute="bottom" secondItem="5Ry-r5-TxB" secondAttribute="bottom" id="7Du-yz-QoH"/>
+                            <constraint firstItem="c2m-fS-ox7" firstAttribute="trailing" secondItem="Zvu-Xk-cjx" secondAttribute="trailing" id="86L-at-hiW"/>
+                            <constraint firstItem="c2m-fS-ox7" firstAttribute="top" secondItem="Zvu-Xk-cjx" secondAttribute="top" id="LBH-0y-7Ld"/>
+                            <constraint firstItem="c2m-fS-ox7" firstAttribute="leading" secondItem="Zvu-Xk-cjx" secondAttribute="leading" id="S8q-GU-aY5"/>
                             <constraint firstItem="Zvu-Xk-cjx" firstAttribute="trailing" secondItem="5Ry-r5-TxB" secondAttribute="trailing" id="hNe-Ni-8RF"/>
                             <constraint firstItem="5Ry-r5-TxB" firstAttribute="leading" secondItem="Zvu-Xk-cjx" secondAttribute="leading" id="stE-8G-9a1"/>
                             <constraint firstItem="5Ry-r5-TxB" firstAttribute="top" secondItem="Zvu-Xk-cjx" secondAttribute="top" id="ztN-5r-koa"/>
@@ -104,6 +125,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" image="map" catalog="system" id="aFG-tK-wOb"/>
                     <connections>
+                        <outlet property="bluetoothMessage" destination="uqb-Qh-fmJ" id="161-Io-Cfn"/>
+                        <outlet property="bluetoothView" destination="c2m-fS-ox7" id="uZV-RB-0Uc"/>
                         <outlet property="mapView" destination="5Ry-r5-TxB" id="SN2-dS-e4f"/>
                     </connections>
                 </viewController>

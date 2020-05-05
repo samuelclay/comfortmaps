@@ -16,7 +16,7 @@ protocol PhotoDelegate {
     func beginSnapshotTransfer(header: String)
     func beginBluetoothPhotoTransfer(header: String)
     func beginWifiPhotoTransfer(header: String)
-    func receivePhotoData(data: Data)
+    func receivePhotoData(data: Data) -> Double
     func receiveSnapshotData(data: Data)
     func endPhotoTransfer()
     func endSnapshotTransfer()
@@ -178,7 +178,7 @@ class PhotoManager: PhotoDelegate {
     // Photos
     //
     
-    func receivePhotoData(data: Data) {
+    func receivePhotoData(data: Data) -> Double {
         uploadingData.append(data)
         imageElapsedTime = Date().timeIntervalSince1970 - imageStartTime
         transferRate = Double(uploadingData.count) / imageElapsedTime * 8.0 / 1000.0
@@ -188,6 +188,8 @@ class PhotoManager: PhotoDelegate {
         } else {
             print(" ---> Photo progress:", uploadingData.count, currentImageSize)
         }
+        
+        return Double(uploadingData.count) / Double(currentImageSize)
     }
 
     func endPhotoTransfer() {
