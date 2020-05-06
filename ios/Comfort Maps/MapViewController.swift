@@ -104,7 +104,11 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
     func center(animated: Bool = true) {
         if let location = appDelegate().locationManager.latestLocation {
             self.lastLocation = location
-            self.mapView.setCenter(location, zoomLevel: 13, animated: animated)
+            var zoomLevel = self.mapView.zoomLevel
+            if zoomLevel < 12 {
+                zoomLevel = 14
+            }
+            self.mapView.setCenter(location, zoomLevel: zoomLevel, animated: animated)
         }
     }
     
