@@ -79,8 +79,8 @@ p {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-.navbar .nav-what {
-  padding: .25rem 1.5rem;
+.navbar p {
+  padding: 0.25rem 1.5rem 0;
 }
 .navbar .dropdown-menu {
   width: 200%;
@@ -91,9 +91,16 @@ p {
 }
 .navbar .dropdown-item {
   color: #88bae3;
+  margin: 0.25rem 0 1rem;
+}
+.navbar .dropdown-item:last-child {
+  margin-bottom: 0;
 }
 .navbar .nav-filter .dropdown-menu {
   width: 400px;
+}
+.navbar .nav-camera .dropdown-menu {
+  width: 300%;
 }
 .navbar .nav-filter .btn {
   line-height: 1.25rem;

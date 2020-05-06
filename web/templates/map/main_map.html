@@ -22,31 +22,32 @@
   
   <ul class="nav col-6">
 
-    <li class="nav-item dropdown">
+    <li class="nav-item dropdown nav-what">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWhat" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         What are Comfort Maps?
       </a>
       <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownWhat">
-        <p class="nav-what">
+        <p>
           Comfort Maps make safer streets. Turn your two-wheeled commute into a call for action.
         </p>
-        <p class="nav-what">
+        <p>
           These are stories told about the lived experience of bicyclists on city streets.
         </p>
-        <p class="nav-what">
-          The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility. 
-        </p>
-        <a class="dropdown-item" href="#">Learn more...</a>
+        {# <p> #}
+        {#   The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility.  #}
+        {# </p> #}
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#learnMoreWhat">Learn more...</a>
       </div>
     </li>
-    <li class="nav-item dropdown">
+    <li class="nav-item dropdown nav-camera">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGet" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Get the camera
       </a>
       <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownGet">
-        <p class="nav-what">
-          These are stories told about the lived experience of bicyclists on city streets.<br><br>The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility. </p>
-        <a class="dropdown-item" href="#">Learn more...</a>
+        <p>Two ways to add your own ratings and snapshots to Comfort Maps: use the iPhone app or buy a special camera.</p>
+        <a class="dropdown-item" href="#"  data-toggle="modal" data-target="#learnMoreCamera">Download the app...</a>
+        <p>The Comfort Maps camera is a physical hardware device that mounts on the handlebars of a bicycle or e-scooter and creates a safe and easy method for rating the comfort levels of streets.</p>
+        <a class="dropdown-item" href="#"  data-toggle="modal" data-target="#learnMoreCamera">Buy the camera...</a>
       </div>
     </li>
   </ul>
@@ -261,6 +262,29 @@
       </div>
     </figure>
     
+  </div>
+</div>
+
+<div class="modal fade" id="learnMoreWhat" tabindex="-1" role="dialog" aria-labelledby="learnMoreWhatTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="learnMoreWhatTitle">What are Comfort Maps?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <p class="lead">A revolution in mobility began three years ago. And in no city is bike infrastructure up to the task. Millions of people are using e-scooters, e-bikes, and e-mopeds to commute, but the streets we use are unsafe and undesirable. The problem is that while cities might choose to build bike lanes, most built bike lanes are inadequate to support the growth of greener modes of transport.</p>
+          <p>Comfort Maps is a tool for advocates to use real-time street safety data in discussions with policymakers. Combining a physical hardware device that mounts on the handlebars of a bicycle or e-scooter with a data visualization platform, Comfort Maps creates a safe and easy method for rating the comfort levels of streets. These ratings and snapshots provide a photographic lived experience that could not easily be captured and shared before.</p>
+          <p>The Comfort Maps data visualization platform provides insights into problem hotspots with real evidence. It also provides open data for circuity metrics and transit services to use for improved routing directions. Lastly, the platform aggregates patterns into visible trends, offering support to advocates in the form of sharable visualizations that illustrate the lived experience of the bike lane.</p>
+          <p>Comfort Maps is built by <a href="https://samuelclay.com">Samuel Clay</a>. You can contact him <a href="https://twitter.com/samuelclay">@samuelclay</a>.</p>
+      </div>
+      {# <div class="modal-footer"> #}
+      {#   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> #}
+      {#   <button type="button" class="btn btn-primary">Save changes</button> #}
+      {# </div> #}
+    </div>
   </div>
 </div>
 {% endblock %}
