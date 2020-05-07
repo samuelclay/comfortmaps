@@ -14,7 +14,7 @@ body a:focus {
   height: 16px;
   vertical-align: text-bottom;
 }
-.page-content {
+.container-fluid.page-content {
   margin-top: 52px; /* fixed navbar offset */
 }
 h1 {
@@ -149,19 +149,24 @@ p {
 
 .sidebar {
   z-index: 100; /* Behind the navbar */
-  padding: 48px 0 0; /* Height of navbar */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
   position: relative;
   top: 0;
   opacity: 0.9;
-  background-color: #1B252D;
+/*  background-color: #1B252D;*/
 }
 
 .sidebar > section {
   opacity: .3;
   transition: opacity 1s;
-  padding: 4vh 18px 40vh;
+  padding-top: 4vh;
+  padding-bottom: 40vh;
 } 
+.sidebar > section .section-container {
+  background-color: rgba(0,0,0,0.5);
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
 .sidebar > section:first-child {
   padding-bottom: 20vh;
 }
@@ -255,16 +260,10 @@ p {
 * Content
 */
 
-[role="main"] {
-  padding-top: 133px; /* Space for fixed navbar */
+.main.container-fluid {
+  padding-left: 0;
+  padding-right: 0;
 }
-
-@media (min-width: 768px) {
-  [role="main"] {
-    padding-top: 48px; /* Space for fixed navbar */
-  }
-}
-
 .scroll-down {
   margin: 64px auto 0;
   height: 64px;
@@ -317,9 +316,8 @@ figure.snapshot-detail-container {
   opacity: 0;
   transition: opacity 1s;
   top: 60px;
-  right: 18px;
-  width: 32%;
-  max-width: 490px;
+  width: auto;
+  margin-right: 3rem;
   background-color: #1B252D;
 }
 figure.snapshot-detail-container.top-side.right-side {

@@ -13,231 +13,244 @@
 
 {% block content %}
 
-<nav class="navbar navbar-dark fixed-top flex-md-nowrap p-0 shadow">
-  
+<nav class="navbar navbar-dark navbar-expand-md fixed-top flex-md-nowrap p-0 shadow">
+
   <a class="navbar-brand col-2" href="#">
     <img src="{% static "img/logo_white.png" %}" class="logo">
     Comfort Maps
-  </a>
+  </a>  
   
-  <ul class="nav col-6">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-    <li class="nav-item dropdown nav-what">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWhat" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        What are Comfort Maps?
-      </a>
-      <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownWhat">
-        <p>
-          Comfort Maps make safer streets. Turn your two-wheeled commute into a call for action.
-        </p>
-        <p>
-          These are stories told about the lived experience of bicyclists on city streets.
-        </p>
-        {# <p> #}
-        {#   The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility.  #}
-        {# </p> #}
-        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#learnMoreWhat">Learn more...</a>
-      </div>
-    </li>
-    <li class="nav-item dropdown nav-camera">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGet" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Get the camera
-      </a>
-      <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownGet">
-        <p>Two ways to add your own ratings and snapshots to Comfort Maps: use the iPhone app or buy a special camera.</p>
-        <a class="dropdown-item" href="#"  data-toggle="modal" data-target="#learnMoreCamera">Download the app...</a>
-        <p>The Comfort Maps camera is a physical hardware device that mounts on the handlebars of a bicycle or e-scooter and creates a safe and easy method for rating the comfort levels of streets.</p>
-        <a class="dropdown-item" href="#"  data-toggle="modal" data-target="#learnMoreCamera">Buy the camera...</a>
-      </div>
-    </li>
-  </ul>
-  
-  <div class="col-4">
-    <ul class="nav justify-content-end">
-      <li class="nav-item nav-filter dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="img"></span>
+  <div class="collapse navbar-collapse" id="navbarToggle">
+    <ul class="nav col-8">
+      <li class="nav-item dropdown nav-what">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownWhat" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          What are Comfort Maps?
         </a>
-        <div class="dropdown-menu dropdown-menu-right mt-0" aria-labelledby="navbarDropdownFilter">
-          <div class="filter-ratings btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
-            <label class="btn btn-filter-bad btn-secondary justify-content-center align-items-center d-flex flex-wrap rounded-0 shadow-none">
-              <input type="radio" name="options" id="option1" >
-              <div class="snapshot-rating filter-rating-bad">
-                <span class="rating rating-1"></span>
-                <span class="rating rating-2"></span>
-                <span class="rating rating-3"></span>
-                <span class="rating rating-4"></span>
-                <span class="rating rating-5"></span>
-              </div>
-              <div class="">Improvement needed</div>
-            </label>
-            <label class="btn btn-filter-none btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
-              <input type="radio" name="options" id="option2" checked> 
-              <div class="snapshot-rating filter-rating-all">
-                <span class="rating rating-1"></span>
-                <span class="rating rating-2"></span>
-                <span class="rating rating-3"></span>
-                <span class="rating rating-4"></span>
-                <span class="rating rating-5"></span>
-              </div>
-              <div class="">All snapshots</div>
-            </label>
-            <label class="btn btn-filter-good btn-secondary justify-content-center align-items-center d-flex flex-wrap rounded-0 shadow-none">
-              <input type="radio" name="options" id="option3">
-              <div class="snapshot-rating filter-rating-good">
-                <span class="rating rating-1"></span>
-                <span class="rating rating-2"></span>
-                <span class="rating rating-3"></span>
-                <span class="rating rating-4"></span>
-                <span class="rating rating-5"></span>
-              </div>
-              <div class="">Great streets</div>
-            </label>
-          </div>
-          <div class="filter-ownership btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
-            <label class="btn btn-ownership-self btn-secondary rounded-0 shadow-none">
-              <input type="radio" name="ownership" id="ownership1" >
-              <div class="snapshot-ownership ownership-self">
-                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
-                Only my snapshots
-              </div>
-            </label>
-            <label class="btn btn-ownership-all btn-secondary rounded-0 shadow-none active">
-              <input type="radio" name="ownership" id="ownership2" checked> 
-              <div class="snapshot-ownership ownership-all">
-                <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
-                Everybody's snapshots
-              </div>
-            </label>
-          </div>
-          <div class="filter-time btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
-            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
-              <input type="radio" name="time" id="time1" >
-              <div class="snapshot-time time-peak">
-                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
-                Peak hours
-              </div>
-            </label>
-            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
-              <input type="radio" name="time" id="time1" >
-              <div class="snapshot-time time-daytime">
-                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
-                Daytime
-              </div>
-            </label>            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
-              <input type="radio" name="time" id="time1" >
-              <div class="snapshot-time time-nighttime">
-                <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
-                Nighttime
-              </div>
-            </label>
-            <label class="btn btn-time-all btn-secondary rounded-0 shadow-none active">
-              <input type="radio" name="time" id="time2" checked> 
-              <div class="snapshot-time time-all">
-                <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
-                All day
-              </div>
-            </label>
-          </div>
+        <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownWhat">
+          <p>
+            Comfort Maps make safer streets. Turn your two-wheeled commute into a call for action.
+          </p>
+          <p>
+            These are stories told about the lived experience of bicyclists on city streets.
+          </p>
+          {# <p> #}
+          {#   The Comfort Maps camera is a special device used to capture real-life data on the streets in an effort to move towards cleaner mobility.  #}
+          {# </p> #}
+          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#learnMoreWhat">Learn more...</a>
         </div>
       </li>
-      <li class="nav-item nav-account dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="img"></span>
+      <li class="nav-item dropdown nav-camera">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGet" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Get the camera
         </a>
-        <div class="dropdown-menu dropdown-menu-right mt-0" aria-labelledby="navbarDropdownAccount">
-          {% if user.is_authenticated %}
-            
-          {% else %}
-            <div class="px-3 py-2">
-              <form class="form" role="form" method="post" action="/accounts/login/">
-                {% csrf_token %}
-                <div class="form-group">
-                  <input id="input-account-email" placeholder="Email" class="form-control form-control-sm" type="text" required="" name="email" autofocus>
-                </div>
-                {# <div class="form-group"> #}
-                {#   <input id="passwordInput" placeholder="Password" class="form-control form-control-sm" type="text" required=""> #}
-                {# </div> #}
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-block">Signup / Login</button>
-                </div>
-                {# <div class="form-group text-center"> #}
-                {#   <small><a href="#" data-toggle="modal" data-target="#modalPassword">Forgot password?</a></small> #}
-                {# </div> #}
-              </form>
-            </div>
-          {% endif %}
+        <div class="dropdown-menu mt-0" aria-labelledby="navbarDropdownGet">
+          <p>Two ways to add your own ratings and snapshots to Comfort Maps: use the iPhone app or buy a special camera.</p>
+          <a class="dropdown-item" href="#"  data-toggle="modal" data-target="#learnMoreCamera">Download the app...</a>
+          <p>The Comfort Maps camera is a physical hardware device that mounts on the handlebars of a bicycle or e-scooter and creates a safe and easy method for rating the comfort levels of streets.</p>
+          <a class="dropdown-item" href="#"  data-toggle="modal" data-target="#learnMoreCamera">Buy the camera...</a>
         </div>
       </li>
     </ul>
-  </div>
   
+    <div class="col-4">
+      <ul class="nav justify-content-end">
+        <li class="nav-item nav-filter dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFilter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="img"></span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right mt-0" aria-labelledby="navbarDropdownFilter">
+            <div class="filter-ratings btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
+              <label class="btn btn-filter-bad btn-secondary justify-content-center align-items-center d-flex flex-wrap rounded-0 shadow-none">
+                <input type="radio" name="options" id="option1" >
+                <div class="snapshot-rating filter-rating-bad">
+                  <span class="rating rating-1"></span>
+                  <span class="rating rating-2"></span>
+                  <span class="rating rating-3"></span>
+                  <span class="rating rating-4"></span>
+                  <span class="rating rating-5"></span>
+                </div>
+                <div class="">Improvement needed</div>
+              </label>
+              <label class="btn btn-filter-none btn-secondary justify-content-center align-items-center d-flex flex-wrap shadow-none active">
+                <input type="radio" name="options" id="option2" checked> 
+                <div class="snapshot-rating filter-rating-all">
+                  <span class="rating rating-1"></span>
+                  <span class="rating rating-2"></span>
+                  <span class="rating rating-3"></span>
+                  <span class="rating rating-4"></span>
+                  <span class="rating rating-5"></span>
+                </div>
+                <div class="">All snapshots</div>
+              </label>
+              <label class="btn btn-filter-good btn-secondary justify-content-center align-items-center d-flex flex-wrap rounded-0 shadow-none">
+                <input type="radio" name="options" id="option3">
+                <div class="snapshot-rating filter-rating-good">
+                  <span class="rating rating-1"></span>
+                  <span class="rating rating-2"></span>
+                  <span class="rating rating-3"></span>
+                  <span class="rating rating-4"></span>
+                  <span class="rating rating-5"></span>
+                </div>
+                <div class="">Great streets</div>
+              </label>
+            </div>
+            <div class="filter-ownership btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
+              <label class="btn btn-ownership-self btn-secondary rounded-0 shadow-none">
+                <input type="radio" name="ownership" id="ownership1" >
+                <div class="snapshot-ownership ownership-self">
+                  <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                  Only my snapshots
+                </div>
+              </label>
+              <label class="btn btn-ownership-all btn-secondary rounded-0 shadow-none active">
+                <input type="radio" name="ownership" id="ownership2" checked> 
+                <div class="snapshot-ownership ownership-all">
+                  <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
+                  Everybody's snapshots
+                </div>
+              </label>
+            </div>
+            <div class="filter-time btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
+              <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
+                <input type="radio" name="time" id="time1" >
+                <div class="snapshot-time time-peak">
+                  <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                  Peak hours
+                </div>
+              </label>
+              <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
+                <input type="radio" name="time" id="time1" >
+                <div class="snapshot-time time-daytime">
+                  <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                  Daytime
+                </div>
+              </label>            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
+                <input type="radio" name="time" id="time1" >
+                <div class="snapshot-time time-nighttime">
+                  <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                  Nighttime
+                </div>
+              </label>
+              <label class="btn btn-time-all btn-secondary rounded-0 shadow-none active">
+                <input type="radio" name="time" id="time2" checked> 
+                <div class="snapshot-time time-all">
+                  <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
+                  All day
+                </div>
+              </label>
+            </div>
+          </div>
+        </li>
+        <li class="nav-item nav-account dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAccount" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="img"></span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right mt-0" aria-labelledby="navbarDropdownAccount">
+            {% if user.is_authenticated %}
+            
+            {% else %}
+              <div class="px-3 py-2">
+                <form class="form" role="form" method="post" action="/accounts/login/">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <input id="input-account-email" placeholder="Email" class="form-control form-control-sm" type="text" required="" name="email" autofocus>
+                  </div>
+                  {# <div class="form-group"> #}
+                  {#   <input id="passwordInput" placeholder="Password" class="form-control form-control-sm" type="text" required=""> #}
+                  {# </div> #}
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">Signup / Login</button>
+                  </div>
+                  {# <div class="form-group text-center"> #}
+                  {#   <small><a href="#" data-toggle="modal" data-target="#modalPassword">Forgot password?</a></small> #}
+                  {# </div> #}
+                </form>
+              </div>
+            {% endif %}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
 
 <!-- Begin page content -->
-<div class="container-fluid p-0 page-content">
-  <div class="row no-gutters">
+<div class="container-fluid page-content">
+  <div class="row">
 
-    <div class="col-md-5 col-lg-4 d-none d-md-block text-light sidebar position-relative" >
+    <div class="col-sm-12 col-md-5 col-lg-4 text-light sidebar position-relative" >
       <section class="sidebar-scroll-section" id="sidebar-section-1">
-        <h1>Where does biking in Cambridge fall short?</h1>
-        <p class="lead">Cambridge, Massachusetts is home to 120,000 people. In the <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclenetworkplan">Cambridge Bicycle Plan</a>, published in 2015, Cambridge has committed to increasing the share of commute trips by bike to 10% by 2020. The U.S. national average in 2014 was 0.6%.</p>
+        <div class="section-container">
+          <h1>Where does biking in Cambridge fall short?</h1>
+          <p class="lead">Cambridge, Massachusetts is home to 120,000 people. In the <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclenetworkplan">Cambridge Bicycle Plan</a>, published in 2015, Cambridge has committed to increasing the share of commute trips by bike to 10% by 2020. The U.S. national average in 2014 was 0.6%.</p>
 
-        <p>The city has also set a goal of decreasing bike crashes by 50 percent. The path to achieving this safety goal is by improving roads to support cyclists. Here's what the bicycle network looks like on the streets today and where improvements are needed.</p>
-        <h6 class="author"><a href="http://samuelclay.com">Samuel Clay</a><br><i>May 13th, 2020</i></h6>
+          <p>The city has also set a goal of decreasing bike crashes by 50 percent. The path to achieving this safety goal is by improving roads to support cyclists. Here's what the bicycle network looks like on the streets today and where improvements are needed.</p>
+          <h6 class="author"><a href="http://samuelclay.com">Samuel Clay</a><br><i>May 13th, 2020</i></h6>
         
-        <div class="scroll-down"></div>
-        
+          <div class="scroll-down"></div>
+        </div>
       </section>
 
       <section class="sidebar-scroll-section" id="sidebar-section-2">
-        <h2>Bike Lanes of Today</h2>
-        <p class="lead">As of 2018 there are 92 miles of bike lanes across the city of Cambridge. The proposed <a href="https://www.cambridgema.gov/CDD/Projects/Transportation/2020bikeplanupdate">Cambridge Bicycle Plan 2020</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
+        <div class="section-container">
+          <h2>Bike Lanes of Today</h2>
+          <p class="lead">As of 2018 there are 92 miles of bike lanes across the city of Cambridge. The proposed <a href="https://www.cambridgema.gov/CDD/Projects/Transportation/2020bikeplanupdate">Cambridge Bicycle Plan 2020</a> calls for adding 75 more miles between 2013 and 2019. And reaching 350+ total miles by 2043.</p>
 
-        <p>Cambridge is creating a world-class biking city, and to accomplish that the city needs to do more than add bike lanes. Improving safety is what leads to increasing usage of the bike facilities in the city and to do that Cambridge needs to consider several problem areas.</p>
+          <p>Cambridge is creating a world-class biking city, and to accomplish that the city needs to do more than add bike lanes. Improving safety is what leads to increasing usage of the bike facilities in the city and to do that Cambridge needs to consider several problem areas.</p>
+        </div>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-3">
-        <h2>Cambridge has many great streets for biking</h2>
-        <p class="lead">Cycleways and separated bike lanes are prominent in the city, but there's no connection between major transit hubs that a person can take on a bicycle without going through dangerous street designs.</p>
-        <p>"Networks of protected bike lanes" is the mantra of safer biking. Even with the <a href="https://www.cambridgebikesafety.org/ordinance/">Cycling Safety Ordinance</a>, which ensures the gradual building of separated bike lanes, the rate at which crashes are lowering means we will see ten more years of unnecessary deaths caused by  lack of safe biking infrastructure.</p>
+        <div class="section-container">
+          <h2>Cambridge has many great streets for biking</h2>
+          <p class="lead">Cycleways and separated bike lanes are prominent in the city, but there's no connection between major transit hubs that a person can take on a bicycle without going through dangerous street designs.</p>
+          <p>"Networks of protected bike lanes" is the mantra of safer biking. Even with the <a href="https://www.cambridgebikesafety.org/ordinance/">Cycling Safety Ordinance</a>, which ensures the gradual building of separated bike lanes, the rate at which crashes are lowering means we will see ten more years of unnecessary deaths caused by  lack of safe biking infrastructure.</p>
+        </div>
       </section>
       
       <section class="sidebar-scroll-section" id="sidebar-section-4">
-        <h2>Oxford Street is a bottleneck</h2>
-        <p class="lead">But there remains a handful of parking spots even though there are numerous bikes and lightweight two-wheeled vehicles rolling through. This map shows where the street is hazardous for bikes due to unnecessary parking.</p>
-        <p>Most crashes in Cambridge are <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclecrashinformation">caused by drivers not seeing cyclists</a>, whether or not the bicycle was in a bike lane.</p>
+        <div class="section-container">
+          <h2>Oxford Street is a bottleneck</h2>
+          <p class="lead">But there remains a handful of parking spots even though there are numerous bikes and lightweight two-wheeled vehicles rolling through. This map shows where the street is hazardous for bikes due to unnecessary parking.</p>
+          <p>Most crashes in Cambridge are <a href="https://www.cambridgema.gov/CDD/Transportation/gettingaroundcambridge/bikesincambridge/bicyclecrashinformation">caused by drivers not seeing cyclists</a>, whether or not the bicycle was in a bike lane.</p>
+        </div>
       </section>
       
       <section class="sidebar-scroll-section section-scroller" id="sidebar-section-5">
-        <div class="section-scroller-fixed">
-          <p class="lead">Take a ride down JFK St</p>
-          <ul class="zoom-streets p-0">
-            <li class="zoom-indicator" :style="{top: indicatorTop}">
-              <img src="{% static "img/noun_indicator.png" %}">
-            </li>
-            {% verbatim %}
-            <li v-for="(zoom, z) in locations" :key="zoom.photoId" class="zoom-street" :class="[`zoom-street-${z}`, zoom.activeZoom == z ? 'active': 'inactive']" @click="setActive(zoom, z)">
-              <div class="zoom-street-number">{{ z+1 }}</div>
-              <div class="zoom-street-name">{{ zoom.streetName }}</div>
-            </li>
-            {% endverbatim %}
-          </ul>
+        <div class="section-container">
+          <div class="section-scroller-fixed">
+            <p class="lead">Take a ride down JFK St</p>
+            <ul class="zoom-streets">
+              <li class="zoom-indicator" :style="{top: indicatorTop}">
+                <img src="{% static "img/noun_indicator.png" %}">
+              </li>
+              {% verbatim %}
+              <li v-for="(zoom, z) in locations" :key="zoom.photoId" class="zoom-street" :class="[`zoom-street-${z}`, zoom.activeZoom == z ? 'active': 'inactive']" @click="setActive(zoom, z)">
+                <div class="zoom-street-number">{{ z+1 }}</div>
+                <div class="zoom-street-name">{{ zoom.streetName }}</div>
+              </li>
+              {% endverbatim %}
+            </ul>
+          </div>
+          {% verbatim %}
+          <div v-for="(zoom, z) in locations" class="zoom-space" :class="[`zoom-space-${z}`, activeZoom == z ? 'active': 'inactive']"></div>
+          {% endverbatim %}
         </div>
-        {% verbatim %}
-        <div v-for="(zoom, z) in locations" class="zoom-space" :class="[`zoom-space-${z}`, activeZoom == z ? 'active': 'inactive']"></div>
-        {% endverbatim %}
       </section>
       
     </div>
     
-    <main role="main" class="container-fluid position-fixed h-100 p-0">
+    <main role="main" class="main container-fluid position-fixed h-100">
       <div class="map-move-protector w-100 h-100"></div>
       <div id="CM-main-map" class="mapbox w-100 h-100 m-0 row"></div>
     </main>
     
     
-    <figure class="figure card snapshot-detail-container p-0 rounded-top offset-4" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
+    <figure class="figure card snapshot-detail-container p-0 rounded-top col-sm-12 col-md-4 offset-md-8" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
       <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top m-0" v-if="activeSnapshot.properties.photo_uploaded">
       <div class="card-body rounded-bottom">
         <figcaption class="figure-caption text-light">
