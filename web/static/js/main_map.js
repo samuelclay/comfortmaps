@@ -646,39 +646,39 @@ CM.MapboxMap = new Vue({
         CM.Filters.ratings = "none";
         this.showBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-3")) {
-        this.flyToPhotoId("-U9Wblf7N", {zoom: 17});
+        this.flyToPhotoId("-U9Wblf7N", {zoom: 14});
         CM.Filters.ratings = "good";
         this.showBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-4")) {
-        this.flyToPhotoId("aAJ-l6wp", {zoom: 16});
+        this.flyToPhotoId("aAJ-l6wp", {zoom: 15});
         CM.Filters.ratings = "bad";
         this.showBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-5")) {
-        this.flyToPhotoId("55_t_gSm", {zoom: 17});
+        this.flyToPhotoId("55_t_gSm", {zoom: 16});
         CM.Filters.ratings = "bad";
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-0")) {
-        this.flyToPhotoId("55_t_gSm", {zoom: 17});
+        this.flyToPhotoId("55_t_gSm", {zoom: 16});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 0;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-1")) {
-        this.flyToPhotoId("pi-6u3xz", {zoom: 17});
+        this.flyToPhotoId("pi-6u3xz", {zoom: 16});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 1;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-2")) {
-        this.flyToPhotoId("tF5ZKCcW", {zoom: 17});
+        this.flyToPhotoId("tF5ZKCcW", {zoom: 16});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 2;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-3")) {
-        this.flyToPhotoId("hV7LG2cI", {zoom: 17});
+        this.flyToPhotoId("hV7LG2cI", {zoom: 16});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 3;
         this.showBikeLanes();
       } else if ($(sectionEl).is(".zoom-space-4")) {
-        this.flyToPhotoId("C4a6-Cce", {zoom: 17});
+        this.flyToPhotoId("C4a6-Cce", {zoom: 16});
         CM.Filters.ratings = "bad";
         CM.ZoomList.activeZoom = 4;
         this.showBikeLanes();
