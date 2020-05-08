@@ -47,6 +47,9 @@ def record_snapshot(request):
                         speed_mph=speed_mph,
                         location=Point(gps_lat, gps_long))
     snapshot.save()
+    
+    snapshot.fetch_reverse_geocode()
+    
     logging.info(" ---> Recording snapshot: %s / %s" % (snapshot, request.POST))
         
     return JsonResponse({"code": 1, "message": "OK"})
