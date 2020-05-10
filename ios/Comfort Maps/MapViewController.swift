@@ -42,7 +42,7 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
         let newLocation = CLLocation(latitude: recentLocation.latitude, longitude: recentLocation.longitude)
         let distance = newLocation.distance(from: oldLocation)
         
-        if distance > 10 {
+        if distance > 50 {
             print(" ---> Moved \(distance) meters, recentering...")
             self.center()
         } else {

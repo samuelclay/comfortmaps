@@ -154,7 +154,7 @@ CM.ScrollSpy = function() {
     }
   });
   
-  $(".sidebar .section-scroller > .zoom-space").scrollspy({
+  $(".sidebar .section-scroller .zoom-space").scrollspy({
     container: window,
     buffer: buffer,
     // buffer: $(".sidebar .section-scroller").offset().top,
@@ -173,16 +173,16 @@ CM.ScrollSpy = function() {
       $(element).removeClass('active');
       $(".zoom-street-" + num).removeClass('active');
     },
-    onTick: (element, position, inside, enters, leaves) => {
-      let spaceHeight = $(element).outerHeight();
-      let spacePosition = parseInt($(element).position().top, 10);
-      let windowScroll = $(window).scrollTop();
-      let spaceDiff = spacePosition - windowScroll - buffer;
-      let scrollPct = 1 - spaceDiff / spaceHeight;
-      console.log(['onTick', spaceHeight, spacePosition, position.top, windowScroll, spaceDiff, scrollPct, buffer]);
-
-      CM.ZoomList.scrollPct = scrollPct;
-    }
+    // onTick: (element, position, inside, enters, leaves) => {
+    //   let spaceHeight = $(element).outerHeight();
+    //   let spacePosition = parseInt($(element).position().top, 10);
+    //   let windowScroll = $(window).scrollTop();
+    //   let spaceDiff = spacePosition - windowScroll - buffer;
+    //   let scrollPct = 1 - spaceDiff / spaceHeight;
+    //   console.log(['onTick', spaceHeight, spacePosition, position.top, windowScroll, spaceDiff, scrollPct, buffer]);
+    //
+    //   CM.ZoomList.scrollPct = scrollPct;
+    // }
   });
   
   $(window).scroll();
@@ -793,19 +793,26 @@ CM.ZoomList = new Vue({
     scrollPct() {
       console.log(['Indicator', this.activeZoom, this.zoomHeight, this.scrollPct]);
       this.indicatorTop = ((this.activeZoom) * this.zoomHeight) + (this.zoomHeight * this.scrollPct);
-      this.indicatorTop -= 24;
+      // this.indicatorTop -= 24;
     },
     
     activeZoom() {
-      this.zoomHeight = $(".zoom-street").first().outerHeight(true);
+      let $activeZoom = $(".zoom-street-" + this.activeZoom);
+      this.zoomHeight = $activeZoom.outerHeight(true);
+      let zoomStreetPos = $activeZoom.position().top;
+      this.indicatorTop = zoomStreetPos;
     }
   },
   
   methods: {
     setActive(location, index) {
+      let buffer = $(window).outerHeight() / 2 - 100;
+      
       this.activeZoom = index;
-      let zoomSpacePos = $(".zoom-space-" + this.activeZoom).position().top;
-      $('body').animate({scrollTop: zoomSpacePos}, 2000)
+      
+      let zoomSpacePos = $(".zoom-space-" + this.activeZoom).position().top - buffer;
+      // console.log(['Scroll to zoom space', zoomSpacePos + buffer, buffer, zoomSpacePos]);
+      $('body').animate({scrollTop: zoomSpacePos}, 0);
     }
   }
   

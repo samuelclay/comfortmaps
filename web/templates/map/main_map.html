@@ -231,7 +231,7 @@
               {% verbatim %}
               <li v-for="(zoom, z) in locations" :key="zoom.photoId" class="zoom-street" :class="[`zoom-street-${z}`, zoom.activeZoom == z ? 'active': 'inactive']" @click="setActive(zoom, z)">
                 <div class="zoom-street-number">{{ z+1 }}</div>
-                <div class="zoom-street-name">{{ zoom.streetName }}</div>
+                {{ zoom.streetName }}
               </li>
               {% endverbatim %}
             </ul>
