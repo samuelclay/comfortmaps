@@ -15,7 +15,7 @@ body a:focus {
   vertical-align: text-bottom;
 }
 .container-fluid.page-content {
-  margin-top: 52px; /* fixed navbar offset */
+/*  margin-top: 52px; /* fixed navbar offset */*/
 }
 h1 {
   font-size: 2.75rem;
@@ -52,6 +52,7 @@ p {
   font-family: "Oswald", sans-serif;
   text-transform: uppercase;
   font-size: 1.45rem;
+  margin: 0 2rem 0 1rem;
 }
 .navbar-dark .nav-item .nav-link {
   color: #fff;
@@ -317,7 +318,7 @@ figure.snapshot-detail-container {
   transition: opacity 1s;
   top: 60px;
   width: auto;
-  margin-right: 3rem;
+  margin-right: 0.5rem;
   background-color: #1B252D;
 }
 figure.snapshot-detail-container.top-side.right-side {

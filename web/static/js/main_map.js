@@ -6,6 +6,17 @@ CM.fontsReady = function() {
 
 }
 
+CM.ScrollDown = new Vue({
+  el: '.scroll-down',
+  
+  methods: {
+    scrollDown() {
+      let nextSectionPos = $("#sidebar-section-2").position().top;
+      $('body').animate({scrollTop: nextSectionPos - 48}, 2000)
+    }
+  }
+});
+
 CM.Account = new Vue({
   el: '.nav-account',
   
@@ -211,12 +222,14 @@ CM.MapboxMap = new Vue({
         style: 'mapbox://styles/sclay/ck73tassr0wqw1inzezyxzs54',
         center: [CM.Globals.defaultLng, CM.Globals.defaultLat], // [long, lat]
         zoom: CM.Globals.defaultZoom,
-        pitchWithRotate: false
+        pitchWithRotate: false,
+        attributionControl: false
       });
       
       this.map.addControl(new mapboxgl.NavigationControl({
         showCompass: false
-      }));
+      }), 'bottom-right');
+      this.map.addControl(new mapboxgl.AttributionControl(), 'bottom-right');
       
       // disable map zoom when using scroll
       this.map.scrollZoom.disable();
@@ -646,11 +659,11 @@ CM.MapboxMap = new Vue({
         CM.Filters.ratings = "none";
         this.showBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-3")) {
-        this.flyToPhotoId("-U9Wblf7N", {zoom: 14});
+        this.flyToPhotoId("-U9Wblf7N", {zoom: 15});
         CM.Filters.ratings = "good";
         this.showBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-4")) {
-        this.flyToPhotoId("aAJ-l6wp", {zoom: 15});
+        this.flyToPhotoId("aAJ-l6wp", {zoom: 15.5});
         CM.Filters.ratings = "bad";
         this.showBikeLanes();
       } else if ($(sectionEl).is("#sidebar-section-5")) {

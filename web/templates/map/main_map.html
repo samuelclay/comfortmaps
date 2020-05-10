@@ -15,7 +15,7 @@
 
 <nav class="navbar navbar-dark navbar-expand-md fixed-top flex-md-nowrap p-0 shadow">
 
-  <a class="navbar-brand col-2" href="#">
+  <a class="navbar-brand" href="#">
     <img src="{% static "img/logo_white.png" %}" class="logo">
     Comfort Maps
   </a>  
@@ -191,7 +191,7 @@
           <p>The city has also set a goal of decreasing bike crashes by 50 percent. The path to achieving this safety goal is by improving roads to support cyclists. Here's what the bicycle network looks like on the streets today and where improvements are needed.</p>
           <h6 class="author"><a href="http://samuelclay.com">Samuel Clay</a><br><i>May 13th, 2020</i></h6>
         
-          <div class="scroll-down"></div>
+          <div class="scroll-down" v-on:click="scrollDown()"></div>
         </div>
       </section>
 
