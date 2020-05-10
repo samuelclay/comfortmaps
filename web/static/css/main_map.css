@@ -195,6 +195,11 @@ p {
 .sidebar > section.final-scroll .section-container {
   background-color: inherit;
 }
+@media (max-width: 540px) {
+  .sidebar > section {
+    padding-bottom: 80vh;
+  }
+}
 /* ====================== */
 /* = Zoom in on Streets = */
 /* ====================== */
@@ -332,6 +337,7 @@ figure.snapshot-detail-container {
   width: auto;
   margin-right: 0.5rem;
   background-color: #1B252D;
+  z-index: 100;
 }
 figure.snapshot-detail-container.top-side.right-side {
   top: 60px;
@@ -436,3 +442,36 @@ figure.snapshot-detail-container.active {
 }
 
 
+@media (max-width: 540px) {
+  .snapshot-detail-container .figure-img {
+    width: 50%;
+    
+  }
+  .snapshot-detail-container .card-body {
+    display: inline-block;
+    width: 50%;
+    top: 0;
+    padding: 0.75rem;
+  }
+  .snapshot-detail-container .snapshot-date {
+    font-size: 0.65rem;
+  }
+  .snapshot-detail-container h3, 
+  .snapshot-detail-container h5 {
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  .snapshot-detail-container h3 {
+    font-size: 1rem;
+  }
+  .snapshot-detail-container h5 {
+    font-size: 0.75rem;
+  }
+  .snapshot-detail-container .snapshot-rating {
+    float: none;
+    margin-bottom: 0.5rem;
+  }
+}
