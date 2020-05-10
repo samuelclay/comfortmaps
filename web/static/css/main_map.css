@@ -152,6 +152,7 @@ p {
   z-index: 100; /* Behind the navbar */
 /*  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);*/
   position: relative;
+  pointer-events: none;
   top: 0;
   opacity: 0.9;
 /*  background-color: #1B252D;*/
@@ -160,7 +161,7 @@ p {
 .sidebar > section {
   opacity: .3;
   transition: opacity 1s;
-  padding-top: 4vh;
+  padding-top: 8vh;
   padding-bottom: 40vh;
 } 
 .sidebar > section .section-container {
@@ -334,6 +335,7 @@ figure.snapshot-detail-container {
   opacity: 0;
   transition: opacity 1s;
   top: 60px;
+  right: 0;
   width: auto;
   margin: 0 0.5rem;
   background-color: #1B252D;
