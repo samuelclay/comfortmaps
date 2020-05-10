@@ -128,7 +128,8 @@
                   <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
                   Daytime
                 </div>
-              </label>            <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
+              </label>            
+              <label class="btn btn-time-self btn-secondary rounded-0 shadow-none">
                 <input type="radio" name="time" id="time1" >
                 <div class="snapshot-time time-nighttime">
                   <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
@@ -140,6 +141,22 @@
                 <div class="snapshot-time time-all">
                   <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
                   All day
+                </div>
+              </label>
+            </div>
+            <div class="filter-recency btn-group btn-group-toggle d-flex flex-row" data-toggle="buttons">
+              <label class="btn btn-recency-self btn-secondary rounded-0 shadow-none">
+                <input type="radio" name="recency" id="recency1" >
+                <div class="snapshot-recency recency-all">
+                  <img src="{% static "img/noun_everyone.png" %}" class="mx-auto d-block">
+                  All snapshots
+                </div>
+              </label>
+              <label class="btn btn-recency-self btn-secondary rounded-0 shadow-none">
+                <input type="radio" name="recency" id="recency1" >
+                <div class="snapshot-recency recency-week">
+                  <img src="{% static "img/noun_account.png" %}" class="mx-auto d-block">
+                  This week
                 </div>
               </label>
             </div>
@@ -239,6 +256,11 @@
           {% verbatim %}
           <div v-for="(zoom, z) in locations" class="zoom-space" :class="[`zoom-space-${z}`, activeZoom == z ? 'active': 'inactive']"></div>
           {% endverbatim %}
+        </div>
+      </section>
+      
+      <section class="sidebar-scroll-section final-scroll" id="sidebar-section-6">
+        <div class="section-container">
         </div>
       </section>
       

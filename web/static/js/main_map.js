@@ -51,6 +51,7 @@ CM.Filters = new Vue({
       ratings: 'all',
       days: 0,
       ownership: 'all',
+      recency: 'all'
     }
   },
   
@@ -82,6 +83,16 @@ CM.Filters = new Vue({
         $(".btn-ownership-self").button("toggle");
         $(".btn-ownership-self").click();
       }
+    },
+    
+    recency(recency) {
+      if (recency == 'all') {
+        $(".btn-recency-all").button("toggle");
+        $(".btn-recency-all").click();
+      } else if (recency == 'week') {
+        $(".btn-recency-week").button("toggle");
+        $(".btn-recency-week").click();
+      }
     }
   },
   
@@ -98,6 +109,15 @@ CM.Filters = new Vue({
       this.ratings = 'good';
       this.updateFilter();
     });
+    
+    $(".btn-ownership-all").click(() => {
+      this.ownership = 'all';
+      this.updateFilter();
+    });
+    $(".btn-ownership-self").click(() => {
+      this.ownership = 'self';
+      this.updateFilter();
+    });   
     
     $(".btn-ownership-all").click(() => {
       this.ownership = 'all';
@@ -695,7 +715,17 @@ CM.MapboxMap = new Vue({
         CM.ZoomList.activeZoom = 4;
         this.showBikeLanes();
         this.flyToPhotoId("C4a6-Cce", {zoom: 16});
+      } else if ($(sectionEl).is("#sidebar-section-6")) {
+        CM.Filters.ratings = "all";
+        this.showBikeLanes();
+        this.deactivateSnapshot();
+        this.protectMapMove(true);
+        this.map.flyTo({center: {
+          lat: CM.Globals.defaultLat,
+          lng: CM.Globals.defaultLng
+        }, speed: 0.4, zoom: CM.Globals.defaultZoom});
       }
+      
     }
         
   }

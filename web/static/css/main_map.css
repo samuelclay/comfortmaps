@@ -189,6 +189,12 @@ p {
 .section-scroller-fixed.active {
 }
 
+.final-scroll {
+  height: 100vh;
+}
+.sidebar > section.final-scroll .section-container {
+  background-color: inherit;
+}
 /* ====================== */
 /* = Zoom in on Streets = */
 /* ====================== */
