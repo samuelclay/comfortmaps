@@ -335,7 +335,7 @@ figure.snapshot-detail-container {
   transition: opacity 1s;
   top: 60px;
   width: auto;
-  margin-right: 0.5rem;
+  margin: 0 0.5rem;
   background-color: #1B252D;
   z-index: 100;
 }
@@ -443,9 +443,12 @@ figure.snapshot-detail-container.active {
 
 
 @media (max-width: 540px) {
+  figure.snapshot-detail-container {
+    top: auto;
+    bottom: 0.5rem;
+  }
   .snapshot-detail-container .figure-img {
     width: 50%;
-    
   }
   .snapshot-detail-container .card-body {
     display: inline-block;
