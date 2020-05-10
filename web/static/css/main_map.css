@@ -168,6 +168,7 @@ p {
   background-color: rgba(0,0,0,0.5);
   padding: 1rem;
   border-radius: 0.25rem;
+  pointer-events: auto;
 }
 .sidebar > section:first-child {
   padding-bottom: 20vh;
@@ -340,6 +341,7 @@ figure.snapshot-detail-container {
   margin: 0 0.5rem;
   background-color: #1B252D;
   z-index: 100;
+  pointer-events: none;
 }
 figure.snapshot-detail-container.top-side.right-side {
   top: 60px;
@@ -350,6 +352,7 @@ figure.snapshot-detail-container.top-side.right-side {
 figure.snapshot-detail-container.active {
   display: block;
   opacity: 1;
+  pointer-events: auto;
 }
 
 .snapshot-detail-container .figure-img {

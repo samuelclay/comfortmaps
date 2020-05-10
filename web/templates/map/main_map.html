@@ -272,7 +272,7 @@
     </main>
     
     
-    <figure class="figure card snapshot-detail-container p-0 rounded-top col-sm-12 col-md-4 offset-md-8" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }" v-if="activeSnapshot">
+    <figure class="figure card snapshot-detail-container p-0 rounded-top col-sm-12 col-md-4 offset-md-8" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }">
       <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top m-0" v-if="activeSnapshot.properties.photo_uploaded">
       <div class="card-body rounded-bottom">
         <figcaption class="figure-caption text-light">
