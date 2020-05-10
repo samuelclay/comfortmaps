@@ -82,7 +82,7 @@ def record_photo(request, photo_id):
     snapshot.save()
     
     logging.info(" ---> Uploaded %s: %s" % (photo_id, image))
-    return JsonResponse({"code": 1, "image_size": len(image_file)})
+    return JsonResponse({"code": 1, "image_size": len(image_file), "photo_url": snapshot.full_photo_url})
 
 @login_required()
 def change_rating(request, photo_id):

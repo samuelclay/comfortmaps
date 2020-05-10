@@ -313,9 +313,9 @@ CM.MapboxMap = new Vue({
               9,
               1,
               15,
-              10,
+              6,
               17,
-              19
+              12
             ],
 
             // Circle color
@@ -336,7 +336,7 @@ CM.MapboxMap = new Vue({
               'case',
               ['boolean', ['feature-state', 'hover'], false],
               1,
-              0.1
+              1
             ],
             'circle-opacity-transition': {
               "duration": 1000
