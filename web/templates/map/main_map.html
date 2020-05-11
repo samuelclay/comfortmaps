@@ -273,27 +273,29 @@
     
     
     <figure class="figure card snapshot-detail-container p-0 rounded-top col-sm-12 col-md-4 offset-md-8" :class="{ active: !!activeSnapshot, 'left-side': leftSide, 'right-side': !leftSide, 'top-side': topSide, 'bottom-side': !topSide, owned: owned }">
-      <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top m-0" v-if="activeSnapshot.properties.photo_uploaded">
-      <div class="card-body rounded-bottom">
-        <figcaption class="figure-caption text-light">
-          <div class="snapshot-rating-date">
-            <div class="snapshot-rating" :class="'active-rating-'+activeSnapshot.properties.rating">
-              <span class="rating rating-1" v-on:click="changeRating(1)"></span>
-              <span class="rating rating-2" v-on:click="changeRating(2)"></span>
-              <span class="rating rating-3" v-on:click="changeRating(3)"></span>
-              <span class="rating rating-4" v-on:click="changeRating(4)"></span>
-              <span class="rating rating-5" v-on:click="changeRating(5)"></span>
+      <div class="snapshot-detail-wrapper" v-if="!!activeSnapshot">
+        <img :src="activeSnapshot.properties.url" class="figure-img img-fluid rounded-top m-0" v-if="activeSnapshot.properties.photo_uploaded">
+        <div class="card-body rounded-bottom">
+          <figcaption class="figure-caption text-light">
+            <div class="snapshot-rating-date">
+              <div class="snapshot-rating" :class="'active-rating-'+activeSnapshot.properties.rating">
+                <span class="rating rating-1" v-on:click="changeRating(1)"></span>
+                <span class="rating rating-2" v-on:click="changeRating(2)"></span>
+                <span class="rating rating-3" v-on:click="changeRating(3)"></span>
+                <span class="rating rating-4" v-on:click="changeRating(4)"></span>
+                <span class="rating rating-5" v-on:click="changeRating(5)"></span>
+              </div>
+              {% verbatim %}
+                <span class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</span>
+              {% endverbatim %}
             </div>
             {% verbatim %}
-              <span class="snapshot-date">{{ activeSnapshot.properties.date | formatDate }}</span>
+              <h3>{{ activeSnapshot.properties.poi }}</h3>
+              <h5>{{ activeSnapshot.properties.address }}</h5>
             {% endverbatim %}
-          </div>
-          {% verbatim %}
-            <h3>{{ activeSnapshot.properties.poi }}</h3>
-            <h5>{{ activeSnapshot.properties.address }}</h5>
-          {% endverbatim %}
-          {# {{ activeSnapshot.properties }}  #}
-        </figcaption>
+            {# {{ activeSnapshot.properties }}  #}
+          </figcaption>
+        </div>
       </div>
     </figure>
     
