@@ -276,7 +276,7 @@ CM.MapboxMap = new Vue({
         lat: CM.Globals.defaultLat,
         lng: CM.Globals.defaultLng,
       }, (geodata) => {
-        // this.geodata = geodata;
+        this.geojson = geodata;
         this.geodata = {
           'good': geodata.features.filter((f) => { return f.properties.rating >= 4; }),
           'bad': geodata.features.filter((f) => { return f.properties.rating <= 2; }),
@@ -322,8 +322,10 @@ CM.MapboxMap = new Vue({
             _.extend(feature.properties, data);
           }
         });
-      
-        this.map.getSource('snapshots-'+rating).setData(features);
+        
+        let geojson = this.geojson;
+        geojson.features = features;
+        this.map.getSource('snapshots-'+rating).setData(geojson);
       });
     },
     
