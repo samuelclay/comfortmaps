@@ -323,7 +323,7 @@ CM.MapboxMap = new Vue({
           }
         });
       
-        this.map.getSource('snapshots-'+rating).setData(fetures);
+        this.map.getSource('snapshots-'+rating).setData(features);
       });
     },
     
