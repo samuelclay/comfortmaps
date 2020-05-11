@@ -110,8 +110,13 @@ def raw_google_map(request):
 def snapshots_from_point(request, format="json"):
     lat = float(request.POST.get('lat') or request.GET.get('lat'))
     lng = float(request.POST.get('lng') or request.GET.get('lng'))
+    rating = request.POST.get('rating', 'all')
     locations = Snapshot.objects.filter(location__distance_lt=(Point(lat, lng), Distance(km=5)))
-    logging.info(f" ---> Snapshots near {lat},{lng}: {locations.count()} {request.user}")
+    if rating == 'good':
+        locations = locations.filter(rating__gte=4)
+    elif rating == 'bad':
+        locations = locations.filter(rating__lte=2)
+    logging.info(f" ---> Snapshots near {lat},{lng} {rating}: {locations.count()} {request.user}")
     
     if format == "json":
         points = [{

@@ -132,13 +132,39 @@ CM.Filters = new Vue({
   methods: {
     updateFilter() {
       var filters = ['all'];
-
-      if (this.ratings == 'bad') {
+      let hidden = 0.05;
+      
+      if (this.ratings == 'good') {
         filters.push(['<=', 'rating', 2]);
-      } else if (this.ratings == 'good') {
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-stroke-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-opacity', hidden);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-stroke-opacity', hidden);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-opacity', hidden);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-stroke-opacity', hidden);
+      } else if (this.ratings == 'bad') {
         filters.push(['>=', 'rating', 4]);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-opacity', hidden);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-stroke-opacity', hidden);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-opacity', hidden);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-stroke-opacity', hidden);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-stroke-opacity', 1);
+      } else if (this.ratings == 'all') {
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-stroke-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-stroke-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-opacity', 1);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-stroke-opacity', 1);
       } else if (this.ratings == 'none') {
         filters.push(['>', 'rating', 5]);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-opacity', 0);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-good', 'circle-stroke-opacity', 0);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-opacity', 0);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-neutral', 'circle-stroke-opacity', 0);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-opacity', 0);
+        CM.MapboxMap.map.setPaintProperty('snapshot-points-bad', 'circle-stroke-opacity', 0);
       }
       
       if (this.ownership == 'self') {
@@ -146,7 +172,9 @@ CM.Filters = new Vue({
       }
       
       // console.log('Filters', filters, this.ratings, this.ownership);
-      CM.MapboxMap.map.setFilter('snapshot-points', filters);
+      _.each(this.geodata, (features, rating) => {
+        CM.MapboxMap.map.setFilter('snapshot-points-'+rating, filters);
+      });
     }
   }
   
@@ -258,13 +286,21 @@ CM.MapboxMap = new Vue({
     mapLoad() {
       $.getJSON("/record/snapshots_from_point.geojson", {
         lat: CM.Globals.defaultLat,
-        lng: CM.Globals.defaultLng
+        lng: CM.Globals.defaultLng,
       }, (geodata) => {
-        this.geodata = geodata;
-        this.map.addSource('snapshots', {
-          'type': 'geojson',
-          'data': geodata,
-          'promoteId': 'id'
+        // this.geodata = geodata;
+        this.geodata = {
+          'good': geodata.features.filter((f) => { return f.properties.rating >= 4; }),
+          'bad': geodata.features.filter((f) => { return f.properties.rating <= 2; }),
+          'neutral': geodata.features.filter((f) => { return f.properties.rating == 3; })
+        };
+        _.each(this.geodata, (features, rating) => {
+          geodata.features = features;
+          this.map.addSource('snapshots-'+rating, {
+            'type': 'geojson',
+            'data': geodata,
+            'promoteId': 'id'
+          });
         });
         
         this.map.on('sourcedata', (data) => {
@@ -272,10 +308,12 @@ CM.MapboxMap = new Vue({
             // console.log(['Already loaded source, ignoring new sourcedata', data]);
             return;
           }
-          if (this.map.getSource('snapshots') && data.isSourceLoaded) {
-            this.loadedSource = true;
-            CM.ScrollSpy();
-          }
+          _.each(this.geodata, (features, rating) => {
+            if (this.map.getSource('snapshots-'+rating) && data.isSourceLoaded) {
+              this.loadedSource = true;
+              CM.ScrollSpy();
+            }
+          });
         });
         this.addSnapshotPoints();
         this.bindHoverPhotos();
@@ -288,66 +326,41 @@ CM.MapboxMap = new Vue({
     },
     
     updateSnapshot(photoId, data) {
-      _.each(this.geodata.features, (feature) => {
-        if (feature.id == photoId) {
-          // console.log(['Extending snapshot', photoId, feature.properties, data]);
-          _.extend(feature.properties, data);
-        }
-      });
+      _.each(this.geodata, (features, rating) => {
+        _.each(features, (feature) => {
+          if (feature.id == photoId) {
+            // console.log(['Extending snapshot', photoId, feature.properties, data]);
+            _.extend(feature.properties, data);
+          }
+        });
       
-      this.map.getSource('snapshots').setData(this.geodata);
+        this.map.getSource('snapshots-'+rating).setData(fetures);
+      });
     },
     
     addSnapshotPoints() {
-      this.map.addLayer(
-        {
-          'id': 'snapshot-points',
-          'type': 'circle',
-          'source': 'snapshots',
-          'minzoom': 1,
-          'paint': {
-            'circle-radius': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              9,
-              1,
-              15,
-              6,
-              17,
-              12
-            ],
+      _.each(this.geodata, (features, rating) => {
+        this.map.addLayer(
+          {
+            'id': 'snapshot-points-'+rating,
+            'type': 'circle',
+            'source': 'snapshots-'+rating,
+            'minzoom': 1,
+            'paint': {
+              'circle-radius': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                9,
+                1,
+                15,
+                6,
+                17,
+                12
+              ],
 
-            // Circle color
-            'circle-color': [
-              "step",
-              ["get", "rating"],
-              "rgb(186,56,51)",
-              2,
-              "rgb(186,110,102)",
-              3,
-              "rgb(255, 227, 136)",
-              4,
-              "rgb(100, 204, 64)",
-              5,
-              "rgb(48, 204, 76)"
-            ],
-            'circle-opacity': [
-              'case',
-              ['boolean', ['feature-state', 'hover'], false],
-              1,
-              1
-            ],
-            'circle-opacity-transition': {
-              "duration": 1000
-            },
-            
-            // Stroke
-            'circle-stroke-color': [
-              'case',
-              ['boolean', ['feature-state', 'selected'], false],
-              "rgb(255, 255, 255)",
-              [
+              // Circle color
+              'circle-color': [
                 "step",
                 ["get", "rating"],
                 "rgb(186,56,51)",
@@ -359,23 +372,55 @@ CM.MapboxMap = new Vue({
                 "rgb(100, 204, 64)",
                 5,
                 "rgb(48, 204, 76)"
-              ]
-            ],
-            'circle-stroke-width': 3,
-            'circle-stroke-opacity': [
-              "case",
-              [
-                "==",
-                ["get", "photo_uploaded"],
-                true
               ],
-              1,
-              0
-            ]
-          }
-        },
-        'waterway-label'
-      );
+              'circle-opacity': [
+                'case',
+                ['boolean', ['feature-state', 'hover'], false],
+                1,
+                1
+              ],
+              'circle-opacity-transition': {
+                "duration": 1000
+              },
+            
+              // Stroke
+              'circle-stroke-color': [
+                'case',
+                ['boolean', ['feature-state', 'selected'], false],
+                "rgb(255, 255, 255)",
+                [
+                  "step",
+                  ["get", "rating"],
+                  "rgb(186,56,51)",
+                  2,
+                  "rgb(186,110,102)",
+                  3,
+                  "rgb(255, 227, 136)",
+                  4,
+                  "rgb(100, 204, 64)",
+                  5,
+                  "rgb(48, 204, 76)"
+                ]
+              ],
+              'circle-stroke-width': 3,
+              'circle-stroke-opacity': [
+                "case",
+                [
+                  "==",
+                  ["get", "photo_uploaded"],
+                  true
+                ],
+                1,
+                0
+              ],
+              'circle-stroke-opacity-transition': {
+                "duration": 1000
+              }
+            }
+          },
+          'waterway-label'
+        );
+      });
     },
     
     addHeadingImage() {
@@ -420,34 +465,40 @@ CM.MapboxMap = new Vue({
     },
     
     bindHoverPhotos() {
-      this.map.on('mousemove', 'snapshot-points', (e) => {
-        if (e.features.length == 0) return;
-        if (this.activeSnapshot && this.activeSnapshot.id ==
-          e.features[0].id) return;
-        // if (this.clickLocked) return; // Comment out to allow hover over photos
+      _.each(this.geodata, (features, rating) => {
+        this.map.on('mousemove', 'snapshot-points-'+rating, (e) => {
+          if (e.features.length == 0) return;
+          if (this.activeSnapshot && this.activeSnapshot.id ==
+            e.features[0].id) return;
+          // if (this.clickLocked) return; // Comment out to allow hover over photos
         
-        this.activateSnapshot(e.features[0], {hover: true});
-        if (this.clickLocked && e.features[0].id == this.clickLocked.id) {
-          this.map.setFeatureState(
-            { source: 'snapshots', id: this.clickLocked.id },
-            { selected: true }
-          );
-        }
-      });
+          this.activateSnapshot(e.features[0], {hover: true});
+          if (this.clickLocked && e.features[0].id == this.clickLocked.id) {
+            _.each(this.geodata, (features, rating) => {
+              this.map.setFeatureState(
+                { source: 'snapshots-'+rating, id: this.clickLocked.id },
+                { selected: true }
+              );
+            });
+          }
+        });
  
-      // When the mouse leaves the state-fill layer, update the feature state of the
-      // previously hovered feature.
-      this.map.on('mouseleave', 'snapshot-points', () => {
-        if (this.clickLocked) {
-          // Go back to click locked photo
-          this.activateSnapshot(this.clickLocked);
-          this.map.setFeatureState(
-            { source: 'snapshots', id: this.clickLocked.id },
-            { selected: true }
-          );
-        } else {
-          this.deactivateSnapshot();
-        }
+        // When the mouse leaves the state-fill layer, update the feature state of the
+        // previously hovered feature.
+        this.map.on('mouseleave', 'snapshot-points-'+rating, () => {
+          if (this.clickLocked) {
+            // Go back to click locked photo
+            this.activateSnapshot(this.clickLocked);
+            _.each(this.geodata, (features, rating) => {
+              this.map.setFeatureState(
+                { source: 'snapshots-'+rating, id: this.clickLocked.id },
+                { selected: true }
+              );
+            });
+          } else {
+            this.deactivateSnapshot();
+          }
+        });
       });
     },
     
@@ -456,19 +507,23 @@ CM.MapboxMap = new Vue({
       if (options.hover && !snapshot.properties.photo_uploaded) return;
       
       if (this.activeSnapshot) {
-        this.map.setFeatureState(
-          { source: 'snapshots', id: this.activeSnapshot.id },
-          { hover: false, selected: false }
-        );
+        _.each(this.geodata, (features, rating) => {
+          this.map.setFeatureState(
+            { source: 'snapshots-'+rating, id: this.activeSnapshot.id },
+            { hover: false, selected: false }
+          );
+        });
       }
       
       this.activeSnapshot = snapshot;
       clearTimeout(this.hideSnapshotTimeout);
       
-      this.map.setFeatureState(
-        { source: 'snapshots', id: this.activeSnapshot.id },
-        { hover: true }
-      );
+      _.each(this.geodata, (features, rating) => {
+        this.map.setFeatureState(
+          { source: 'snapshots-'+rating, id: this.activeSnapshot.id },
+          { hover: true }
+        );
+      });
       
       this.updateHeading();
       this.displaySnapshotDetail();
@@ -476,10 +531,12 @@ CM.MapboxMap = new Vue({
     
     deactivateSnapshot() {
       if (this.activeSnapshot) {
-        this.map.setFeatureState(
-          { source: 'snapshots', id: this.activeSnapshot.id },
-          { hover: false, selected: false }
-        );
+        _.each(this.geodata, (features, rating) => {
+          this.map.setFeatureState(
+            { source: 'snapshots-'+rating, id: this.activeSnapshot.id },
+            { hover: false, selected: false }
+          );
+        });
       }
       
       this.activeSnapshot = null;
@@ -517,28 +574,32 @@ CM.MapboxMap = new Vue({
         }
       });
       
-      this.map.on('click', 'snapshot-points', (e) => {
-        console.log(['Click', e.features]);
-        this.flyToSnapshot(e.features[0]);
+      _.each(this.geodata, (features, rating) => {
+        this.map.on('click', 'snapshot-points-'+rating, (e) => {
+          console.log(['Click', e.features]);
+          this.flyToSnapshot(e.features[0]);
+        });
       });
     },
     
     flyToPhotoId(photoId, options) {
       // console.log(['Flying to', photoId]);
-      let feature = this.geodata.features.find((feature) => {
-        return feature.id == photoId;
-      });
-      // let feature = this.map.querySourceFeatures('snapshots', {
-      //   filter: ['==', 'id', photoId]
-      // });
+      _.each(this.geodata, (features, rating) => {
+        let feature = features.find((feature) => {
+          return feature.id == photoId;
+        });
+        // let feature = this.map.querySourceFeatures('snapshots', {
+        //   filter: ['==', 'id', photoId]
+        // });
       
-      if (!feature) {
-        console.log(["Error, couldn't find photo feature", photoId]);
-        this.loadedSource = false;
-        return;
-      }
-
-      this.flyToSnapshot(feature, options);
+        if (feature) {
+          this.flyToSnapshot(feature, options);
+          return;
+        }
+        
+        // console.log(["Error, couldn't find photo feature", photoId]);
+        // this.loadedSource = false;
+      });
     },
     
     flyToSnapshot(snapshot, options) {
@@ -554,10 +615,12 @@ CM.MapboxMap = new Vue({
       }, 0);
       this.clickLocked = snapshot;
       this.activateSnapshot(snapshot);
-      this.map.setFeatureState(
-        { source: 'snapshots', id: this.activeSnapshot.id },
-        { selected: true }
-      );
+      _.each(this.geodata, (features, rating) => {
+        this.map.setFeatureState(
+          { source: 'snapshots-'+rating, id: this.activeSnapshot.id },
+          { selected: true }
+        );
+      });
       
       if (CM.SnapshotDetail.topSide && CM.SnapshotDetail.rightSide) {
         setTimeout(() => {
@@ -640,12 +703,17 @@ CM.MapboxMap = new Vue({
     },
     
     hideBikeLanes() {
-      this.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', 0)
+      return;
+      
+      this.map.setPaintProperty('cambridge-ma-bike-facilities', 'line-opacity', 0);
       this.map.setPaintProperty('boston-ma-existing-bike-network', 'line-opacity', 0);
     },
     
     showBikeLanes() {
-      this.map.setLayoutProperty('cambridge-ma-bike-facilities', 'visibility', 'visible')
+      return;
+      
+      this.map.setLayoutProperty('cambridge-ma-bike-facilities', 'visibility', 'visible');
+      this.map.setLayoutProperty('boston-ma-existing-bike-network', 'visibility', 'visible');
       let zoom = [
         'interpolate',
         ['linear'],
@@ -662,8 +730,8 @@ CM.MapboxMap = new Vue({
     activateSectionFromScroll(sectionEl) {
       if ($(sectionEl).is("#sidebar-section-1")) {
         this.deactivateSnapshot();
-        CM.Filters.ratings = "none";
-        this.hideBikeLanes();
+        CM.Filters.ratings = "all";
+        this.showBikeLanes();
         this.protectMapMove(true);
         this.map.flyTo({center: {
           lat: CM.Globals.defaultLat,
