@@ -10,7 +10,7 @@ import Foundation
 import NetworkExtension
 
 class WifiManager: NSObject {
-    public var photoDelegate: PhotoDelegate?
+    public var photoDelegate: PhotoBluetoothDelegate?
     
     override init() {
         super.init()

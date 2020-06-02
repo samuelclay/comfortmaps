@@ -12,7 +12,7 @@ import CoreLocation
 import Alamofire
 import AudioToolbox
 
-protocol PhotoDelegate {
+protocol PhotoBluetoothDelegate {
     func beginSnapshotTransfer(header: String)
     func beginBluetoothPhotoTransfer(header: String)
     func beginWifiPhotoTransfer(header: String)
@@ -24,6 +24,7 @@ protocol PhotoDelegate {
 
 protocol PhotoUploadDelegate {
     func endSnapshotUpload()
+    func endSnapshotPhotoUpload()
 }
 
 struct Coordinate: Codable {
@@ -38,6 +39,7 @@ struct Snapshot: Codable {
     var coords: Coordinate?
     var heading: Double?
     var speed: Double?
+    var photoUrl: String?
     
     init(_ dictionary: [String: Any]) {
         self.photoId = dictionary["id"] as! String
@@ -46,10 +48,11 @@ struct Snapshot: Codable {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case photoId = "photo_id", rating, acceleration, coords = "gps", heading, speed = "speed_mph"
+        case photoId = "photo_id", rating, acceleration, coords = "gps", heading, speed = "speed_mph", photoUrl = "photo_url"
     }
 }
-class PhotoManager: PhotoDelegate {
+
+class PhotoManager: PhotoBluetoothDelegate {
     private var uploadingData           : Data         = Data()
     private var uploadingSnapshot       : Data         = Data()
     private var currentImageSize        : Int          = 0
@@ -206,7 +209,12 @@ class PhotoManager: PhotoDelegate {
                 print("Upload Progress: \(progress.fractionCompleted)")
             }
             .responseJSON { response in
-                debugPrint(response)
+                debugPrint(response.result)
+                if let result = response.result.value {
+                    for delegate in self.delegates {
+                        delegate.endSnapshotPhotoUpload(result)
+                    }
+                }
 //                AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
             }
         uploadingData = Data()

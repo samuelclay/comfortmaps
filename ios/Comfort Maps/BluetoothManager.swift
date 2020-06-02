@@ -22,7 +22,7 @@ protocol BluetoothManagerDelegate {
 class BluetoothManager: NSObject, CBPeripheralDelegate, CBCentralManagerDelegate {
     private var centralManager: CBCentralManager!
     private var peripheral: CBPeripheral!
-    public var photoDelegate: PhotoDelegate?
+    public var photoDelegate: PhotoBluetoothDelegate?
     private var delegates: [BluetoothManagerDelegate] = []
     fileprivate let snapshotData = NSMutableData()
     

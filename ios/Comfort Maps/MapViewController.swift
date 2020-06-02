@@ -14,6 +14,13 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var bluetoothView: UIView!
     @IBOutlet weak var bluetoothMessage: UILabel!
+    
+    @IBOutlet weak var snapshotView: UIView!
+    @IBOutlet weak var snapshotPhoto: UIImageView!
+    @IBOutlet weak var snapshotDate: UILabel!
+    @IBOutlet weak var snapshotPoi: UILabel!
+    @IBOutlet weak var snapshotAddress: UILabel!
+    
     private var lastLocation: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
@@ -99,6 +106,10 @@ class MapViewController: UIViewController, LocationManagerDelegate, MGLMapViewDe
     
     func endSnapshotUpload() {
         self.reloadMap()
+    }
+    
+    func endSnapshotPhotoUpload() {
+        
     }
     
     func center(animated: Bool = true) {
