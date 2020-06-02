@@ -169,18 +169,21 @@ CM.Filters = new Vue({
 });
 
 CM.ScrollSpy = function() {
+  if (this.loaded) return;
+  this.loaded = true;
+  
   let buffer = $(window).outerHeight() / 2;
   
   $(".sidebar > section").scrollspy({
     container: window,
     buffer: buffer,
     onEnter: (element, position) => {
-      // console.log(['enter', element]);
+      console.log(['enter', element]);
       $(element).addClass('active');
       CM.MapboxMap.activateSectionFromScroll(element)
     },
     onLeave: (element, position) => {
-      // console.log(['leave', element]);
+      console.log(['leave', element]);
       $(element).removeClass('active');
       // CM.MapboxMap.activateSectionFromScroll(element)
     },
@@ -770,6 +773,7 @@ CM.MapboxMap = new Vue({
       } else if ($(sectionEl).is("#sidebar-section-6")) {
         CM.Filters.ratings = "all";
         this.showBikeLanes();
+        this.clickLocked = null;
         this.deactivateSnapshot();
         this.protectMapMove(true);
         this.map.flyTo({center: {

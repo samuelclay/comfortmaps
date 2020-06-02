@@ -166,6 +166,8 @@ p {
 } 
 .sidebar > section .section-container {
   background-color: rgba(0,0,0,0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   padding: 1rem;
   border-radius: 0.25rem;
   pointer-events: auto;
