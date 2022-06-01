@@ -30,7 +30,7 @@
     "bluetooth-hci-socket": "abandonware/node-bluetooth-hci-socket",
     "rpi-gpio": "^2.1.5",
     "sequelize": "^5.21.4",
-    "sharp": "^0.24.0",
+    "sharp": "^0.30.5",
     "shortid": "^2.2.15",
     "sqlite3": "^4.1.1",
     "uuid": "^3.4.0"
